@@ -1,0 +1,195 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="R0g3r Th4t"><meta name="copyright" content="R0g3r Th4t"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>“MSC异常处理增强设计” | Rt'Small'House</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"wr-web.github.io","root":"/","title":"RT'Small'Website","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="MSC异常处理增强设计MSC加强的__try{}__except{}结构差不多了解了 先是压入一个结构，包含了TryLevel，Scopetable，ExceptionHandler，Next，exc_ptr(这个在只有一个try块中被跳过了)，进入try块遇到异常，异常处理后进入到filter过滤函数，再视情况进入handler函数处理，处理完毕就和没有发生异常一样直接离开__try{}__ex">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“MSC异常处理增强设计”">
+<meta property="og:url" content="https://wr-web.github.io/2020/11/08/2020-11-8/index.html">
+<meta property="og:site_name" content="Rt&#39;Small&#39;House">
+<meta property="og:description" content="MSC异常处理增强设计MSC加强的__try{}__except{}结构差不多了解了 先是压入一个结构，包含了TryLevel，Scopetable，ExceptionHandler，Next，exc_ptr(这个在只有一个try块中被跳过了)，进入try块遇到异常，异常处理后进入到filter过滤函数，再视情况进入handler函数处理，处理完毕就和没有发生异常一样直接离开__try{}__ex">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-08T10:40:11.000Z">
+<meta property="article:modified_time" content="2021-05-26T08:58:43.368Z">
+<meta property="article:author" content="R0g3r Th4t">
+<meta property="article:tag" content="SEH">
+<meta property="article:tag" content="MSVC">
+<meta property="article:tag" content="Windows异常">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="R0g3r Th4t"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="R0g3r Th4t"></a><div class="site-author-name"><a href="/about/">R0g3r Th4t</a></div><span class="site-name">Rt'Small'House</span><sub class="site-subtitle"></sub><div class="site-desciption">fake reversing engine</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">21</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">30</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/cgi-bin/qm/qr?k=kZJzggTTCf4SpvEQ8lXWoi5ZjhAx0ILZ&amp;jump_from=webapi" title="QQ 群 1050458482" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/wr-web" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/fake" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/fake" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=fake" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/fake" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/13582048" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://cdn.jsdelivr.net/fake" title="微信公众号" target="_blank" style="color:#1AAD19"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-2-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/wr51882017" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/elpsycn" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="orz1053131305@outlook.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.link" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-train-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MSC%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E5%A2%9E%E5%BC%BA%E8%AE%BE%E8%AE%A1"><span class="toc-number">1.</span> <span class="toc-text">MSC异常处理增强设计</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%A7%E7%94%9F%E5%BC%82%E5%B8%B8%E6%97%B6%E7%9A%84%E5%AF%84%E5%AD%98%E5%99%A8%E5%92%8C%E8%B0%83%E7%94%A8-except-handler4%E6%97%B6%E7%9A%84%E5%AF%84%E5%AD%98%E5%99%A8%E7%8A%B6%E6%80%81"><span class="toc-number">1.0.1.</span> <span class="toc-text">产生异常时的寄存器和调用__except__handler4时的寄存器状态</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Showx86SEH-except-handler4"><span class="toc-number">1.0.2.</span> <span class="toc-text">Showx86SEH!_except_handler4</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Showx86SEH-except-handler4-0xdf"><span class="toc-number">1.0.3.</span> <span class="toc-text">Showx86SEH!_except_handler4+0xdf</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://wr-web.github.io/2020/11/08/2020-11-8/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="R0g3r Th4t"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Rt'Small'House"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">“MSC异常处理增强设计”</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2020-11-08 18:40:11" itemprop="dateCreated datePublished" datetime="2020-11-08T18:40:11+08:00">2020-11-08</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-05-26 16:58:43" itemprop="dateModified" datetime="2021-05-26T16:58:43+08:00">2021-05-26</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/SEH%E5%AD%A6%E4%B9%A0/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">SEH学习</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/SEH/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">SEH</span></a><a class="tag-item" href="/tags/MSVC/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">MSVC</span></a><a class="tag-item" href="/tags/Windows%E5%BC%82%E5%B8%B8/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Windows异常</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h3 id="MSC异常处理增强设计"><a href="#MSC异常处理增强设计" class="headerlink" title="MSC异常处理增强设计"></a>MSC异常处理增强设计</h3><p>MSC加强的__try{}__except{}结构差不多了解了</p>
+<p>先是压入一个结构，包含了TryLevel，Scopetable，ExceptionHandler，Next，exc_ptr(这个在只有一个try块中被跳过了)，进入try块遇到异常，异常处理后进入到filter过滤函数，再视情况进入handler函数处理，处理完毕就和没有发生异常一样直接离开__try{}__except{}。</p>
+<p>不过中间还是有一个绕不过去的_except_handler4，这个到底怎么工作的呢？怎么工作才能在发生异常之后进入到filter呢？我调试一下看看，希望能有一些收获。</p>
+<h5 id="产生异常时的寄存器和调用-except-handler4时的寄存器状态"><a href="#产生异常时的寄存器和调用-except-handler4时的寄存器状态" class="headerlink" title="产生异常时的寄存器和调用__except__handler4时的寄存器状态"></a>产生异常时的寄存器和调用__except__handler4时的寄存器状态</h5><pre class="language-markdown" data-language="markdown"><code class="language-markdown">eax=00000008 ebx=00dab000 ecx=00581737 edx=00b9dbb4 esi=00000000 edi=00581cf3
+eip=00581042 esp=00b9f7a8 ebp=00b9f7d4 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00010246
+Showx86SEH!OneException+0x42:
+00581042 c70655555555    mov     dword ptr [esi],55555555h ds:002b:00000000=????????</code></pre>
+
+<pre class="language-markdown" data-language="markdown"><code class="language-markdown">Breakpoint 1 hit
+eax=00000000 ebx=00000000 ecx=00581840 edx=77638e90 esi=00000000 edi=00000000
+eip=00581840 esp=00b9f178 ebp=00b9f198 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+Showx86SEH!_except_handler4:
+00581840 8bff            mov     edi,edi</code></pre>
+
+<h5 id="Showx86SEH-except-handler4"><a href="#Showx86SEH-except-handler4" class="headerlink" title="Showx86SEH!_except_handler4"></a>Showx86SEH!_except_handler4</h5><pre class="language-assembly" data-language="assembly"><code class="language-assembly">;0:000&gt; u 00581840 00581915
+00581840 8bff            mov     edi,edi
+00581842 55              push    ebp
+00581843 8bec            mov     ebp,esp
+00581845 83ec18          sub     esp,18h
+00581848 53              push    ebx
+00581849 8b5d0c          mov     ebx,dword ptr [ebp+0Ch]
+0058184c 56              push    esi
+0058184d 8b7308          mov     esi,dword ptr [ebx+8]
+00581850 333500705900    xor     esi,dword ptr [Showx86SEH!__security_cookie (00597000)]
+00581856 57              push    edi
+00581857 8b06            mov     eax,dword ptr [esi]
+00581859 c645ff00        mov     byte ptr [ebp-1],0
+0058185d c745f401000000  mov     dword ptr [ebp-0Ch],1
+00581864 8d7b10          lea     edi,[ebx+10h]
+00581867 83f8fe          cmp     eax,0FFFFFFFEh
+0058186a 740d            je      Showx86SEH!_except_handler4+0x39 (00581879)
+0058186c 8b4e04          mov     ecx,dword ptr [esi+4]
+0058186f 03cf            add     ecx,edi
+00581871 330c38          xor     ecx,dword ptr [eax+edi]
+;____________________________________________________________________________
+00581874 e860190000      call    Showx86SEH!__security_check_cookie (005831d9)
+;____________________________________________________________________________
+00581879 8b4e0c          mov     ecx,dword ptr [esi+0Ch]
+0058187c 8b4608          mov     eax,dword ptr [esi+8]
+0058187f 03cf            add     ecx,edi
+00581881 330c38          xor     ecx,dword ptr [eax+edi]
+;____________________________________________________________________________
+00581884 e850190000      call    Showx86SEH!__security_check_cookie (005831d9)
+;____________________以上安全检查，估计和之前进栈的加密过的eax有关___________________
+00581889 8b4508          mov     eax,dword ptr [ebp+8]
+0058188c f6400466        test    byte ptr [eax+4],66h
+00581890 0f8519010000    jne     Showx86SEH!_except_handler4+0x16f (005819af)
+00581896 8b4d10          mov     ecx,dword ptr [ebp+10h]
+00581899 8d55e8          lea     edx,[ebp-18h]
+0058189c 8953fc          mov     dword ptr [ebx-4],edx
+0058189f 8b5b0c          mov     ebx,dword ptr [ebx+0Ch]
+005818a2 8945e8          mov     dword ptr [ebp-18h],eax
+005818a5 894dec          mov     dword ptr [ebp-14h],ecx
+005818a8 83fbfe          cmp     ebx,0FFFFFFFEh
+;___________猜测这个ebx保存的是TryLevel，不过windbg还是不是很会调试，要再观摩一下_____
+;______________________这一个je直接跳转到except结束位置，有点猫腻__________________
+005818ab 745f            je      Showx86SEH!_except_handler4+0xcc (0058190c)
+;____________________________________________________________________________
+005818ad 8d4900          lea     ecx,[ecx]
+005818b0 8d045b          lea     eax,[ebx+ebx*2]
+005818b3 8b4c8614        mov     ecx,dword ptr [esi+eax*4+14h]
+005818b7 8d448610        lea     eax,[esi+eax*4+10h]
+005818bb 8945f0          mov     dword ptr [ebp-10h],eax
+005818be 8b00            mov     eax,dword ptr [eax]
+005818c0 8945f8          mov     dword ptr [ebp-8],eax
+005818c3 85c9            test    ecx,ecx
+005818c5 7414            je      Showx86SEH!_except_handler4+0x9b (005818db)
+005818c7 8bd7            mov     edx,edi
+;______________________看到这个函数名字，估计就是调用filter的了____________________
+;_____________________________验证了一下确实是的________________________________
+005818c9 e8f4010000      call    Showx86SEH!_EH4_CallFilterFunc (00581ac2)
+;____________________________这里给1有啥用呢？__________________________________
+005818ce c645ff01        mov     byte ptr [ebp-1],1
+;____________________________________________________________________________
+005818d2 85c0            test    eax,eax
+005818d4 7840            js      Showx86SEH!_except_handler4+0xd6 (00581916)
+005818d6 7f47            jg      Showx86SEH!_except_handler4+0xdf (0058191f)
+;________________________________这里跳转了_____________________________________</code></pre>
+
+<p>EXCEPTION_EXECUTE_HANDLER          1<br>EXCEPTION_CONTINUE_SEARCH          0<br>EXCEPTION_CONTINUE_EXECUTION   -1<br>从中可以看出调用__Showx86SEH!_EH4_CallFilterFunc__返回了EXCEPTION_EXECUTE_HANDLER，表示可以处理好</p>
+<pre class="language-assembly" data-language="assembly"><code class="language-assembly">005818d8 8b45f8          mov     eax,dword ptr [ebp-8]
+005818db 8bd8            mov     ebx,eax
+005818dd 83f8fe          cmp     eax,0FFFFFFFEh
+005818e0 75ce            jne     Showx86SEH!_except_handler4+0x70 (005818b0)
+005818e2 807dff00        cmp     byte ptr [ebp-1],0
+005818e6 7424            je      Showx86SEH!_except_handler4+0xcc (0058190c)
+005818e8 8b06            mov     eax,dword ptr [esi]
+005818ea 83f8fe          cmp     eax,0FFFFFFFEh
+005818ed 740d            je      Showx86SEH!_except_handler4+0xbc (005818fc)
+;_except_handler4+143
+005818ef 8b4e04          mov     ecx,dword ptr [esi+4]
+005818f2 03cf            add     ecx,edi
+005818f4 330c38          xor     ecx,dword ptr [eax+edi]
+;____________________________________________________________________________
+005818f7 e8dd180000      call    Showx86SEH!__security_check_cookie (005831d9)
+;____________________________________________________________________________
+005818fc 8b4e0c          mov     ecx,dword ptr [esi+0Ch]
+005818ff 8b5608          mov     edx,dword ptr [esi+8]
+00581902 03cf            add     ecx,edi
+00581904 330c3a          xor     ecx,dword ptr [edx+edi]
+;____________________________________________________________________________
+00581907 e8cd180000      call    Showx86SEH!__security_check_cookie (005831d9)
+;____________________________________________________________________________
+0058190c 8b45f4          mov     eax,dword ptr [ebp-0Ch]
+0058190f 5f              pop     edi
+00581910 5e              pop     esi
+00581911 5b              pop     ebx
+00581912 8be5            mov     esp,ebp
+00581914 5d              pop     ebp
+00581915 c3              ret</code></pre>
+
+<h5 id="Showx86SEH-except-handler4-0xdf"><a href="#Showx86SEH-except-handler4-0xdf" class="headerlink" title="Showx86SEH!_except_handler4+0xdf"></a>Showx86SEH!_except_handler4+0xdf</h5><pre class="language-assembly" data-language="assembly"><code class="language-assembly">;0:000&gt; u Showx86SEH!_except_handler4+0xdf 005819aa
+0058191f 8b4d08          mov     ecx,dword ptr [ebp+8]
+00581922 813963736de0    cmp     dword ptr [ecx],0E06D7363h
+00581928 7529            jne     Showx86SEH!_except_handler4+0x113 (00581953)
+0058192a 833d8c9b590000  cmp     dword ptr [Showx86SEH!_pDestructExceptionObject (00599b8c)],0
+00581931 7420            je      Showx86SEH!_except_handler4+0x113 (00581953)
+00581933 688c9b5900      push    offset Showx86SEH!_pDestructExceptionObject (00599b8c)
+00581938 e843190000      call    Showx86SEH!_IsNonwritableInCurrentImage (00583280)
+0058193d 83c404          add     esp,4
+00581940 85c0            test    eax,eax
+00581942 740f            je      Showx86SEH!_except_handler4+0x113 (00581953)
+00581944 8b5508          mov     edx,dword ptr [ebp+8]
+00581947 6a01            push    1
+00581949 52              push    edx
+0058194a ff158c9b5900    call    dword ptr [Showx86SEH!_pDestructExceptionObject (00599b8c)]
+00581950 83c408          add     esp,8
+00581953 8b4d0c          mov     ecx,dword ptr [ebp+0Ch]
+00581956 8b5508          mov     edx,dword ptr [ebp+8]
+00581959 e894010000      call    Showx86SEH!_EH4_GlobalUnwind2 (00581af2)
+0058195e 8b450c          mov     eax,dword ptr [ebp+0Ch]
+00581961 39580c          cmp     dword ptr [eax+0Ch],ebx
+00581964 7412            je      Showx86SEH!_except_handler4+0x138 (00581978)
+00581966 6800705900      push    offset Showx86SEH!__security_cookie (00597000)
+0058196b 57              push    edi
+0058196c 8bd3            mov     edx,ebx
+0058196e 8bc8            mov     ecx,eax
+00581970 e896010000      call    Showx86SEH!_EH4_LocalUnwind (00581b0b)
+00581975 8b450c          mov     eax,dword ptr [ebp+0Ch]
+00581978 8b4df8          mov     ecx,dword ptr [ebp-8]
+0058197b 89480c          mov     dword ptr [eax+0Ch],ecx
+0058197e 8b06            mov     eax,dword ptr [esi]
+00581980 83f8fe          cmp     eax,0FFFFFFFEh
+00581983 740d            je      Showx86SEH!_except_handler4+0x152 (00581992)
+00581985 8b4e04          mov     ecx,dword ptr [esi+4]
+00581988 03cf            add     ecx,edi
+0058198a 330c38          xor     ecx,dword ptr [eax+edi]
+0058198d e847180000      call    Showx86SEH!__security_check_cookie (005831d9)
+00581992 8b4e0c          mov     ecx,dword ptr [esi+0Ch]
+00581995 8b5608          mov     edx,dword ptr [esi+8]
+00581998 03cf            add     ecx,edi
+0058199a 330c3a          xor     ecx,dword ptr [edx+edi]
+0058199d e837180000      call    Showx86SEH!__security_check_cookie (005831d9)
+005819a2 8b45f0          mov     eax,dword ptr [ebp-10h]
+005819a5 8b4808          mov     ecx,dword ptr [eax+8]
+005819a8 8bd7            mov     edx,edi
+;__________________________这个函数调用了handler________________________
+005819aa e82a010000      call    Showx86SEH!_EH4_TransferToHandler (00581ad9)
+;____________________________________________________________________
+005819af bafeffffff      mov     edx,0FFFFFFFEh
+005819b4 39530c          cmp     dword ptr [ebx+0Ch],edx
+005819b7 0f844fffffff    je      Showx86SEH!_except_handler4+0xcc (0058190c)
+005819bd 6800705900      push    offset Showx86SEH!__security_cookie (00597000)
+005819c2 57              push    edi
+005819c3 8bcb            mov     ecx,ebx
+005819c5 e841010000      call    Showx86SEH!_EH4_LocalUnwind (00581b0b)
+005819ca e919ffffff      jmp     Showx86SEH!_except_handler4+0xa8 (005818e8)
+005819cf cc              int     3
+
+</code></pre>
+
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="Donate" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/alipay-qrcode.jpg"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/alipay-qrcode.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/qqpay-qrcode.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/qqpay-qrcode.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/wechatpay-qrcode.jpg"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/wechatpay-qrcode.jpg" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>R0g3r Th4t</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://wr-web.github.io/2020/11/08/2020-11-8/" title="“MSC异常处理增强设计”">https://wr-web.github.io/2020/11/08/2020-11-8/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/11/10/2020-11-10/" rel="prev" title="“反调试之去除硬件断点”"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">“反调试之去除硬件断点”</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/11/05/2020-11-5/" rel="next" title="“VS的入口到底在哪”"><span class="post-nav-text">“VS的入口到底在哪”</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> R0g3r Th4t</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

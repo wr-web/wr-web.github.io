@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="R0g3r Th4t"><meta name="copyright" content="R0g3r Th4t"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>“小小的调试一下自己写的SEH有关的小程序” | Rt'Small'House</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"wr-web.github.io","root":"/","title":"RT'Small'Website","version":"1.6.1","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}.","hits":"${hits} results found","hits_time":"${hits} results found in ${time} ms"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><meta name="description" content="自己做了一个SEH相关的一个小程序，顺便在调试的时候观察一下 0:000&gt; g $exentry ModLoad: 75a90000 75ab5000   C:\Windows\SysWOW64\IMM32.DLL eax&#x3D;001bf840 ebx&#x3D;00300000 ecx&#x3D;00851010 edx&#x3D;00851010 esi&#x3D;00851010 edi&#x3D;00851010 eip&#x3D;00851010 e">
+<meta property="og:type" content="article">
+<meta property="og:title" content="“小小的调试一下自己写的SEH有关的小程序”">
+<meta property="og:url" content="https://wr-web.github.io/2020/11/03/2020-11-3/index.html">
+<meta property="og:site_name" content="Rt&#39;Small&#39;House">
+<meta property="og:description" content="自己做了一个SEH相关的一个小程序，顺便在调试的时候观察一下 0:000&gt; g $exentry ModLoad: 75a90000 75ab5000   C:\Windows\SysWOW64\IMM32.DLL eax&#x3D;001bf840 ebx&#x3D;00300000 ecx&#x3D;00851010 edx&#x3D;00851010 esi&#x3D;00851010 edi&#x3D;00851010 eip&#x3D;00851010 e">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-11-03T11:00:00.000Z">
+<meta property="article:modified_time" content="2021-05-26T08:56:49.886Z">
+<meta property="article:author" content="R0g3r Th4t">
+<meta property="article:tag" content="SEH">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button" data-target="post-toc-wrap" title="Table of Contents"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button sidebar-nav-active" data-target="site-overview-wrap" title="Overview"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="R0g3r Th4t"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="R0g3r Th4t"></a><div class="site-author-name"><a href="/about/">R0g3r Th4t</a></div><span class="site-name">Rt'Small'House</span><sub class="site-subtitle"></sub><div class="site-desciption">fake reversing engine</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="Home"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="Archives"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/categories/" title="Categories"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">21</span></a></div><div class="site-state-item"><a href="/tags/" title="Tags"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">30</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/cgi-bin/qm/qr?k=kZJzggTTCf4SpvEQ8lXWoi5ZjhAx0ILZ&amp;jump_from=webapi" title="QQ 群 1050458482" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/wr-web" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/fake" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.douban.com/fake" title="豆瓣" target="_blank" style="color:#007722"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-douban-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://music.163.com/#/user/home?id=fake" title="网易云音乐" target="_blank" style="color:#C20C0C"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-netease-cloud-music-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.zhihu.com/fake" title="知乎" target="_blank" style="color:#0084FF"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-zhihu-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/13582048" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://cdn.jsdelivr.net/fake" title="微信公众号" target="_blank" style="color:#1AAD19"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-2-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/wr51882017" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/elpsycn" title="Telegram Channel" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="orz1053131305@outlook.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://travellings.link" title="Travelling" target="_blank" style="color:var(--hty-text-color)"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-train-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content">This post does not have a Table of Contents</div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://wr-web.github.io/2020/11/03/2020-11-3/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="R0g3r Th4t"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="Rt'Small'House"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">“小小的调试一下自己写的SEH有关的小程序”</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="Created: 2020-11-03 19:00:00" itemprop="dateCreated datePublished" datetime="2020-11-03T19:00:00+08:00">2020-11-03</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="Modified: 2021-05-26 16:56:49" itemprop="dateModified" datetime="2021-05-26T16:56:49+08:00">2021-05-26</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/SEH%E5%AD%A6%E4%B9%A0/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">SEH学习</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/SEH/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">SEH</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>自己做了一个SEH相关的一个小程序，顺便在调试的时候观察一下</p>
+<pre class="language-markdown" data-language="markdown"><code class="language-markdown">0:000> g $exentry
+ModLoad: 75a90000 75ab5000   C:\Windows\SysWOW64\IMM32.DLL
+eax=001bf840 ebx=00300000 ecx=00851010 edx=00851010 esi=00851010 edi=00851010
+eip=00851010 esp=001bf7e8 ebp=001bf7f4 iopl=0         nv up ei pl zr na pe nc
+cs=0023  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000246
+Project1!<span class="token italic"><span class="token punctuation">_</span><span class="token content">Start:
+00851010 6764a10000      mov     eax,dword ptr fs:[00000000h] fs:0053:00000000=001bf840
+</span><span class="token punctuation">_</span></span></code></pre>
+
+<pre class="language-assembly" data-language="assembly"><code class="language-assembly">_Start:
+    assume fs:nothing
+	mov eax,fs:[0]         ;&lt;---IP
+    push offset myHandler
+    push fs:[0]
+    mov fs:[0],esp
+    mov ecx,-1
+    mov [eax],ecx
+    xor eax,eax
+    mov [eax],eax
+    retn
+END	_Start</code></pre>
+
+<pre class="language-markdown" data-language="markdown"><code class="language-markdown">_0:000> !exchain
+001bf840: ntdll!_except_handler4+0 (775da040)
+  CRT scope  0, filter: ntdll!__RtlUserThreadStart+3ad46 (7760293b)
+                func:   ntdll!__RtlUserThreadStart+3addf (776029d4)
+001bf858: ntdll!FinalExceptionHandlerPad54+0 (775e8ff6)
+Invalid exception stack at ffffffff</code></pre>
+
+<pre class="language-assembly" data-language="assembly"><code class="language-assembly">_Start:
+    assume fs:nothing
+	mov eax,fs:[0]         
+    push offset myHandler
+    push fs:[0]
+    mov fs:[0],esp        
+    mov ecx,-1       ;&lt;---IP
+    mov [eax],ecx
+    xor eax,eax
+    mov [eax],eax
+    retn
+END	_Start</code></pre>
+
+<pre class="language-markdown" data-language="markdown"><code class="language-markdown">0:000> !exchain
+001bf7e0: Project1!_Start+fffffffffffffff0 (00851000)
+001bf840: ntdll!_except_handler4+0 (775da040)
+  CRT scope  0, filter: ntdll!__RtlUserThreadStart+3ad46 (7760293b)
+                func:   ntdll!__RtlUserThreadStart+3addf (776029d4)
+001bf858: ntdll!FinalExceptionHandlerPad54+0 (775e8ff6)
+Invalid exception stack at ffffffff</code></pre>
+
+
+
+<p>发现handler函数在0x00851000处,反汇编一下</p>
+<pre class="language-markdown" data-language="markdown"><code class="language-markdown">0:000> u 00851000
+Project1!_Start+0xffffffff`fffffff0 [D:\seh\Project1\KillSeh.asm @ 24]:
+00851000 6a04            push    4
+00851002 6a00            push    0
+00851004 6803408500      push    offset Project1!messuc (00854003)
+00851009 6a00            push    0
+0085100b e82e000000      call    Project1!MessageBoxA (0085103e)
+Project1!_Start [D:\seh\Project1\KillSeh.asm @ 34]:
+00851010 6764a10000      mov     eax,dword ptr fs:[00000000h]
+00851015 6800108500      push    offset Project1!_Start+0xffffffff`fffffff0 (00851000)
+0085101a 6764ff360000    push    dword ptr fs:[0000h]
+</code></pre>
+
+<p>然后发现我这个程序没有返回，由于在汇编中我写在start前面，所以会错上加错，在ash链上的函数应该返回一个_EXCEPTION_CONTINUE让程序继续搜索下一个异常处理程序(_excep_handler4)</p>
+<p>于是乎我定义了一下ExceptionContinueSearch = 1（估计库里面也有）</p>
+<p>mov eax,ExceptionContinueSearch</p>
+<p>retn</p>
+<p>再继续调试，这次终于找到元凶了</p>
+<pre class="language-assembly" data-language="assembly"><code class="language-assembly">ntdll!_except_handler4:
+775da040 8bff            mov     edi,edi
+775da042 55              push    ebp
+775da043 8bec            mov     ebp,esp
+775da045 ff7514          push    dword ptr [ebp+14h]
+775da048 ff7510          push    dword ptr [ebp+10h]
+775da04b ff750c          push    dword ptr [ebp+0Ch]
+775da04e ff7508          push    dword ptr [ebp+8]
+775da051 68603f5d77      push    offset ntdll!__security_check_cookie (775d3f60)
+775da056 6860336877      push    offset ntdll!__security_cookie (77683360)
+775da05b e870bcffff      call    ntdll!_except_handler4_common (775d5cd0)
+775da060 83c418          add     esp,18h
+775da063 5d              pop     ebp
+775da064 c3              ret</code></pre>
+
+<p>又是security_check，这玩意一般是防止栈溢出用的，这里我也没调过，接着看下一个函数</p>
+<p>ntdll!_except_handler4_common</p>
+<p>发现了一个函数用来调用seh链上的异常处理函数</p>
+<pre class="language-assembly" data-language="assembly"><code class="language-assembly">ntdll!ExecuteHandler2:
+775e8e4c 55              push    ebp
+775e8e4d 8bec            mov     ebp,esp
+775e8e4f ff750c          push    dword ptr [ebp+0Ch]
+775e8e52 52              push    edx          ;难道用栈改seh这么常见吗，分分钟被hook掉（bushi），有空可以试一试
+775e8e53 64ff3500000000  push    dword ptr fs:[0]
+775e8e5a 64892500000000  mov     dword ptr fs:[0],esp
+775e8e61 ff7514          push    dword ptr [ebp+14h]
+775e8e64 ff7510          push    dword ptr [ebp+10h]
+775e8e67 ff750c          push    dword ptr [ebp+0Ch]
+775e8e6a ff7508          push    dword ptr [ebp+8]
+775e8e6d 8b4d18          mov     ecx,dword ptr [ebp+18h]
+775e8e70 ffd1            call    ecx
+775e8e72 648b2500000000  mov     esp,dword ptr fs:[0]
+775e8e79 648f0500000000  pop     dword ptr fs:[0]
+775e8e80 8be5            mov     esp,ebp
+775e8e82 5d              pop     ebp
+775e8e83 c21400          ret     14h</code></pre>
+
+<p>再上一级函数</p>
+<pre class="language-assembly" data-language="assembly"><code class="language-assembly">;ntdll!RtlpExecuteHandlerForException
+ntdll!ExecuteHandler:
+775e8e20 53              push    ebx
+775e8e21 56              push    esi
+775e8e22 57              push    edi
+775e8e23 33c0            xor     eax,eax
+775e8e25 33db            xor     ebx,ebx
+775e8e27 33f6            xor     esi,esi
+775e8e29 33ff            xor     edi,edi
+775e8e2b ff742420        push    dword ptr [esp+20h]
+775e8e2f ff742420        push    dword ptr [esp+20h]
+775e8e33 ff742420        push    dword ptr [esp+20h]
+775e8e37 ff742420        push    dword ptr [esp+20h]
+775e8e3b ff742420        push    dword ptr [esp+20h]
+775e8e3f e808000000      call    ntdll!ExecuteHandler2 (775e8e4c)
+775e8e44 5f              pop     edi
+775e8e45 5e              pop     esi
+775e8e46 5b              pop     ebx
+775e8e47 c21400          ret     14h
+</code></pre>
+
+<p>再上一级</p>
+<pre class="language-assembly" data-language="assembly"><code class="language-assembly">ntdll!RtlDispatchException:
+775c80cc 8bff            mov     edi,edi
+775c80ce 55              push    ebp
+775c80cf 8bec            mov     ebp,esp
+775c80d1 83e4f8          and     esp,0FFFFFFF8h
+775c80d4 83ec7c          sub     esp,7Ch
+775c80d7 a160336877      mov     eax,dword ptr [ntdll!__security_cookie (77683360)]
+775c80dc 33c4            xor     eax,esp
+775c80de 89442478        mov     dword ptr [esp+78h],eax
+775c80e2 8b550c          mov     edx,dword ptr [ebp+0Ch]
+775c80e5 53              push    ebx
+775c80e6 56              push    esi
+775c80e7 8b7508          mov     esi,dword ptr [ebp+8]
+775c80ea 33db            xor     ebx,ebx
+775c80ec 57              push    edi
+775c80ed 89542410        mov     dword ptr [esp+10h],edx
+775c80f1 885c240f        mov     byte ptr [esp+0Fh],bl
+775c80f5 813e060000c0    cmp     dword ptr [esi],0C0000006h
+775c80fb 7410            je      ntdll!RtlDispatchException+0x41 (775c810d)
+775c80fd 8b4e0c          mov     ecx,dword ptr [esi+0Ch]
+775c8100 e826030000      call    ntdll!RtlpIsUserCallTargetBitMapCheckFault (775c842b)
+775c8105 84c0            test    al,al
+775c8107 0f85f6a90300    jne     ntdll!RtlDispatchException+0x3aa37 (77602b03)
+775c810d 64a130000000    mov     eax,dword ptr fs:[00000030h]
+775c8113 f7406800008000  test    dword ptr [eax+68h],800000h
+775c811a 0f8504aa0300    jne     ntdll!RtlDispatchException+0x3aa58 (77602b24)
+775c8120 e80b65fcff      call    ntdll!LdrControlFlowGuardEnforced (7758e630)
+775c8125 8b7c2410        mov     edi,dword ptr [esp+10h]
+775c8129 85c0            test    eax,eax
+775c812b 0f852c010000    jne     ntdll!RtlDispatchException+0x191 (775c825d)
+775c8131 53              push    ebx
+775c8132 8bd7            mov     edx,edi
+775c8134 8bce            mov     ecx,esi
+775c8136 e8463a0000      call    ntdll!RtlpCallVectoredHandlers (775cbb81)
+775c813b 84c0            test    al,al
+775c813d 0f85f2000000    jne     ntdll!RtlDispatchException+0x169 (775c8235)
+775c8143 8d542420        lea     edx,[esp+20h]
+775c8147 8d4c241c        lea     ecx,[esp+1Ch]
+775c814b e8af020000      call    ntdll!RtlpGetStackLimits (775c83ff)
+775c8150 648b3d00000000  mov     edi,dword ptr fs:[0]
+775c8157 8d442418        lea     eax,[esp+18h]
+775c815b 53              push    ebx
+775c815c 6a04            push    4
+775c815e 50              push    eax
+775c815f 6a22            push    22h
+775c8161 6aff            push    0FFFFFFFFh
+775c8163 897c2428        mov     dword ptr [esp+28h],edi
+775c8167 895c242c        mov     dword ptr [esp+2Ch],ebx
+775c816b e8209e0000      call    ntdll!NtQueryInformationProcess (775d1f90)
+775c8170 85c0            test    eax,eax
+775c8172 0f88bda90300    js      ntdll!RtlDispatchException+0x3aa69 (77602b35)
+775c8178 f644241840      test    byte ptr [esp+18h],40h
+775c817d 7518            jne     ntdll!RtlDispatchException+0xcb (775c8197)
+775c817f 8b54241c        mov     edx,dword ptr [esp+1Ch]
+775c8183 51              push    ecx
+775c8184 ff742424        push    dword ptr [esp+24h]
+775c8188 8bcf            mov     ecx,edi
+775c818a e805020000      call    ntdll!RtlpIsValidExceptionChain (775c8394)
+775c818f 84c0            test    al,al
+775c8191 0f84a7a90300    je      ntdll!RtlDispatchException+0x3aa72 (77602b3e)
+775c8197 8b4c2414        mov     ecx,dword ptr [esp+14h]
+775c819b 895c2424        mov     dword ptr [esp+24h],ebx
+775c819f 83f9ff          cmp     ecx,0FFFFFFFFh
+775c81a2 0f848f000000    je      ntdll!RtlDispatchException+0x16b (775c8237)
+775c81a8 3b4c241c        cmp     ecx,dword ptr [esp+1Ch]
+775c81ac 0f82eb000000    jb      ntdll!RtlDispatchException+0x1d1 (775c829d)
+775c81b2 8d4108          lea     eax,[ecx+8]
+775c81b5 3b442420        cmp     eax,dword ptr [esp+20h]
+775c81b9 0f87de000000    ja      ntdll!RtlDispatchException+0x1d1 (775c829d)
+775c81bf f6c103          test    cl,3
+775c81c2 0f85d5000000    jne     ntdll!RtlDispatchException+0x1d1 (775c829d)
+775c81c8 8b4904          mov     ecx,dword ptr [ecx+4]
+775c81cb 3b4c2420        cmp     ecx,dword ptr [esp+20h]
+775c81cf 0f82be000000    jb      ntdll!RtlDispatchException+0x1c7 (775c8293)
+775c81d5 ff742410        push    dword ptr [esp+10h]
+775c81d9 8b54241c        mov     edx,dword ptr [esp+1Ch]
+775c81dd e8c1000000      call    ntdll!RtlIsValidHandler (775c82a3)
+775c81e2 84c0            test    al,al
+775c81e4 0f84b3000000    je      ntdll!RtlDispatchException+0x1d1 (775c829d)
+775c81ea 8b7c2414        mov     edi,dword ptr [esp+14h]
+775c81ee 895c2428        mov     dword ptr [esp+28h],ebx
+775c81f2 385c240f        cmp     byte ptr [esp+0Fh],bl
+775c81f6 0f8579a90300    jne     ntdll!RtlDispatchException+0x3aaa9 (77602b75)
+775c81fc ff7704          push    dword ptr [edi+4]
+775c81ff 8d442430        lea     eax,[esp+30h]
+775c8203 50              push    eax
+775c8204 ff742418        push    dword ptr [esp+18h]
+775c8208 57              push    edi
+775c8209 56              push    esi
+;##############################################################################
+775c820a e8010c0200      call    ntdll!RtlpExecuteHandlerForException (775e8e10)
+;##########################目前ip在此############################################
+775c820f 8b4c2428        mov     ecx,dword ptr [esp+28h]
+775c8213 85c9            test    ecx,ecx
+775c8215 0f8572a90300    jne     ntdll!RtlDispatchException+0x3aac1 (77602b8d)
+775c821b 8b542424        mov     edx,dword ptr [esp+24h]
+775c821f 3bd7            cmp     edx,edi
+775c8221 0f8471a90300    je      ntdll!RtlDispatchException+0x3aacc (77602b98)
+775c8227 2bc3            sub     eax,ebx
+775c8229 754a            jne     ntdll!RtlDispatchException+0x1a9 (775c8275)
+775c822b 40              inc     eax
+775c822c 844604          test    byte ptr [esi+4],al
+775c822f 0f85b9a90300    jne     ntdll!RtlDispatchException+0x3ab22 (77602bee)
+775c8235 b301            mov     bl,1
+775c8237 8b542410        mov     edx,dword ptr [esp+10h]
+775c823b 8bce            mov     ecx,esi
+775c823d 6a01            push    1
+775c823f e83d390000      call    ntdll!RtlpCallVectoredHandlers (775cbb81)
+;下次有空看看这个函数
+775c8244 8ac3            mov     al,bl
+775c8246 8b8c2484000000  mov     ecx,dword ptr [esp+84h]
+775c824d 5f              pop     edi
+775c824e 5e              pop     esi
+775c824f 5b              pop     ebx
+775c8250 33cc            xor     ecx,esp
+775c8252 e809bd0000      call    ntdll!__security_check_cookie (775d3f60)
+775c8257 8be5            mov     esp,ebp
+775c8259 5d              pop     ebp
+775c825a c20800          ret     8
+</code></pre>
+
+<p>再上一级</p>
+<pre class="language-assembly" data-language="assembly"><code class="language-assembly">ntdll!KiUserExceptionDispatcher:
+775d42b0 833d4ce9677700  cmp     dword ptr [ntdll!LdrDelegatedKiUserExceptionDispatcher (7767e94c)],0
+775d42b7 740e            je      ntdll!KiUserExceptionDispatcher+0x17 (775d42c7)
+775d42b9 8b0d4ce96777    mov     ecx,dword ptr [ntdll!LdrDelegatedKiUserExceptionDispatcher (7767e94c)]
+775d42bf ff15e0116877    call    dword ptr [ntdll!__guard_check_icall_fptr (776811e0)]
+775d42c5 ffe1            jmp     ecx
+775d42c7 fc              cld
+775d42c8 8b4c2404        mov     ecx,dword ptr [esp+4]
+775d42cc 8b1c24          mov     ebx,dword ptr [esp]
+775d42cf 51              push    ecx
+775d42d0 53              push    ebx
+;###############################################################################
+775d42d1 e8f63dffff      call    ntdll!RtlDispatchException (775c80cc)
+;##########################目前ip在此############################################
+775d42d6 0ac0            or      al,al
+775d42d8 740c            je      ntdll!KiUserExceptionDispatcher+0x36 (775d42e6)
+775d42da 5b              pop     ebx
+775d42db 59              pop     ecx
+775d42dc 6a00            push    0
+775d42de 51              push    ecx
+775d42df e86cdfffff      call    ntdll!NtContinue (775d2250)
+775d42e4 eb0b            jmp     ntdll!KiUserExceptionDispatcher+0x41 (775d42f1)
+775d42e6 5b              pop     ebx
+775d42e7 59              pop     ecx
+775d42e8 6a00            push    0
+775d42ea 51              push    ecx
+775d42eb 53              push    ebx
+775d42ec e82ff1ffff      call    ntdll!NtRaiseException (775d3420)
+775d42f1 83c4ec          add     esp,0FFFFFFECh
+775d42f4 890424          mov     dword ptr [esp],eax
+775d42f7 c744240401000000 mov     dword ptr [esp+4],1
+775d42ff 895c2408        mov     dword ptr [esp+8],ebx
+775d4303 c744241000000000 mov     dword ptr [esp+10h],0
+775d430b 54              push    esp
+775d430c e8ff4c0100      call    ntdll!RtlRaiseException (775e9010)
+775d4311 c20800          ret     8
+</code></pre>
+
+<p>如果用ida可以的话就方便多了，下次找找ida的可行调试方法，ida调试老是报错不知道为啥</p>
+</div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="Donate" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/alipay-qrcode.jpg"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/alipay-qrcode.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/qqpay-qrcode.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/qqpay-qrcode.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/wechatpay-qrcode.jpg"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/donate/wechatpay-qrcode.jpg" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>Post author: </strong>R0g3r Th4t</li><li class="post-copyright-link"><strong>Post link: </strong><a href="https://wr-web.github.io/2020/11/03/2020-11-3/" title="“小小的调试一下自己写的SEH有关的小程序”">https://wr-web.github.io/2020/11/03/2020-11-3/</a></li><li class="post-copyright-license"><strong>Copyright Notice: </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> unless otherwise stated.</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2020/11/04/2020-11-4/" rel="prev" title="“线程的实际入口”"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">“线程的实际入口”</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2020/09/28/in/" rel="next" title="in"><span class="post-nav-text">in</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> R0g3r Th4t</span></div><div class="powered"><span>Powered by <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> v5.4.0</span><span class="footer-separator">|</span><span>Theme - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.6.1</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
