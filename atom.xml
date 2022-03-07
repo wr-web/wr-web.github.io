@@ -98,7 +98,7 @@
     <link href="https://wr-web.github.io/2021/05/22/dll_injection_hook/"/>
     <id>https://wr-web.github.io/2021/05/22/dll_injection_hook/</id>
     <published>2021-05-22T12:00:00.000Z</published>
-    <updated>2022-03-07T10:24:05.925Z</updated>
+    <updated>2022-03-07T13:19:24.998Z</updated>
     
     
     <summary type="html">learn hook</summary>
@@ -339,7 +339,7 @@
     <link href="https://wr-web.github.io/2020/09/28/thread_process_loader/"/>
     <id>https://wr-web.github.io/2020/09/28/thread_process_loader/</id>
     <published>2020-09-28T12:00:00.000Z</published>
-    <updated>2022-03-07T10:04:20.471Z</updated>
+    <updated>2022-03-07T13:22:19.194Z</updated>
     
     
     <summary type="html">how windows load process</summary>
@@ -350,6 +350,8 @@
     
     
     <category term="Windows" scheme="https://wr-web.github.io/tags/Windows/"/>
+    
+    <category term="留坑" scheme="https://wr-web.github.io/tags/%E7%95%99%E5%9D%91/"/>
     
   </entry>
   
