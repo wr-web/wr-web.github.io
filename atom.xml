@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>R0gerThat</title>
+  <icon>https://wr-web.github.io/icon.png</icon>
+  
+  <link href="https://wr-web.github.io/atom.xml" rel="self"/>
+  
+  <link href="https://wr-web.github.io/"/>
+  <updated>2022-03-07T10:34:24.031Z</updated>
+  <id>https://wr-web.github.io/</id>
+  
+  <author>
+    <name>RT</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>SCTF 2021 ret2text</title>
+    <link href="https://wr-web.github.io/2021/12/27/sctf_2021_ret2text/"/>
+    <id>https://wr-web.github.io/2021/12/27/sctf_2021_ret2text/</id>
+    <published>2021-12-27T12:00:00.000Z</published>
+    <updated>2022-03-07T10:34:24.031Z</updated>
+    
+    
+    <summary type="html">sctf WP</summary>
+    
+    
+    
+    <category term="符号执行" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
+    
+    <category term="Angr" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/"/>
+    
+    
+    <category term="符号执行" scheme="https://wr-web.github.io/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
+    
+    <category term="angr" scheme="https://wr-web.github.io/tags/angr/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Angr 学习与实践</title>
+    <link href="https://wr-web.github.io/2021/08/16/angr_learn_introduction/"/>
+    <id>https://wr-web.github.io/2021/08/16/angr_learn_introduction/</id>
+    <published>2021-08-16T12:00:00.000Z</published>
+    <updated>2022-03-07T10:27:36.558Z</updated>
+    
+    
+    <summary type="html">learn angr and some wp</summary>
+    
+    
+    
+    <category term="符号执行" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
+    
+    <category term="Angr" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/"/>
+    
+    
+    <category term="符号执行" scheme="https://wr-web.github.io/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
+    
+    <category term="angr" scheme="https://wr-web.github.io/tags/angr/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>RCTF Valgrind</title>
+    <link href="https://wr-web.github.io/2021/07/19/rctf_valgrind/"/>
+    <id>https://wr-web.github.io/2021/07/19/rctf_valgrind/</id>
+    <published>2021-07-19T12:00:00.000Z</published>
+    <updated>2022-03-07T10:25:37.846Z</updated>
+    
+    
+    <summary type="html">rctf wp</summary>
+    
+    
+    
+    <category term="符号执行" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
+    
+    <category term="Angr" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/"/>
+    
+    <category term="RCTF" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/RCTF/"/>
+    
+    
+    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
+    
+    <category term="符号执行" scheme="https://wr-web.github.io/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
+    
+    <category term="angr" scheme="https://wr-web.github.io/tags/angr/"/>
+    
+    <category term="留坑" scheme="https://wr-web.github.io/tags/%E7%95%99%E5%9D%91/"/>
+    
+    <category term="RCTF" scheme="https://wr-web.github.io/tags/RCTF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Dll INJECTION &amp;&amp; HOOK</title>
+    <link href="https://wr-web.github.io/2021/05/22/dll_injection_hook/"/>
+    <id>https://wr-web.github.io/2021/05/22/dll_injection_hook/</id>
+    <published>2021-05-22T12:00:00.000Z</published>
+    <updated>2022-03-07T10:24:05.925Z</updated>
+    
+    
+    <summary type="html">learn hook</summary>
+    
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/categories/Windows/"/>
+    
+    
+    <category term="留坑" scheme="https://wr-web.github.io/tags/%E7%95%99%E5%9D%91/"/>
+    
+    <category term="Hacking" scheme="https://wr-web.github.io/tags/Hacking/"/>
+    
+    <category term="DLL hook" scheme="https://wr-web.github.io/tags/DLL-hook/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>fread ?!</title>
+    <link href="https://wr-web.github.io/2021/04/22/fread/"/>
+    <id>https://wr-web.github.io/2021/04/22/fread/</id>
+    <published>2021-04-22T12:00:00.000Z</published>
+    <updated>2022-03-07T10:22:12.573Z</updated>
+    
+    
+    <summary type="html">HGAME WP</summary>
+    
+    
+    
+    <category term="CRT" scheme="https://wr-web.github.io/categories/CRT/"/>
+    
+    <category term="MSVC" scheme="https://wr-web.github.io/categories/CRT/MSVC/"/>
+    
+    
+    <category term="MSVC" scheme="https://wr-web.github.io/tags/MSVC/"/>
+    
+    <category term="source" scheme="https://wr-web.github.io/tags/source/"/>
+    
+    <category term="CRT" scheme="https://wr-web.github.io/tags/CRT/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>CALL_CONVENTION</title>
+    <link href="https://wr-web.github.io/2021/04/15/call_convention/"/>
+    <id>https://wr-web.github.io/2021/04/15/call_convention/</id>
+    <published>2021-04-15T12:00:00.000Z</published>
+    <updated>2022-03-07T10:20:09.580Z</updated>
+    
+    
+    <summary type="html">learn from 《程序员的自我修养》</summary>
+    
+    
+    
+    <category term="call convention" scheme="https://wr-web.github.io/categories/call-convention/"/>
+    
+    
+    <category term="MSVC" scheme="https://wr-web.github.io/tags/MSVC/"/>
+    
+    <category term="call convention" scheme="https://wr-web.github.io/tags/call-convention/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>HGAME-FINAL-RE</title>
+    <link href="https://wr-web.github.io/2021/03/21/HGAME_FINAL/"/>
+    <id>https://wr-web.github.io/2021/03/21/HGAME_FINAL/</id>
+    <published>2021-03-21T12:00:00.000Z</published>
+    <updated>2022-03-07T10:18:00.373Z</updated>
+    
+    
+    <summary type="html">HGAME WP</summary>
+    
+    
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/categories/HGAME/"/>
+    
+    
+    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/tags/HGAME/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>HGAME_WEEK1_WP</title>
+    <link href="https://wr-web.github.io/2021/03/14/HGAME_WEEK1_WP/"/>
+    <id>https://wr-web.github.io/2021/03/14/HGAME_WEEK1_WP/</id>
+    <published>2021-03-14T12:00:00.000Z</published>
+    <updated>2022-03-07T10:14:06.558Z</updated>
+    
+    
+    <summary type="html">HGAME WP</summary>
+    
+    
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/categories/HGAME/"/>
+    
+    
+    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/tags/HGAME/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>HGAME_WEEK3_WP</title>
+    <link href="https://wr-web.github.io/2021/03/14/HGAME_WEEK3_WP/"/>
+    <id>https://wr-web.github.io/2021/03/14/HGAME_WEEK3_WP/</id>
+    <published>2021-03-14T12:00:00.000Z</published>
+    <updated>2022-03-07T10:16:07.087Z</updated>
+    
+    
+    <summary type="html">HGAME WP</summary>
+    
+    
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/categories/HGAME/"/>
+    
+    
+    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/tags/HGAME/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>HGAME_WEEK4_WP</title>
+    <link href="https://wr-web.github.io/2021/03/14/HGAME_WEEK4_WP/"/>
+    <id>https://wr-web.github.io/2021/03/14/HGAME_WEEK4_WP/</id>
+    <published>2021-03-14T12:00:00.000Z</published>
+    <updated>2022-03-07T10:16:59.738Z</updated>
+    
+    
+    <summary type="html">HGAME WP</summary>
+    
+    
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/categories/HGAME/"/>
+    
+    
+    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/tags/HGAME/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>HGAME_WEEK2_WP</title>
+    <link href="https://wr-web.github.io/2021/03/14/HGAME_WEEK2_WP/"/>
+    <id>https://wr-web.github.io/2021/03/14/HGAME_WEEK2_WP/</id>
+    <published>2021-03-14T12:00:00.000Z</published>
+    <updated>2022-03-07T10:15:11.994Z</updated>
+    
+    
+    <summary type="html">HGAME WP</summary>
+    
+    
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/categories/HGAME/"/>
+    
+    
+    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/tags/HGAME/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>findkey</title>
+    <link href="https://wr-web.github.io/2020/12/17/write_up_findkey/"/>
+    <id>https://wr-web.github.io/2020/12/17/write_up_findkey/</id>
+    <published>2020-12-17T12:00:00.000Z</published>
+    <updated>2022-03-07T10:10:51.469Z</updated>
+    
+    
+    <summary type="html">wp</summary>
+    
+    
+    
+    <category term="write_up" scheme="https://wr-web.github.io/categories/write-up/"/>
+    
+    <category term="re" scheme="https://wr-web.github.io/categories/write-up/re/"/>
+    
+    
+    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>反调试之去除硬件断点</title>
+    <link href="https://wr-web.github.io/2020/11/10/anti_debug_hardware_breakpoint/"/>
+    <id>https://wr-web.github.io/2020/11/10/anti_debug_hardware_breakpoint/</id>
+    <published>2020-11-10T12:00:00.000Z</published>
+    <updated>2022-03-07T10:08:25.121Z</updated>
+    
+    
+    <summary type="html">book</summary>
+    
+    
+    
+    <category term="Windbg" scheme="https://wr-web.github.io/categories/Windbg/"/>
+    
+    <category term="Anti-debug" scheme="https://wr-web.github.io/categories/Windbg/Anti-debug/"/>
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/tags/Windows/"/>
+    
+    <category term="anti-debug" scheme="https://wr-web.github.io/tags/anti-debug/"/>
+    
+    <category term="windbg" scheme="https://wr-web.github.io/tags/windbg/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>marked-book</title>
+    <link href="https://wr-web.github.io/2020/09/28/marked_book/"/>
+    <id>https://wr-web.github.io/2020/09/28/marked_book/</id>
+    <published>2020-09-28T12:00:00.000Z</published>
+    <updated>2022-03-07T09:53:30.450Z</updated>
+    
+    
+    <summary type="html">book</summary>
+    
+    
+    
+    <category term="books" scheme="https://wr-web.github.io/categories/books/"/>
+    
+    
+    <category term="mark" scheme="https://wr-web.github.io/tags/mark/"/>
+    
+    <category term="book" scheme="https://wr-web.github.io/tags/book/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>进程/线程 的实际入口</title>
+    <link href="https://wr-web.github.io/2020/09/28/thread_process_loader/"/>
+    <id>https://wr-web.github.io/2020/09/28/thread_process_loader/</id>
+    <published>2020-09-28T12:00:00.000Z</published>
+    <updated>2022-03-07T10:04:20.471Z</updated>
+    
+    
+    <summary type="html">how windows load process</summary>
+    
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/categories/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/tags/Windows/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>WIN HANDLE</title>
+    <link href="https://wr-web.github.io/2020/09/27/win_handle/"/>
+    <id>https://wr-web.github.io/2020/09/27/win_handle/</id>
+    <published>2020-09-27T12:00:00.000Z</published>
+    <updated>2022-03-07T09:50:27.937Z</updated>
+    
+    
+    <summary type="html">HANDLE</summary>
+    
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/categories/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/tags/Windows/"/>
+    
+    <category term="Handle" scheme="https://wr-web.github.io/tags/Handle/"/>
+    
+  </entry>
+  
+</feed>

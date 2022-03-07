@@ -1,0 +1,853 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#6200ee"><meta name="author" content="RT"><meta name="copyright" content="RT"><meta name="generator" content="Hexo 6.0.0"><meta name="theme" content="hexo-theme-yun"><title>RCTF Valgrind | R0gerThat</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/github/wr-web/picture/blob/main/author2.ico"><link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/github/wr-web/picture/blob/main/author2.ico" color="#6200ee"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"wr-web.github.io","root":"/","title":"RT の Diary","version":"1.7.0","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="alternate" href="/atom.xml" title="R0gerThat" type="application/atom+xml"><meta name="description" content="rctf wp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RCTF Valgrind">
+<meta property="og:url" content="https://wr-web.github.io/2021/07/19/rctf_valgrind/index.html">
+<meta property="og:site_name" content="R0gerThat">
+<meta property="og:description" content="rctf wp">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-19T12:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-07T10:25:37.846Z">
+<meta property="article:author" content="RT">
+<meta property="article:tag" content="WP">
+<meta property="article:tag" content="符号执行">
+<meta property="article:tag" content="angr">
+<meta property="article:tag" content="留坑">
+<meta property="article:tag" content="RCTF">
+<meta name="twitter:card" content="summary"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="RT"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/wr-web/picture/author2.ico" alt="RT"></a><div class="site-author-name"><a href="/about/">RT</a></div><span class="site-name">R0gerThat</span><sub class="site-subtitle"></sub><div class="site-desciption">@Vidar-Team @CTFer @Game Lover </div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">16</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">13</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">18</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/wr-web" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/13582048" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/R0gerTh4t" title="Telegram" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:orz1053131305@outlook.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Valgrind"><span class="toc-number">1.</span> <span class="toc-text">Valgrind</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.1.</span> <span class="toc-text">一些介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A5%E4%B8%8B%E6%9D%A5%E5%B0%B1%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%81%9A%E9%A2%98%E5%95%A6233"><span class="toc-number">1.2.</span> <span class="toc-text">接下来就可以直接做题啦233</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E6%A0%B9%E6%8D%AE%E8%AF%AD%E4%B9%89%EF%BC%8C%E5%8E%BB%E5%88%86%E6%9E%90%E6%AF%8F%E4%B8%80%E6%AE%B5block%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%8C%E8%B7%B3%E8%BD%AC%E5%88%B0%E5%93%AA%E9%87%8C%E3%80%82"><span class="toc-number">1.2.1.</span> <span class="toc-text">我们可以根据语义，去分析每一段block做了什么，跳转到哪里。</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://wr-web.github.io/2021/07/19/rctf_valgrind/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="RT"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="R0gerThat"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">RCTF Valgrind</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2021-07-19 20:00:00" itemprop="dateCreated datePublished" datetime="2021-07-19T20:00:00+08:00">2021-07-19</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2022-03-07 18:25:37" itemprop="dateModified" datetime="2022-03-07T18:25:37+08:00">2022-03-07</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">符号执行</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Angr</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/RCTF/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">RCTF</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/WP/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">WP</span></a><a class="tag-item" href="/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">符号执行</span></a><a class="tag-item" href="/tags/angr/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">angr</span></a><a class="tag-item" href="/tags/%E7%95%99%E5%9D%91/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">留坑</span></a><a class="tag-item" href="/tags/RCTF/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">RCTF</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#6200ee;"><h1 id="Valgrind"><a href="#Valgrind" class="headerlink" title="Valgrind"></a>Valgrind</h1><p>给的是 angr.SimState 对象在执行过程中输出的日志。<br>由于网上资料也比较多，或许有些杂乱，我也做一些介绍。让大家也能快速上手。暂时就探索到这，有空再看看源码，再深入一些。</p>
+<blockquote>
+<p>Angr : A powerful and user-friendly binary analysis platform!</p>
+</blockquote>
+<h2 id="一些介绍"><a href="#一些介绍" class="headerlink" title="一些介绍"></a>一些介绍</h2><p>配置 angr 环境 <a target="_blank" rel="noopener" href="https://docs.angr.io/introductory-errata/install">https://docs.angr.io/introductory-errata/install</a></p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment">## 对于我的 wsl2 </span>
+<span class="token function">git</span> clone https://github.com/angr/angr-dev
+<span class="token builtin class-name">cd</span> angr-dev
+./setup.sh -i -e angr
+<span class="token comment">## 要是有包下不来，挂个代理，或者手动下，都可以</span>
+<span class="token comment">## 接下来要配置 ~/.bashrc</span>
+<span class="token builtin class-name">export</span> WORK_HOME <span class="token operator">=</span> ~/.vituralenvs
+<span class="token builtin class-name">source</span> <span class="token variable"><span class="token variable">$(</span><span class="token function">find</span> / -name <span class="token string">"virtualenvwrapper.sh"</span><span class="token variable">)</span></span>
+<span class="token comment">## 这个也可以手动设置路径</span>
+<span class="token comment">## 发现 angr venv 中导入不了 angr</span>
+<span class="token comment">## 可以在 angr venv 中使用 pip install -e angr</span>
+<span class="token comment">## pip 的 -e 参数，还不大清楚，简单的说似乎是路径选择</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>由浅入深。<br>我们先来用 angr 来载入一下程序。</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">In <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>: <span class="token function">import</span> monkeyhex,cle,pyvex
+
+In <span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span>: ld <span class="token operator">=</span> cle.Loader<span class="token punctuation">(</span><span class="token string">"/bin/true"</span><span class="token punctuation">)</span>
+
+In <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span>: data <span class="token operator">=</span> ld.memory.load<span class="token punctuation">(</span>ld.main_object.entry,0x100<span class="token punctuation">)</span>
+
+In <span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span>: data
+Out<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span>: b<span class="token string">'1\xedI\x89\xd1^H\x89\xe2H\x83\xe4\xf0PTL\x8d\x05*2\x00\x00H\x8d\r\xb31\x00\x00H\x8d=\x1c\xff\xff\xff\xff\x15\xfeW \x00\xf4\x0f\x1fD\x00\x00H\x8d=\x99X \x00UH\x8d\x05\x91X \x00H9\xf8H\x89\xe5t\x19H\x8b\x05\xd2W \x00H\x85\xc0t\r]\xff\xe0f.\x0f\x1f\x84\x00\x00\x00\x00\x00]\xc3\x0f\x1f@\x00f.\x0f\x1f\x84\x00\x00\x00\x00\x00H\x8d=YX \x00H\x8d5RX \x00UH)\xfeH\x89\xe5H\xc1\xfe\x03H\x89\xf0H\xc1\xe8?H\x01\xc6H\xd1\xfet\x18H\x8b\x05\x99W \x00H\x85\xc0t\x0c]\xff\xe0f\x0f\x1f\x84\x00\x00\x00\x00\x00]\xc3\x0f\x1f@\x00f.\x0f\x1f\x84\x00\x00\x00\x00\x00\x80=1X \x00\x00u/H\x83=oW \x00\x00UH\x89\xe5t\x0cH\x8b=zW \x00\xe8M\xfe\xff\xff\xe8H\xff\xff\xff\xc6\x05\tX \x00\x01]\xc3\x0f\x1f\x80\x00\x00\x00\x00\xf3\xc3f\x0f\x1fD\x00\x00'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>第一步，加载。此时二进制文件已经通过 cle 加载到到内存了。这里暂时不提动态链接器，当然动态链接器可以存在，没了的话一些跳转的函数就不能到正确的位置了。</p>
+<pre class="line-numbers language-none"><code class="language-none">In [5]: irsb &#x3D; pyvex.lift(data,ld.main_object.entry,ld.main_object.arch)
+
+In [6]: irsb
+Out[6]: IRSB &lt;0x2a bytes, 11 ins., &lt;Arch AMD64 (LE)&gt;&gt; at 0x4017b0
+
+In [7]: irsb.pp()
+IRSB &#123;
+   t0:Ity_I32 t1:Ity_I32 t2:Ity_I32 t3:Ity_I64 t4:Ity_I64 t5:Ity_I64 t6:Ity_I64 t7:Ity_I64 t8:Ity_I64 t9:Ity_I64 t10:Ity_I64 t11:Ity_I64 t12:Ity_I64 t13:Ity_I64 t14:Ity_I64 t15:Ity_I32 t16:Ity_I64 t17:Ity_I64 t18:Ity_I64 t19:Ity_I64 t20:Ity_I32 t21:Ity_I64 t22:Ity_I32 t23:Ity_I64 t24:Ity_I64 t25:Ity_I64 t26:Ity_I64 t27:Ity_I64 t28:Ity_I64 t29:Ity_I64 t30:Ity_I64 t31:Ity_I64 t32:Ity_I64 t33:Ity_I64 t34:Ity_I64 t35:Ity_I64 t36:Ity_I64
+
+   00 | ------ IMark(0x4017b0, 2, 0) ------
+   01 | PUT(rbp) &#x3D; 0x0000000000000000
+   02 | ------ IMark(0x4017b2, 3, 0) ------
+   03 | t26 &#x3D; GET:I64(rdx)
+   04 | PUT(r9) &#x3D; t26
+   05 | PUT(rip) &#x3D; 0x00000000004017b5
+   06 | ------ IMark(0x4017b5, 1, 0) ------
+   07 | t4 &#x3D; GET:I64(rsp)
+   08 | t3 &#x3D; LDle:I64(t4)
+   09 | t27 &#x3D; Add64(t4,0x0000000000000008)
+   10 | PUT(rsi) &#x3D; t3
+   11 | ------ IMark(0x4017b6, 3, 0) ------
+   12 | PUT(rdx) &#x3D; t27
+   13 | ------ IMark(0x4017b9, 4, 0) ------
+   14 | t5 &#x3D; And64(t27,0xfffffffffffffff0)
+   15 | PUT(cc_op) &#x3D; 0x0000000000000014
+   16 | PUT(cc_dep1) &#x3D; t5
+   17 | PUT(cc_dep2) &#x3D; 0x0000000000000000
+   18 | PUT(rip) &#x3D; 0x00000000004017bd
+   19 | ------ IMark(0x4017bd, 1, 0) ------
+   20 | t8 &#x3D; GET:I64(rax)
+   21 | t29 &#x3D; Sub64(t5,0x0000000000000008)
+   22 | PUT(rsp) &#x3D; t29
+   23 | STle(t29) &#x3D; t8
+   24 | PUT(rip) &#x3D; 0x00000000004017be
+   25 | ------ IMark(0x4017be, 1, 0) ------
+   26 | t31 &#x3D; Sub64(t29,0x0000000000000008)
+   27 | PUT(rsp) &#x3D; t31
+   28 | STle(t31) &#x3D; t29
+   29 | ------ IMark(0x4017bf, 7, 0) ------
+   30 | PUT(r8) &#x3D; 0x00000000004049f0
+   31 | ------ IMark(0x4017c6, 7, 0) ------
+   32 | PUT(rcx) &#x3D; 0x0000000000404980
+   33 | ------ IMark(0x4017cd, 7, 0) ------
+   34 | PUT(rdi) &#x3D; 0x00000000004016f0
+   35 | PUT(rip) &#x3D; 0x00000000004017d4
+   36 | ------ IMark(0x4017d4, 6, 0) ------
+   37 | t17 &#x3D; LDle:I64(0x0000000000606fd8)
+   38 | t33 &#x3D; Sub64(t31,0x0000000000000008)
+   39 | PUT(rsp) &#x3D; t33
+   40 | STle(t33) &#x3D; 0x00000000004017da
+   41 | t35 &#x3D; Sub64(t33,0x0000000000000080)
+   42 | &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; AbiHint(0xt35, 128, t17) &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;
+   NEXT: PUT(rip) &#x3D; t17; Ijk_Call
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>我们把这块数据，通过 lift 函数把他变成一块 irsb。这块 irsb 这里我把它称为 IR Block， 就是 VEX IR 的基本块，动态执行的时候为了兼容多个架构，angr 就会执行这一块，执行又会涉及到另外一个模块。</p>
+<p>这里之所以要使用 data，addr，arch。可以看到每一段 IMark 都有表示 (地址，汇编长度，不知道是什么的一个变量)</p>
+<p>还有另外一个 Block，是由 capstone 模块提供，而更底层我也没有挖掘过，只好使用 angr 集成的 Capstone 了。虽说它是反汇编模块，但是似乎没有提供直接的接口，我想是应该有个提供 data 或者 addr size 和 arch 输出反汇编的。这个我还得找找。这里的话我就按部就班的来了。</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">In <span class="token punctuation">[</span><span class="token number">39</span><span class="token punctuation">]</span>: p <span class="token operator">=</span> angr.Project<span class="token punctuation">(</span><span class="token string">"/bin/true"</span><span class="token punctuation">)</span>
+WARNING <span class="token operator">|</span> <span class="token number">2021</span>-09-17 <span class="token number">23</span>:29:36,414 <span class="token operator">|</span> cle.loader <span class="token operator">|</span> The main binary is a position-independent executable. It is being loaded with a base address of 0x400000.
+In <span class="token punctuation">[</span><span class="token number">40</span><span class="token punctuation">]</span>: st <span class="token operator">=</span> p.factory.blank_state<span class="token punctuation">(</span>addr <span class="token operator">=</span> ld.main_object.entry<span class="token punctuation">)</span>
+In <span class="token punctuation">[</span><span class="token number">41</span><span class="token punctuation">]</span>: st.addr
+Out<span class="token punctuation">[</span><span class="token number">41</span><span class="token punctuation">]</span>: 0x4017b0
+In <span class="token punctuation">[</span><span class="token number">42</span><span class="token punctuation">]</span>: bb <span class="token operator">=</span> st.block<span class="token punctuation">(</span><span class="token punctuation">)</span>
+In <span class="token punctuation">[</span><span class="token number">43</span><span class="token punctuation">]</span>: bb.pp<span class="token punctuation">(</span><span class="token punctuation">)</span>
+0x4017b0:       xor     ebp, ebp
+0x4017b2:       mov     r9, rdx
+0x4017b5:       pop     rsi
+0x4017b6:       mov     rdx, rsp
+0x4017b9:       and     rsp, 0xfffffffffffffff0
+0x4017bd:       push    rax
+0x4017be:       push    rsp
+0x4017bf:       lea     r8, <span class="token punctuation">[</span>rip + 0x322a<span class="token punctuation">]</span>
+0x4017c6:       lea     rcx, <span class="token punctuation">[</span>rip + 0x31b3<span class="token punctuation">]</span>
+0x4017cd:       lea     rdi, <span class="token punctuation">[</span>rip - 0xe4<span class="token punctuation">]</span>
+0x4017d4:       call    qword ptr <span class="token punctuation">[</span>rip + 0x2057fe<span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>接下来就是汇编以及一些可以用于解析的参数，略作展示。</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">In <span class="token punctuation">[</span><span class="token number">46</span><span class="token punctuation">]</span>: bb.capstone
+Out<span class="token punctuation">[</span><span class="token number">46</span><span class="token punctuation">]</span>: <span class="token operator">&lt;</span>DisassemblerBlock <span class="token keyword">for</span> 0x4017b<span class="token operator"><span class="token file-descriptor important">0</span>></span>
+
+In <span class="token punctuation">[</span><span class="token number">47</span><span class="token punctuation">]</span>: bb.capstone.pp<span class="token punctuation">(</span><span class="token punctuation">)</span>
+0x4017b0:       xor     ebp, ebp
+0x4017b2:       mov     r9, rdx
+0x4017b5:       pop     rsi
+0x4017b6:       mov     rdx, rsp
+0x4017b9:       and     rsp, 0xfffffffffffffff0
+0x4017bd:       push    rax
+0x4017be:       push    rsp
+0x4017bf:       lea     r8, <span class="token punctuation">[</span>rip + 0x322a<span class="token punctuation">]</span>
+0x4017c6:       lea     rcx, <span class="token punctuation">[</span>rip + 0x31b3<span class="token punctuation">]</span>
+0x4017cd:       lea     rdi, <span class="token punctuation">[</span>rip - 0xe4<span class="token punctuation">]</span>
+0x4017d4:       call    qword ptr <span class="token punctuation">[</span>rip + 0x2057fe<span class="token punctuation">]</span>
+
+In <span class="token punctuation">[</span><span class="token number">48</span><span class="token punctuation">]</span>: bb.capstone.insns
+Out<span class="token punctuation">[</span><span class="token number">48</span><span class="token punctuation">]</span>: 
+<span class="token punctuation">[</span><span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"xor"</span> <span class="token keyword">for</span> 0x4017b<span class="token operator"><span class="token file-descriptor important">0</span>></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"mov"</span> <span class="token keyword">for</span> 0x4017b<span class="token operator"><span class="token file-descriptor important">2</span>></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"pop"</span> <span class="token keyword">for</span> 0x4017b<span class="token operator"><span class="token file-descriptor important">5</span>></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"mov"</span> <span class="token keyword">for</span> 0x4017b<span class="token operator"><span class="token file-descriptor important">6</span>></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"and"</span> <span class="token keyword">for</span> 0x4017b<span class="token operator"><span class="token file-descriptor important">9</span>></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"push"</span> <span class="token keyword">for</span> 0x4017bd<span class="token operator">></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"push"</span> <span class="token keyword">for</span> 0x4017be<span class="token operator">></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"lea"</span> <span class="token keyword">for</span> 0x4017bf<span class="token operator">></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"lea"</span> <span class="token keyword">for</span> 0x4017c<span class="token operator"><span class="token file-descriptor important">6</span>></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"lea"</span> <span class="token keyword">for</span> 0x4017cd<span class="token operator">></span>,
+ <span class="token operator">&lt;</span>DisassemblerInsn <span class="token string">"call"</span> <span class="token keyword">for</span> 0x4017d<span class="token operator"><span class="token file-descriptor important">4</span>></span><span class="token punctuation">]</span>
+
+In <span class="token punctuation">[</span><span class="token number">49</span><span class="token punctuation">]</span>: bb.capstone.insns<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>.op_str
+Out<span class="token punctuation">[</span><span class="token number">49</span><span class="token punctuation">]</span>: <span class="token string">'ebp, ebp'</span>
+
+In <span class="token punctuation">[</span><span class="token number">50</span><span class="token punctuation">]</span>: bb.capstone.insns<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>.insn
+Out<span class="token punctuation">[</span><span class="token number">50</span><span class="token punctuation">]</span>: <span class="token operator">&lt;</span>CsInsn 0x4017b0 <span class="token punctuation">[</span>31ed<span class="token punctuation">]</span>: xor ebp, ebp<span class="token operator">></span>
+
+In <span class="token punctuation">[</span><span class="token number">51</span><span class="token punctuation">]</span>: bb.capstone.insns<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>.size
+Out<span class="token punctuation">[</span><span class="token number">51</span><span class="token punctuation">]</span>: 0x2<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>至此一小部分的静态分析的模块就介绍好了。</p>
+<h2 id="接下来就可以直接做题啦233"><a href="#接下来就可以直接做题啦233" class="headerlink" title="接下来就可以直接做题啦233"></a>接下来就可以直接做题啦233</h2><p>我们看回标题，题目要求的就是分析 一堆 IRSB 俺就叫他 SB 好了(名词大师)而且我们也能比较清楚的看到每个 block 尾部都有跳转的地址，也可能有跳转的一些条件。block 的头部有一些寄存器(大概吧，应该可以称作寄存器)</p>
+<pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly">IRSB &#123;
+   t0:Ity_I32 t1:Ity_I32 t2:Ity_I32 t3:Ity_I32 t4:Ity_I32 t5:Ity_I32 t6:Ity_I32
+
+   00 | ------ IMark(0x8048464, 3, 0) ------
+   01 | t2 &#x3D; GET:I32(esp)
+   02 | t0 &#x3D; Sub32(t2,0x00000054)
+   03 | PUT(cc_op) &#x3D; 0x00000006
+   04 | PUT(cc_dep1) &#x3D; t2
+   05 | PUT(cc_dep2) &#x3D; 0x00000054
+   06 | PUT(cc_ndep) &#x3D; 0x00000000
+   07 | PUT(eip) &#x3D; 0x08048467
+   08 | ------ IMark(0x8048467, 5, 0) ------
+   09 | t4 &#x3D; Sub32(t0,0x00000004)
+   10 | PUT(esp) &#x3D; t4
+   11 | STle(t4) &#x3D; 0x0804846c
+   NEXT: PUT(eip) &#x3D; 0x080485f1; Ijk_Call
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>中间的每一段 IMark 就表示一段汇编转换成的 vex ir ，虽然但是，这个和他的汇编其实不等价，我们应该从一整个 blcok 来看他的 ir 或者 他的 汇编。这样才能理解他在干什么。</p>
+<p>有关 vex ir 指令的一些<a target="_blank" rel="noopener" href="https://github.com/smparkes/valgrind-vex/blob/master/pub/libvex_ir.h">注释</a>，还是可以食用的。</p>
+<p>怎么产生的这一段，我们就可以看回之前调用过的 lift ，而 lift 当然是针对不同架构所建立的，也就是 lift 函数会被不同的架构所需要的 lift 重写。</p>
+<p>题目很长，给了 4k 行，这其实不是很利于线性的分析。于是乎我们可以写一段 py 脚本提取一下。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> re
+<span class="token keyword">import</span> IPython
+
+<span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">"./oldlog.log"</span><span class="token punctuation">,</span><span class="token string">"r"</span><span class="token punctuation">)</span> <span class="token keyword">as</span> file1<span class="token punctuation">:</span>
+    data <span class="token operator">=</span> file1<span class="token punctuation">.</span>read<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    file1<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+
+target <span class="token operator">=</span> <span class="token string">"IMark\(([\w]*), \d, \d\)"</span>
+
+res <span class="token operator">=</span> re<span class="token punctuation">.</span>findall<span class="token punctuation">(</span>target<span class="token punctuation">,</span>data<span class="token punctuation">)</span>
+
+addr_int_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span>x<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">:</span><span class="token punctuation">]</span><span class="token punctuation">,</span><span class="token number">16</span><span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">set</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+addr_int_list<span class="token punctuation">.</span>sort<span class="token punctuation">(</span><span class="token punctuation">)</span>
+addr_str_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token builtin">hex</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> addr_int_list<span class="token punctuation">]</span>
+
+addr_code <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+
+<span class="token keyword">for</span> addr <span class="token keyword">in</span> addr_str_list<span class="token punctuation">:</span>
+    target1 <span class="token operator">=</span> <span class="token string">'------ IMark\(%s, \d&#123;1,3&#125;, \d&#123;1,3&#125;\) ------\n([\w\W]*?)\n\&#125;'</span><span class="token operator">%</span>addr
+    target2 <span class="token operator">=</span> <span class="token string">'------ IMark\(%s, \d&#123;1,3&#125;, \d&#123;1,3&#125;\) ------\n([\w\W]*?)   \d&#123;1,3&#125; \| ------ IMark'</span><span class="token operator">%</span>addr
+    code1 <span class="token operator">=</span> re<span class="token punctuation">.</span>search<span class="token punctuation">(</span>target1<span class="token punctuation">,</span>data<span class="token punctuation">)</span>
+    code2 <span class="token operator">=</span> re<span class="token punctuation">.</span>search<span class="token punctuation">(</span>target2<span class="token punctuation">,</span>data<span class="token punctuation">)</span>
+
+    <span class="token keyword">if</span> code1 <span class="token operator">!=</span> <span class="token boolean">None</span> <span class="token keyword">and</span> code2 <span class="token operator">!=</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        addr_code<span class="token punctuation">[</span>addr<span class="token punctuation">]</span> <span class="token operator">=</span> code1<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token keyword">if</span> <span class="token builtin">len</span><span class="token punctuation">(</span>code1<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">&lt;</span><span class="token builtin">len</span><span class="token punctuation">(</span>code2<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">else</span> code2<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">elif</span> code2 <span class="token operator">==</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        addr_code<span class="token punctuation">[</span>addr<span class="token punctuation">]</span> <span class="token operator">=</span> code1<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token keyword">elif</span> code1 <span class="token operator">==</span> <span class="token boolean">None</span><span class="token punctuation">:</span>
+        addr_code<span class="token punctuation">[</span>addr<span class="token punctuation">]</span> <span class="token operator">=</span> code2<span class="token punctuation">.</span>group<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token keyword">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span><span class="token string">"./newlog.log"</span><span class="token punctuation">,</span><span class="token string">"w"</span><span class="token punctuation">)</span> <span class="token keyword">as</span> file2<span class="token punctuation">:</span>
+    <span class="token keyword">for</span> addr <span class="token keyword">in</span> addr_str_list<span class="token punctuation">:</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>addr <span class="token operator">==</span> <span class="token string">'0x8048554'</span> <span class="token keyword">or</span> addr <span class="token operator">==</span> <span class="token string">'0x8048552'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>addr<span class="token operator">+</span><span class="token string">'\n'</span><span class="token punctuation">)</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>addr_code<span class="token punctuation">[</span>addr<span class="token punctuation">]</span><span class="token punctuation">)</span>
+        file2<span class="token punctuation">.</span>writelines<span class="token punctuation">(</span>addr<span class="token operator">+</span><span class="token string">'\n'</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span><span class="token punctuation">(</span>addr_code<span class="token punctuation">[</span>addr<span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token string">''</span> <span class="token keyword">and</span> addr_code<span class="token punctuation">[</span>addr<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">!=</span> <span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            file2<span class="token punctuation">.</span>writelines<span class="token punctuation">(</span>addr_code<span class="token punctuation">[</span>addr<span class="token punctuation">]</span><span class="token operator">+</span><span class="token string">'\n'</span><span class="token punctuation">)</span>
+        <span class="token keyword">else</span><span class="token punctuation">:</span>
+            file2<span class="token punctuation">.</span>writelines<span class="token punctuation">(</span>addr_code<span class="token punctuation">[</span>addr<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    file2<span class="token punctuation">.</span>close<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+IPython<span class="token punctuation">.</span>embed<span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>得到了如下 irsb 集合,不想看的话就可以忽略了233,直接跳转到下面</p>
+<pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly">0x8048464
+   01 | t2 &#x3D; GET:I32(esp)
+   02 | t0 &#x3D; Sub32(t2,0x00000054)
+   03 | PUT(cc_op) &#x3D; 0x00000006
+   04 | PUT(cc_dep1) &#x3D; t2
+   05 | PUT(cc_dep2) &#x3D; 0x00000054
+   06 | PUT(cc_ndep) &#x3D; 0x00000000
+   07 | PUT(eip) &#x3D; 0x08048467
+0x8048467
+   09 | t4 &#x3D; Sub32(t0,0x00000004)
+   10 | PUT(esp) &#x3D; t4
+   11 | STle(t4) &#x3D; 0x0804846c   # Write a value to memory
+   NEXT: PUT(eip) &#x3D; 0x080485f1; Ijk_Call
+0x804846c
+   01 | t0 &#x3D; GET:I32(eax)
+   02 | t2 &#x3D; Add32(t0,0x00001b94)
+   03 | PUT(cc_op) &#x3D; 0x00000003
+   04 | PUT(cc_dep1) &#x3D; t0
+   05 | PUT(cc_dep2) &#x3D; 0x00001b94
+   06 | PUT(cc_ndep) &#x3D; 0x00000000
+   07 | PUT(eax) &#x3D; t2
+   08 | PUT(eip) &#x3D; 0x08048471
+0x8048471
+   10 | t51 &#x3D; GET:I16(gs)
+   11 | t50 &#x3D; 16Uto32(t51)
+   12 | t5 &#x3D; GET:I64(ldt)
+   13 | t6 &#x3D; GET:I64(gdt)
+   14 | t52 &#x3D; x86g_use_seg_selector(t5,t6,t50,0x00000014):Ity_I64
+   15 | t54 &#x3D; 64HIto32(t52)
+   16 | t53 &#x3D; CmpNE32(t54,0x00000000)
+   17 | if (t53) &#123; PUT(eip) &#x3D; 0x8048471; Ijk_MapFail &#125;
+   18 | t55 &#x3D; 64to32(t52)
+   19 | t56 &#x3D; LDle:I32(t55)
+   20 | PUT(eip) &#x3D; 0x08048477
+0x8048477
+   22 | t58 &#x3D; GET:I32(ebp)
+   23 | t57 &#x3D; Add32(t58,0xfffffff4)
+   24 | STle(t57) &#x3D; t56
+0x804847a
+   26 | PUT(cc_op) &#x3D; 0x0000000f
+   27 | PUT(cc_dep1) &#x3D; 0x00000000
+   28 | PUT(cc_dep2) &#x3D; 0x00000000
+   29 | PUT(cc_ndep) &#x3D; 0x00000000
+   30 | PUT(eax) &#x3D; 0x00000000
+   31 | PUT(eip) &#x3D; 0x0804847c
+0x804847c
+   33 | t60 &#x3D; Add32(t58,0xffffffce)
+   34 | STle(t60) &#x3D; 0x656d3174
+   35 | PUT(eip) &#x3D; 0x08048483
+0x8048483
+   37 | t62 &#x3D; Add32(t58,0xffffffd2)
+   38 | STle(t62) &#x3D; 0x7530795f
+   39 | PUT(eip) &#x3D; 0x0804848a
+0x804848a
+   41 | t64 &#x3D; Add32(t58,0xffffffd6)
+   42 | STle(t64) &#x3D; 0x6a6e655f
+   43 | PUT(eip) &#x3D; 0x08048491
+0x8048491
+   45 | t66 &#x3D; Add32(t58,0xffffffda)
+   46 | STle(t66) &#x3D; 0x775f7930
+   47 | PUT(eip) &#x3D; 0x08048498
+0x8048498
+   49 | t68 &#x3D; Add32(t58,0xffffffde)
+   50 | STle(t68) &#x3D; 0x31743561
+   51 | PUT(eip) &#x3D; 0x0804849f
+0x804849f
+   53 | t70 &#x3D; Add32(t58,0xffffffe2)
+   54 | STle(t70) &#x3D; 0x775f676e
+   55 | PUT(eip) &#x3D; 0x080484a6
+0x80484a6
+   57 | t72 &#x3D; Add32(t58,0xffffffe6)
+   58 | STle(t72) &#x3D; 0x6e5f3561
+   59 | PUT(eip) &#x3D; 0x080484ad
+0x80484ad
+   61 | t74 &#x3D; Add32(t58,0xffffffea)
+   62 | STle(t74) &#x3D; 0x775f746f
+   63 | PUT(eip) &#x3D; 0x080484b4
+0x80484b4
+   65 | t76 &#x3D; Add32(t58,0xffffffee)
+   66 | STle(t76) &#x3D; 0x65743561
+   67 | PUT(eip) &#x3D; 0x080484bb
+0x80484bb
+   69 | t78 &#x3D; Add32(t58,0xfffffff2)
+   70 | STle(t78) &#x3D; 0x0064
+   71 | PUT(eip) &#x3D; 0x080484c1
+0x80484c1
+   73 | t80 &#x3D; Add32(t58,0xffffffac)
+   74 | STle(t80) &#x3D; 0x00000003
+   75 | PUT(eip) &#x3D; 0x080484c8
+0x80484c8
+   77 | t82 &#x3D; Add32(t58,0xffffffb4)
+   78 | STle(t82) &#x3D; 0x41
+   79 | PUT(eip) &#x3D; 0x080484cc
+0x80484cc
+   81 | t84 &#x3D; Add32(t58,0xffffffb5)
+   82 | STle(t84) &#x3D; 0x42
+   83 | PUT(eip) &#x3D; 0x080484d0
+0x80484d0
+   85 | t86 &#x3D; Add32(t58,0xffffffb6)
+   86 | STle(t86) &#x3D; 0x43
+   87 | PUT(eip) &#x3D; 0x080484d4
+0x80484d4
+   89 | t88 &#x3D; Add32(t58,0xffffffb7)
+   90 | STle(t88) &#x3D; 0x44
+   91 | PUT(eip) &#x3D; 0x080484d8
+0x80484d8
+   93 | t90 &#x3D; Add32(t58,0xffffffb8)
+   94 | STle(t90) &#x3D; 0x45
+   95 | PUT(eip) &#x3D; 0x080484dc
+0x80484dc
+   97 | t92 &#x3D; Add32(t58,0xffffffb9)
+   98 | STle(t92) &#x3D; 0x46
+   99 | PUT(eip) &#x3D; 0x080484e0
+0x80484e0
+   101 | t94 &#x3D; Add32(t58,0xffffffba)
+   102 | STle(t94) &#x3D; 0x47
+   103 | PUT(eip) &#x3D; 0x080484e4
+0x80484e4
+   105 | t96 &#x3D; Add32(t58,0xffffffbb)
+   106 | STle(t96) &#x3D; 0x48
+   107 | PUT(eip) &#x3D; 0x080484e8
+0x80484e8
+   109 | t98 &#x3D; Add32(t58,0xffffffbc)
+   110 | STle(t98) &#x3D; 0x49
+   111 | PUT(eip) &#x3D; 0x080484ec
+0x80484ec
+   113 | t100 &#x3D; Add32(t58,0xffffffbd)
+   114 | STle(t100) &#x3D; 0x4a
+   115 | PUT(eip) &#x3D; 0x080484f0
+0x80484f0
+   117 | t102 &#x3D; Add32(t58,0xffffffbe)
+   118 | STle(t102) &#x3D; 0x4b
+   119 | PUT(eip) &#x3D; 0x080484f4
+0x80484f4
+   121 | t104 &#x3D; Add32(t58,0xffffffbf)
+   122 | STle(t104) &#x3D; 0x4c
+   123 | PUT(eip) &#x3D; 0x080484f8
+0x80484f8
+   125 | t106 &#x3D; Add32(t58,0xffffffc0)
+   126 | STle(t106) &#x3D; 0x4d
+   127 | PUT(eip) &#x3D; 0x080484fc
+0x80484fc
+   129 | t108 &#x3D; Add32(t58,0xffffffc1)
+   130 | STle(t108) &#x3D; 0x4e
+   131 | PUT(eip) &#x3D; 0x08048500
+0x8048500
+   133 | t110 &#x3D; Add32(t58,0xffffffc2)
+   134 | STle(t110) &#x3D; 0x4f
+   135 | PUT(eip) &#x3D; 0x08048504
+0x8048504
+   137 | t112 &#x3D; Add32(t58,0xffffffc3)
+   138 | STle(t112) &#x3D; 0x50
+   139 | PUT(eip) &#x3D; 0x08048508
+0x8048508
+   141 | t114 &#x3D; Add32(t58,0xffffffc4)
+   142 | STle(t114) &#x3D; 0x51
+   143 | PUT(eip) &#x3D; 0x0804850c
+0x804850c
+   145 | t116 &#x3D; Add32(t58,0xffffffc5)
+   146 | STle(t116) &#x3D; 0x52
+   147 | PUT(eip) &#x3D; 0x08048510
+0x8048510
+   149 | t118 &#x3D; Add32(t58,0xffffffc6)
+   150 | STle(t118) &#x3D; 0x53
+   151 | PUT(eip) &#x3D; 0x08048514
+0x8048514
+   153 | t120 &#x3D; Add32(t58,0xffffffc7)
+   154 | STle(t120) &#x3D; 0x54
+   155 | PUT(eip) &#x3D; 0x08048518
+0x8048518
+   157 | t122 &#x3D; Add32(t58,0xffffffc8)
+   158 | STle(t122) &#x3D; 0x55
+   159 | PUT(eip) &#x3D; 0x0804851c
+0x804851c
+   161 | t124 &#x3D; Add32(t58,0xffffffc9)
+   162 | STle(t124) &#x3D; 0x56
+   163 | PUT(eip) &#x3D; 0x08048520
+0x8048520
+   165 | t126 &#x3D; Add32(t58,0xffffffca)
+   166 | STle(t126) &#x3D; 0x57
+   167 | PUT(eip) &#x3D; 0x08048524
+0x8048524
+   169 | t128 &#x3D; Add32(t58,0xffffffcb)
+   170 | STle(t128) &#x3D; 0x58
+   171 | PUT(eip) &#x3D; 0x08048528
+0x8048528
+   173 | t130 &#x3D; Add32(t58,0xffffffcc)
+   174 | STle(t130) &#x3D; 0x59
+   175 | PUT(eip) &#x3D; 0x0804852c
+0x804852c
+   177 | t132 &#x3D; Add32(t58,0xffffffcd)
+   178 | STle(t132) &#x3D; 0x5a
+   179 | PUT(eip) &#x3D; 0x08048530
+0x8048530
+   181 | t134 &#x3D; Add32(t58,0xffffffa8)
+   182 | STle(t134) &#x3D; 0x00000000
+0x8048537
+   NEXT: PUT(eip) &#x3D; 0x080485c8; Ijk_Boring
+0x804853c
+   01 | t14 &#x3D; GET:I32(ebp)
+   02 | t13 &#x3D; Add32(t14,0xffffffce)
+   03 | PUT(eip) &#x3D; 0x0804853f
+0x804853f
+   05 | t15 &#x3D; Add32(t14,0xffffffa8)
+   06 | t17 &#x3D; LDle:I32(t15)
+0x8048542
+   08 | t2 &#x3D; Add32(t17,t13)
+   09 | PUT(eip) &#x3D; 0x08048544
+0x8048544
+   11 | t19 &#x3D; LDle:I8(t2)
+   12 | t32 &#x3D; 8Uto32(t19)
+   13 | t18 &#x3D; t32
+   14 | PUT(eax) &#x3D; t18
+0x8048547
+   16 | t21 &#x3D; GET:I8(al)
+   17 | t33 &#x3D; 8Sto32(t21)
+   18 | t20 &#x3D; t33
+   19 | PUT(edx) &#x3D; t20
+   20 | PUT(eip) &#x3D; 0x0804854a
+0x804854a
+   22 | t22 &#x3D; Add32(t14,0xffffffac)
+   23 | t24 &#x3D; LDle:I32(t22)
+0x804854d
+   25 | t7 &#x3D; Add32(t24,t20)
+   26 | PUT(eax) &#x3D; t7
+0x804854f
+   28 | PUT(cc_op) &#x3D; 0x00000006
+   29 | PUT(cc_dep1) &#x3D; t7
+   30 | PUT(cc_dep2) &#x3D; 0x0000005a
+   31 | PUT(cc_ndep) &#x3D; 0x00000000
+   32 | PUT(eip) &#x3D; 0x08048552
+0x8048552
+   34 | t35 &#x3D; CmpLE32S(t7,0x0000005a)
+   35 | t34 &#x3D; 1Uto32(t35)
+   36 | t30 &#x3D; t34
+   37 | t36 &#x3D; 32to1(t30)
+   38 | t25 &#x3D; t36
+   39 | if (t25) &#123; PUT(eip) &#x3D; 0x8048554; Ijk_Boring &#125;
+   NEXT: PUT(eip) &#x3D; 0x08048574; Ijk_Boring
+0x8048554
+   01 | t17 &#x3D; GET:I32(ebp)
+   02 | t16 &#x3D; Add32(t17,0xffffffce)
+   03 | PUT(eip) &#x3D; 0x08048557
+0x8048557
+   05 | t18 &#x3D; Add32(t17,0xffffffa8)
+   06 | t20 &#x3D; LDle:I32(t18)
+0x804855a
+   08 | t2 &#x3D; Add32(t20,t16)
+   09 | PUT(eip) &#x3D; 0x0804855c
+0x804855c
+   11 | t22 &#x3D; LDle:I8(t2)
+   12 | t21 &#x3D; 8Uto32(t22)
+0x804855f
+   14 | PUT(eip) &#x3D; 0x08048561
+0x8048561
+   16 | t24 &#x3D; Add32(t17,0xffffffac)
+   17 | t26 &#x3D; LDle:I32(t24)
+0x8048564
+   19 | t7 &#x3D; Add32(t26,t21)
+0x8048566
+   21 | PUT(ecx) &#x3D; t7
+0x8048568
+   23 | t28 &#x3D; Add32(t17,0xffffffce)
+   24 | PUT(edx) &#x3D; t28
+   25 | PUT(eip) &#x3D; 0x0804856b
+0x804856b
+   27 | t30 &#x3D; Add32(t17,0xffffffa8)
+   28 | t32 &#x3D; LDle:I32(t30)
+0x804856e
+   30 | t12 &#x3D; Add32(t32,t28)
+   31 | PUT(cc_op) &#x3D; 0x00000003
+   32 | PUT(cc_dep1) &#x3D; t32
+   33 | PUT(cc_dep2) &#x3D; t28
+   34 | PUT(cc_ndep) &#x3D; 0x00000000
+   35 | PUT(eax) &#x3D; t12
+   36 | PUT(eip) &#x3D; 0x08048570
+0x8048570
+   38 | t33 &#x3D; GET:I8(cl)
+   39 | STle(t12) &#x3D; t33
+0x8048572
+   NEXT: PUT(eip) &#x3D; 0x080485c4; Ijk_Boring
+0x8048574
+   01 | t63 &#x3D; GET:I32(ebp)
+   02 | t62 &#x3D; Add32(t63,0xffffffce)
+   03 | PUT(eip) &#x3D; 0x08048577
+0x8048577
+   05 | t64 &#x3D; Add32(t63,0xffffffa8)
+   06 | t66 &#x3D; LDle:I32(t64)
+0x804857a
+   08 | t2 &#x3D; Add32(t66,t62)
+   09 | PUT(eip) &#x3D; 0x0804857c
+0x804857c
+   11 | t68 &#x3D; LDle:I8(t2)
+   12 | t140 &#x3D; 8Uto32(t68)
+   13 | t67 &#x3D; t140
+   14 | PUT(eax) &#x3D; t67
+0x804857f
+   16 | t70 &#x3D; GET:I8(al)
+   17 | t141 &#x3D; 8Sto32(t70)
+   18 | t69 &#x3D; t141
+   19 | PUT(eip) &#x3D; 0x08048582
+0x8048582
+   21 | t71 &#x3D; Add32(t63,0xffffffac)
+   22 | t73 &#x3D; LDle:I32(t71)
+0x8048585
+   24 | t7 &#x3D; Add32(t73,t69)
+0x8048587
+   26 | t74 &#x3D; Add32(t7,0xffffffa6)
+0x804858a
+0x804858f
+0x8048591
+   30 | t14 &#x3D; MullS32(t74,0x4ec4ec4f)
+   31 | t142 &#x3D; 64HIto32(t14)
+   32 | t77 &#x3D; t142
+0x8048593
+   34 | t20 &#x3D; Sar32(t77,0x03)
+0x8048596
+0x8048598
+   37 | t27 &#x3D; Sar32(t74,0x1f)
+0x804859b
+   39 | t31 &#x3D; Sub32(t20,t27)
+0x804859d
+   41 | PUT(eip) &#x3D; 0x0804859f
+0x804859f
+   43 | t103 &#x3D; Add32(t63,0xffffffb0)
+   44 | STle(t103) &#x3D; t31
+   45 | PUT(eip) &#x3D; 0x080485a2
+0x80485a2
+   47 | t106 &#x3D; Add32(t63,0xffffffb0)
+   48 | t108 &#x3D; LDle:I32(t106)
+0x80485a5
+   50 | t38 &#x3D; Mul32(t108,0x0000001a)
+0x80485a8
+   52 | t39 &#x3D; Sub32(t74,t38)
+0x80485aa
+   54 | PUT(eip) &#x3D; 0x080485ac
+0x80485ac
+   56 | t110 &#x3D; Add32(t63,0xffffffb0)
+   57 | STle(t110) &#x3D; t39
+   58 | PUT(eip) &#x3D; 0x080485af
+0x80485af
+   60 | t113 &#x3D; Add32(t63,0xffffffb0)
+   61 | t115 &#x3D; LDle:I32(t113)
+0x80485b2
+   63 | t44 &#x3D; Sub32(t115,0x00000001)
+   64 | PUT(eip) &#x3D; 0x080485b5
+0x80485b5
+   66 | t117 &#x3D; Add32(t63,t44)
+   67 | t116 &#x3D; Add32(t117,0xffffffb4)
+   68 | t122 &#x3D; LDle:I8(t116)
+   69 | t143 &#x3D; 8Uto32(t122)
+   70 | t121 &#x3D; t143
+   71 | PUT(eax) &#x3D; t121
+0x80485ba
+   73 | t123 &#x3D; Add32(t63,0xffffffce)
+   74 | PUT(ecx) &#x3D; t123
+   75 | PUT(eip) &#x3D; 0x080485bd
+0x80485bd
+   77 | t125 &#x3D; Add32(t63,0xffffffa8)
+   78 | t127 &#x3D; LDle:I32(t125)
+0x80485c0
+   80 | t50 &#x3D; Add32(t127,t123)
+   81 | PUT(edx) &#x3D; t50
+   82 | PUT(eip) &#x3D; 0x080485c2
+0x80485c2
+   84 | t128 &#x3D; GET:I8(al)
+   85 | STle(t50) &#x3D; t128
+   86 | PUT(eip) &#x3D; 0x080485c4
+0x80485c4
+   88 | t129 &#x3D; Add32(t63,0xffffffa8)
+   89 | t56 &#x3D; LDle:I32(t129)
+   90 | t54 &#x3D; Add32(t56,0x00000001)
+   91 | STle(t129) &#x3D; t54
+   92 | PUT(eip) &#x3D; 0x080485c8
+
+0x80485c8
+   01 | t5 &#x3D; GET:I32(ebp)
+   02 | t4 &#x3D; Add32(t5,0xffffffa8)
+   03 | t2 &#x3D; LDle:I32(t4)           #A load from memory
+   04 | PUT(cc_op) &#x3D; 0x00000006
+   05 | PUT(cc_dep1) &#x3D; t2
+   06 | PUT(cc_dep2) &#x3D; 0x00000024
+   07 | PUT(cc_ndep) &#x3D; 0x00000000
+   08 | PUT(eip) &#x3D; 0x080485cc
+0x80485cc
+   10 | t14 &#x3D; CmpLE32S(t2,0x00000024)
+   11 | t13 &#x3D; 1Uto32(t14)
+   12 | t11 &#x3D; t13
+   13 | t15 &#x3D; 32to1(t11)
+   14 | t6 &#x3D; t15
+   15 | if (t6) &#123; PUT(eip) &#x3D; 0x804853c; Ijk_Boring &#125;
+   NEXT: PUT(eip) &#x3D; 0x080485d2; Ijk_Boring
+0x80485d2
+   01 | PUT(eax) &#x3D; 0x00000000
+   02 | PUT(eip) &#x3D; 0x080485d7
+0x80485d7
+   04 | t10 &#x3D; GET:I32(ebp)
+   05 | t9 &#x3D; Add32(t10,0xfffffff4)
+   06 | t11 &#x3D; LDle:I32(t9)
+   07 | PUT(ecx) &#x3D; t11
+   08 | PUT(eip) &#x3D; 0x080485da
+0x80485da
+   10 | t13 &#x3D; GET:I16(gs)
+   11 | t25 &#x3D; 16Uto32(t13)
+   12 | t12 &#x3D; t25
+   13 | t5 &#x3D; GET:I64(ldt)
+   14 | t6 &#x3D; GET:I64(gdt)
+   15 | t26 &#x3D; x86g_use_seg_selector(t5,t6,t12,0x00000014):Ity_I64
+   16 | t14 &#x3D; t26
+   17 | t27 &#x3D; 64HIto32(t14)
+   18 | t16 &#x3D; t27
+   19 | t15 &#x3D; CmpNE32(t16,0x00000000)
+   20 | if (t15) &#123; PUT(eip) &#x3D; 0x80485da; Ijk_MapFail &#125;
+   21 | t28 &#x3D; 64to32(t14)
+   22 | t17 &#x3D; t28
+   23 | t2 &#x3D; LDle:I32(t17)
+   24 | t1 &#x3D; Xor32(t11,t2)
+   25 | PUT(cc_op) &#x3D; 0x0000000f
+   26 | PUT(cc_dep1) &#x3D; t1
+   27 | PUT(cc_dep2) &#x3D; 0x00000000
+   28 | PUT(cc_ndep) &#x3D; 0x00000000
+   29 | PUT(ecx) &#x3D; t1
+   30 | PUT(eip) &#x3D; 0x080485e1
+0x80485e1
+   32 | t30 &#x3D; CmpEQ32(t1,0x00000000)
+   33 | t29 &#x3D; 1Uto32(t30)
+   34 | t23 &#x3D; t29
+   35 | t31 &#x3D; 32to1(t23)
+   36 | t18 &#x3D; t31
+   37 | if (t18) &#123; PUT(eip) &#x3D; 0x80485e8; Ijk_Boring &#125;
+   NEXT: PUT(eip) &#x3D; 0x080485e3; Ijk_Boring
+0x80485e8
+   01 | t2 &#x3D; GET:I32(esp)
+   02 | t0 &#x3D; Add32(t2,0x00000054)
+   03 | PUT(cc_op) &#x3D; 0x00000003
+   04 | PUT(cc_dep1) &#x3D; t2
+   05 | PUT(cc_dep2) &#x3D; 0x00000054
+   06 | PUT(cc_ndep) &#x3D; 0x00000000
+   07 | PUT(esp) &#x3D; t0
+   08 | PUT(eip) &#x3D; 0x080485eb
+0x80485eb
+   10 | t3 &#x3D; LDle:I32(t0)
+   11 | t10 &#x3D; Add32(t0,0x00000004)
+   12 | PUT(esp) &#x3D; t10
+   13 | PUT(ecx) &#x3D; t3
+   14 | PUT(eip) &#x3D; 0x080485ec
+0x80485ec
+   16 | t5 &#x3D; LDle:I32(t10)
+   17 | PUT(ebp) &#x3D; t5
+0x80485ed
+   19 | t12 &#x3D; Add32(t3,0xfffffffc)
+   20 | PUT(esp) &#x3D; t12
+   21 | PUT(eip) &#x3D; 0x080485f0
+0x80485f0
+   23 | t9 &#x3D; LDle:I32(t12)
+   24 | t14 &#x3D; Add32(t12,0x00000004)
+   25 | PUT(esp) &#x3D; t14
+   NEXT: PUT(eip) &#x3D; t9; Ijk_Ret
+0x80485f1
+   01 | t0 &#x3D; GET:I32(esp)
+   02 | t3 &#x3D; LDle:I32(t0)
+   03 | PUT(eax) &#x3D; t3
+   04 | PUT(eip) &#x3D; 0x080485f4
+0x80485f4
+   06 | t2 &#x3D; LDle:I32(t0)
+   07 | t4 &#x3D; Add32(t0,0x00000004)
+   08 | PUT(esp) &#x3D; t4
+   NEXT: PUT(eip) &#x3D; t2; Ijk_Ret<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h3 id="我们可以根据语义，去分析每一段block做了什么，跳转到哪里。"><a href="#我们可以根据语义，去分析每一段block做了什么，跳转到哪里。" class="headerlink" title="我们可以根据语义，去分析每一段block做了什么，跳转到哪里。"></a>我们可以根据语义，去分析每一段block做了什么，跳转到哪里。</h3><p>当然，我们也可以倒过来写汇编，毕竟就只有 110 行左右的汇编。</p>
+<p>说到底，其实我们就是人工做了语法分析的逻辑。<br>以下是我写的伪代码。浓缩到110行了。直接看 irsb 也是可以的，甚至我这种人肉反汇编其实是比较浪费时间的。</p>
+<pre class="line-numbers language-asm" data-language="asm"><code class="language-asm">0x8048464   sub esp,0x58
+0x8048467   mov [esp],0x0804846c -&gt; call 0x804846c # 写地址 CALL
+0x804846c   add eax,0x1b94
+0x8048471   
+0x8048477   mov [ebp-0x0C],[x86g_use_seg_selector(t5,t6,t50,0x00000014)]
+0x804847a   mov eax,0
+0x804847c   mov.d [ebp-0x32],0x656d3174
+0x8048483   mov.d [ebp-0x2E],0x7530795f
+0x804848a   mov.d [ebp-0x2A],0x6a6e655f
+...
+0x80484b4   mov.d [ebp-0x12],0x65743561
+0x80484bb   mov.w [ebp-0x0E],0x0064
+0x80484c1   mov.d [ebp-0x54],0x00000003
+0x80484c8   mov.b [ebp-0x4C],0x41
+0x80484cc   mov.b [ebp-0x4B],0x42
+...
+0x804852c   mov.b [ebp-0x33],0x5a
+0x8048530   mov.d [ebp-0x58],0x00000000
+0x8048537   jmp 0x80485c8-----------------------------|
+
+
+0x804853c   lea edx,[ebp-0x32]&lt;-------|   # add a2,[ebp-0x58],ebp-0x32
+0x804853f   mov.d eax,[ebp-0x58]
+0x8048542   add eax,edx
+0x8048544   mov.b eax,[eax]
+0x8048547   mov edx,al                  # get a byte
+0x804854a   mov eax,[ebp-0x54]          # 所有的都会位移3
+0x804854d   add eax,edx
+0x804854f   cmp eax,0x0000005a
+0x8048552   jle 0x8048554---------------| jmp  0x8048574            
+
+0x8048554   lea edx,[ebp-0x32]                            
+0x8048557   mov eax,[ebp-0x58]
+0x804855a   add edx,eax
+0x804855c   mov.bb al,[edx]
+0x804855f                               #位移3
+0x8048561   mov t26,[ebp-0x54]
+0x8048564   add t7,t26,eax
+0x8048566   mov ecx,t7
+0x8048568   lea edx,[ebp-0x32]
+0x804856b   
+0x804856e   mov eax,(edx+[ebp-0x58])
+0x8048570   mov [eax],cl
+0x8048572   jmp 0x80485c4
+
+                                        |
+                                        |
+0x8048574   lea edx,[ebp-0x32]&lt;---------|
+0x8048577   mov ecx,[ebp-0x58]
+0x804857a   add ecx,edx
+0x804857c   mov.b ecx,[ecx]
+0x804857f   mov edx,al                  #(al+3-0x5A)*0x4ec4ec4f&gt;&gt;3
+0x8048582   mov ecx,[ebp-0x54]
+0x8048585   add ecx,edx
+0x8048587   sub ecx,0x5A
+0x8048591   mul 0x4ec4ec4f              # ecx &#x3D; (I32high)(rcx*0x4ec4ec4f)
+0x8048593   shr ecx,0x3
+0x8048596   mov edx,[ebp-0x54]
+0x8048598   shr edx,0x1f
+0x804859b   sub edx,eax
+0x804859d   jmp 0x0804859f              
+0x804859f   [ebp-0x50],edx
+0x80485a2   mov eax,[ebp-0x50]          #eax&#x3D;eax*0x0000001a
+0x80485a5   mul 0x0000001a
+0x80485a8   sub ecx,eax
+0x80485aa   nop
+0x80485ac   mov [ebp-0x50],ecx
+0x80485af   mov ecx,[ebp-0x50]
+0x80485b2   sub ecx,0x00000001
+0x80485b5   mov.b eax,[ebp+ecx-0x4C]  # 根据 ecx 查表
+0x80485ba   lea ecx,[ebp-0x32]
+0x80485bd   mov t127,[ebp-0x58]
+0x80485c0   mov edx,t127+ecx
+0x80485c2   mov.b [edx],eax
+0x80485c4   add [ebp-0x58],0x1---------|
+0x80485c8   cmp [ebp-0x58],0x24------------|    |
+0x80485cc   jnz 0x804853c ----------------------|
+
+0x80485d2   mov eax,0x0
+0x80485d7   mov ecx,[ebp-0x0C]
+0x80485da   xor ecx,[x86g_use_seg_selector(t5,t6,t12,0x00000014)]
+0x80485e1   cmp ecx,0x00;   je 0x80485e8;jmp out
+0x80485e8   add esp,0x54
+0x80485eb   mov ecx,[esp] ; add esp,0x04
+0x80485ec   mov ebp,[esp]
+0x80485ed   
+0x80485f0   ret
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p>了解到栈里面不同位置干什么用了之后，可以看到程序的逻辑就是位移以及一段取模</p>
+<p>解密脚本</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">byte_stream <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0x74</span><span class="token punctuation">,</span><span class="token number">0x31</span><span class="token punctuation">,</span><span class="token number">0x6d</span><span class="token punctuation">,</span><span class="token number">0x65</span><span class="token punctuation">,</span>
+                <span class="token number">0x5f</span><span class="token punctuation">,</span><span class="token number">0x79</span><span class="token punctuation">,</span><span class="token number">0x30</span><span class="token punctuation">,</span><span class="token number">0x75</span><span class="token punctuation">,</span>
+                <span class="token number">0x5f</span><span class="token punctuation">,</span><span class="token number">0x65</span><span class="token punctuation">,</span><span class="token number">0x6e</span><span class="token punctuation">,</span><span class="token number">0x6a</span><span class="token punctuation">,</span>
+                <span class="token number">0x30</span><span class="token punctuation">,</span><span class="token number">0x79</span><span class="token punctuation">,</span><span class="token number">0x5f</span><span class="token punctuation">,</span><span class="token number">0x77</span><span class="token punctuation">,</span>
+                <span class="token number">0x61</span><span class="token punctuation">,</span><span class="token number">0x35</span><span class="token punctuation">,</span><span class="token number">0x74</span><span class="token punctuation">,</span><span class="token number">0x31</span><span class="token punctuation">,</span>
+                <span class="token number">0x6e</span><span class="token punctuation">,</span><span class="token number">0x67</span><span class="token punctuation">,</span><span class="token number">0x5f</span><span class="token punctuation">,</span><span class="token number">0x77</span><span class="token punctuation">,</span>
+                <span class="token number">0x61</span><span class="token punctuation">,</span><span class="token number">0x35</span><span class="token punctuation">,</span><span class="token number">0x5f</span><span class="token punctuation">,</span><span class="token number">0x6e</span><span class="token punctuation">,</span>
+                <span class="token number">0x6f</span><span class="token punctuation">,</span><span class="token number">0x74</span><span class="token punctuation">,</span><span class="token number">0x5f</span><span class="token punctuation">,</span><span class="token number">0x77</span><span class="token punctuation">,</span>
+                <span class="token number">0x61</span><span class="token punctuation">,</span><span class="token number">0x35</span><span class="token punctuation">,</span><span class="token number">0x74</span><span class="token punctuation">,</span><span class="token number">0x65</span><span class="token punctuation">,</span>
+                <span class="token number">0x64</span><span class="token punctuation">]</span>
+<span class="token comment"># table = [0x41...0x5a]</span>
+table <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">0x41</span> <span class="token operator">+</span> num <span class="token keyword">for</span> num <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">0x5a</span><span class="token operator">-</span><span class="token number">0x41</span><span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+
+<span class="token keyword">for</span> i<span class="token punctuation">,</span>value <span class="token keyword">in</span> <span class="token builtin">enumerate</span><span class="token punctuation">(</span>byte_stream<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">if</span> value <span class="token operator">+</span> <span class="token number">3</span> <span class="token operator">&lt;=</span> <span class="token number">0x0000005a</span><span class="token punctuation">:</span>
+        byte_stream<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> value <span class="token operator">+</span> <span class="token number">3</span>
+    <span class="token keyword">else</span><span class="token punctuation">:</span>
+        t74 <span class="token operator">=</span> <span class="token number">3</span> <span class="token operator">+</span> value <span class="token operator">-</span> <span class="token number">0x5a</span>
+        mul1 <span class="token operator">=</span> <span class="token punctuation">(</span>t74 <span class="token operator">*</span> <span class="token number">0x4ec4ec4f</span><span class="token punctuation">)</span> <span class="token operator">>></span><span class="token number">32</span>
+        t20 <span class="token operator">=</span> mul1 <span class="token operator">>></span> <span class="token number">3</span>
+        t27 <span class="token operator">=</span> <span class="token punctuation">(</span>value <span class="token operator">+</span> <span class="token number">3</span> <span class="token operator">-</span><span class="token number">0x5A</span><span class="token punctuation">)</span> <span class="token operator">>></span> <span class="token number">0x1f</span>
+        mul2 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>t20 <span class="token operator">-</span> t27<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token punctuation">(</span><span class="token number">0x1a</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token number">0xFFFFFFFF</span>
+        sub <span class="token operator">=</span> value <span class="token operator">+</span> <span class="token number">3</span> <span class="token operator">-</span> <span class="token number">0x5A</span> <span class="token operator">-</span> mul2
+        byte_stream<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> table<span class="token punctuation">[</span>sub<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">]</span>
+
+<span class="token keyword">print</span><span class="token punctuation">(</span><span class="token builtin">bytes</span><span class="token punctuation">(</span>byte_stream<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment"># t20 = Sar32(from64HIto32(MullS32(from8to32(ch) + 0x00000003 - 0x5A,0x4ec4ec4f)),0x03)</span>
+<span class="token comment"># t27 = Sar32(from8to32(ch) + 0x00000003 - 0x5A,0x1f)</span>
+<span class="token comment"># load_ch(ebp + Sub32(from8to32(ch) + 0x00000003 - 0x5A,Mul32(Sub32(t20,t27),0x0000001a)) - 0x00000001 - 0x4C)</span>
+
+<span class="token comment"># 2**35 / 0x4ec4ec4f = 25L</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/wr-web/picture/zhifubao_reward.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/wr-web/picture/zhifubao_reward.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/wr-web/picture/wechat_reward.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/wr-web/picture/wechat_reward.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>RT</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://wr-web.github.io/2021/07/19/rctf_valgrind/" title="RCTF Valgrind">https://wr-web.github.io/2021/07/19/rctf_valgrind/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/08/16/angr_learn_introduction/" rel="prev" title="Angr 学习与实践"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">Angr 学习与实践</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/05/22/dll_injection_hook/" rel="next" title="Dll INJECTION &amp;&amp; HOOK"><span class="post-nav-text">Dll INJECTION &amp;&amp; HOOK</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> RT</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.7.0</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#6200ee" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

@@ -1,0 +1,694 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#6200ee"><meta name="author" content="RT"><meta name="copyright" content="RT"><meta name="generator" content="Hexo 6.0.0"><meta name="theme" content="hexo-theme-yun"><title>Dll INJECTION &amp;&amp; HOOK | R0gerThat</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.25/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/github/wr-web/picture/blob/main/author2.ico"><link rel="mask-icon" href="https://cdn.jsdelivr.net/gh/github/wr-web/picture/blob/main/author2.ico" color="#6200ee"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"wr-web.github.io","root":"/","title":"RT の Diary","version":"1.7.0","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="alternate" href="/atom.xml" title="R0gerThat" type="application/atom+xml"><meta name="description" content="learn hook">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dll INJECTION &amp;&amp; HOOK">
+<meta property="og:url" content="https://wr-web.github.io/2021/05/22/dll_injection_hook/index.html">
+<meta property="og:site_name" content="R0gerThat">
+<meta property="og:description" content="learn hook">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wr-web.github.io/images/Snipaste_2021-09-22_23-28-12.jpg">
+<meta property="og:image" content="https://wr-web.github.io/images/Snipaste_2021-09-23_01-08-25.jpg">
+<meta property="og:image" content="https://wr-web.github.io/images/Snipaste_2021-09-23_01-24-02.jpg">
+<meta property="og:image" content="https://wr-web.github.io/images/Snipaste_2021-09-23_01-27-08.jpg">
+<meta property="og:image" content="https://wr-web.github.io/images/Snipaste_2021-09-24_10-51-19.jpg">
+<meta property="og:image" content="https://wr-web.github.io/images/Snipaste_2021-09-24_10-51-29.jpg">
+<meta property="article:published_time" content="2021-05-22T12:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-07T10:24:05.925Z">
+<meta property="article:author" content="RT">
+<meta property="article:tag" content="留坑">
+<meta property="article:tag" content="Hacking">
+<meta property="article:tag" content="DLL hook">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wr-web.github.io/images/Snipaste_2021-09-22_23-28-12.jpg"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="RT"><img width="96" loading="lazy" src="https://cdn.jsdelivr.net/gh/wr-web/picture/author2.ico" alt="RT"></a><div class="site-author-name"><a href="/about/">RT</a></div><span class="site-name">R0gerThat</span><sub class="site-subtitle"></sub><div class="site-desciption">@Vidar-Team @CTFer @Game Lover </div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">16</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">13</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">18</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-settings-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="/atom.xml" title="RSS" target="_blank" style="color:orange"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-rss-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/wr-web" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/13582048" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://t.me/R0gerTh4t" title="Telegram" target="_blank" style="color:#0088CC"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-telegram-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:orz1053131305@outlook.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#DLL-INJECTION-amp-amp-HOOK"><span class="toc-number">1.</span> <span class="toc-text">DLL INJECTION &amp;&amp; HOOK</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BD%BF%E7%94%A8%E6%8B%93%E5%B1%95%E6%9C%80%E5%90%8E%E4%B8%80%E4%B8%AA%E8%8A%82%E5%8C%BA%E8%BF%9B%E8%A1%8C%E6%B3%A8%E5%85%A5%E5%B7%B2%E7%BB%8F%E5%86%99%E5%A5%BD%E7%9A%84%E7%9A%84DLL"><span class="toc-number">1.1.</span> <span class="toc-text">1.使用拓展最后一个节区进行注入已经写好的的DLL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E8%BF%9B%E7%A8%8B%E5%88%9B%E5%BB%BA%E6%9C%9F%E9%97%B4%E4%BF%AE%E6%94%B9PE%E8%BE%93%E5%85%A5%E8%A1%A8"><span class="toc-number">1.2.</span> <span class="toc-text">2.进程创建期间修改PE输入表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3"><span class="toc-number">1.3.</span> <span class="toc-text">3.</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#win-%E5%86%85%E6%A0%B8"><span class="toc-number">2.</span> <span class="toc-text">win 内核</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#win-%E5%86%85%E6%A0%B8%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">win 内核数据结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SSDT-system-service-descriptor-table"><span class="toc-number">2.1.1.</span> <span class="toc-text">SSDT (system service descriptor table)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IDT-interrupt-descriptor-table"><span class="toc-number">2.1.2.</span> <span class="toc-text">IDT (interrupt descriptor table)</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://wr-web.github.io/2021/05/22/dll_injection_hook/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="RT"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="R0gerThat"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Dll INJECTION &amp;&amp; HOOK</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2021-05-22 20:00:00" itemprop="dateCreated datePublished" datetime="2021-05-22T20:00:00+08:00">2021-05-22</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2022-03-07 18:24:05" itemprop="dateModified" datetime="2022-03-07T18:24:05+08:00">2022-03-07</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Windows/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Windows</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E7%95%99%E5%9D%91/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">留坑</span></a><a class="tag-item" href="/tags/Hacking/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Hacking</span></a><a class="tag-item" href="/tags/DLL-hook/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">DLL hook</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#6200ee;"><h1 id="DLL-INJECTION-amp-amp-HOOK"><a href="#DLL-INJECTION-amp-amp-HOOK" class="headerlink" title="DLL INJECTION &amp;&amp; HOOK"></a>DLL INJECTION &amp;&amp; HOOK</h1><blockquote>
+<p>《关于我一本书看到一半却咕了一个学期这件事》</p>
+</blockquote>
+<p>粗略的看了一下，dll injection 和 hook 发现这俩应该是得放一起的，因为涉及的知识比较难做分隔，或者说基础知识很是接近，越是了解，就会发现越要了解 windows 的 loader 机制，windows 的一些较为有用的 api ，甚至是 windows 的内核数据结构，直接深入 windows 的 r0 还是比较猛的。</p>
+<p>也因此这篇文章注定是随着我的学习不断更新的。</p>
+<h2 id="1-使用拓展最后一个节区进行注入已经写好的的DLL"><a href="#1-使用拓展最后一个节区进行注入已经写好的的DLL" class="headerlink" title="1.使用拓展最后一个节区进行注入已经写好的的DLL"></a>1.使用拓展最后一个节区进行注入已经写好的的DLL</h2><p><img src="https://wr-web.github.io/images/Snipaste_2021-09-22_23-28-12.jpg" alt="Snipaste_2021-09-22_23-28-12" loading="lazy"></p>
+<p>这个在运行被注入的 notepad 的过程中，DLL 中的 Msg 并不会运行，只是通过 dllenterpoint 函数执行了 dllmain ，后者调用了 msgbox，弹出一个msgbox 窗体。</p>
+<p><img src="https://wr-web.github.io/images/Snipaste_2021-09-23_01-08-25.jpg" alt="Snipaste_2021-09-23_01-08-25" loading="lazy"></p>
+<p>text 中的 0x7800 -&gt; 0x7748 也就是肯定没有 7800 那么多数据，因此后面的可以写入的就是 0x7800-0x7748。不过不够我要的 IIT 就是了。<br>分析给的 notepad 可以知道 ，为了不影响程序的正常运行，我们可以把 IIT结构修改并转移到别的地方存储，IIT 存储的关键就只有 OriginalFirstThunk,FirstThunk,Name。我们只要把 optional_header 中的 Data Directory 中的 Immport Directory 指向我们自己的数据即可，没有数据就创造区域。没有空间就修改 section_header 中的 raw size,最后写到最末尾。</p>
+<p><img src="https://wr-web.github.io/images/Snipaste_2021-09-23_01-24-02.jpg" alt="Snipaste_2021-09-23_01-24-02" loading="lazy"></p>
+<p>由于程序启用了绑定输入。程序在加载的时候会以为dll的函数加载到了正确的虚拟地址中，然而我自己的dll似乎不能延迟绑定（似乎也可以的样子，研究一波）</p>
+<p><img src="https://wr-web.github.io/images/Snipaste_2021-09-23_01-27-08.jpg" alt="Snipaste_2021-09-23_01-27-08" loading="lazy"></p>
+<p>我们可以覆盖 0x1B0 的地址和大小为零，顺带也可以删掉 0x250 0xD0长度的{TimeDateStamp:DWORD;offsetModuleName:WORD;NumberOfModuleForwarderRefs:WORD}结构体数组</p>
+<p>还有可能要注意的一点就是 FirstTrunk 也要指向 IMAGE_IMPORT_BY_NAME</p>
+<h2 id="2-进程创建期间修改PE输入表"><a href="#2-进程创建期间修改PE输入表" class="headerlink" title="2.进程创建期间修改PE输入表"></a>2.进程创建期间修改PE输入表</h2><p>以挂起进程创建这个进程 dwCreationFlag<br>搜索虚拟内存中的镜像地址<br>创建新节区，在虚拟内存中直接分配就好了<br>修改 OptionalHeader 中的 ImportDictionary 指向自己的新地址<br>移植 IID 到新节，新DLL所需要 的 INT，IAT，IMAGE_IMPORT_BY_NAME<br>再有删掉输入绑定</p>
+<p>可以通过项目的日志看的更清楚</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">[*] Path &#x3D; [*] ImageBase &#x3D; 0x00400000
+[*] PE头读取成功!
+[*] 当前导入表信息 VA &#x3D; 0x000064CC Size &#x3D; 0x28
+[*] dwOldIIDCnt &#x3D; 2  Size &#x3D; 0x28
+[*] dwNewIIDCnt &#x3D; 3  Size &#x3D; 0x3C
+[*] 导入表所在节  .rdata  RawOffset &#x3D; 0x6000 Size &#x3D; 0x1000
+[*] 新节添加完毕!
+[*] NewSection VA &#x3D; 0x410000 VirtualSize &#x3D; 0x1000 RawSize &#x3D; 0x1000
+[*] 原导入表IID结构保存完毕.
+[*] 新导入表IID子结构构造完毕.
+[*] 新IID成员占用的空间大小 &#x3D; 0x22
+[*] 新IID填充完毕.
+[*] PE头更新完毕.
+[*] 开始更新内存中的PE数据.
+[*] 准备写入PE头: StartAddress &#x3D; 0x00400000 Size &#x3D; 0x1000
+[*] PE头写入完毕.
+[*] 准备写入IID信息: StartAddress &#x3D; 0x0041003C Size &#x3D; 0x1000
+[*] 新IID项的子结构写入完毕. Add &#x3D; 0x1003C Size &#x3D; 0x22
+[*] 新导入表整体写入完毕. Offset &#x3D; 0x1003C Size &#x3D; 0x22
+[*] 导入表感染完毕.<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<p><img src="https://wr-web.github.io/images/Snipaste_2021-09-24_10-51-19.jpg" alt="Snipaste_2021-09-24_10-51-19" loading="lazy"></p>
+<p><img src="https://wr-web.github.io/images/Snipaste_2021-09-24_10-51-29.jpg" alt="Snipaste_2021-09-24_10-51-29" loading="lazy"></p>
+<p>我个人观点，本项目的重点在于解析 IMAGE,还有一些自己不熟悉的 WINAPI，并没有什么非常新颖的思路，比起第一个就只是把 PE 创建时 suspend 了，还有直接分配内存给自己注入 IID，后面就和我自己的做法一样了。作者写出这个脚本还是很强的。</p>
+<p>自己水平有限，还不能比较好的写出这种脚本，下次一定。</p>
+<h2 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h2><h1 id="win-内核"><a href="#win-内核" class="headerlink" title="win 内核"></a>win 内核</h1><h2 id="win-内核数据结构"><a href="#win-内核数据结构" class="headerlink" title="win 内核数据结构"></a>win 内核数据结构</h2><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">typedef</span> <span class="token keyword">struct</span> <span class="token class-name">tagSERVICE_DESCRIPTOR_TABLE</span> <span class="token punctuation">&#123;</span>
+    SYSTEM_SERVICE_TABLE nt<span class="token punctuation">;</span> <span class="token comment">//effectively a pointer to Service Dispatch Table (SSDT) itself</span>
+    SYSTEM_SERVICE_TABLE win32k<span class="token punctuation">;</span>
+    SYSTEM_SERVICE_TABLE sst3<span class="token punctuation">;</span> <span class="token comment">//pointer to a memory address that contains how many routines are defined in the table</span>
+    SYSTEM_SERVICE_TABLE sst4<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span> SERVICE_DESCRIPTOR_TABLE<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">lkd<span class="token operator">></span> dps nt<span class="token operator">!</span>keservicedescriptortable l4
+fffff802<span class="token variable"><span class="token variable">`</span>532018c0  fffff802<span class="token variable">`</span></span>524c8340 nt<span class="token operator">!</span>KiServiceTable
+fffff802<span class="token variable"><span class="token variable">`</span>532018c8  00000000<span class="token variable">`</span></span>00000000
+fffff802<span class="token variable"><span class="token variable">`</span>532018d0  00000000<span class="token variable">`</span></span>000001d7
+fffff802<span class="token variable"><span class="token variable">`</span>532018d8  fffff802<span class="token variable">`</span></span>524c8aa0 nt<span class="token operator">!</span>KiArgumentTable<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h3 id="SSDT-system-service-descriptor-table"><a href="#SSDT-system-service-descriptor-table" class="headerlink" title="SSDT (system service descriptor table)"></a>SSDT (system service descriptor table)</h3><pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly">lkd&gt; .foreach &#x2F;ps 1 &#x2F;pS 1 ( offset &#123;dd &#x2F;c 1 nt!KiServiceTable L poi(nt!KeServiceDescriptorTable+10)&#125;)&#123; r $t0 &#x3D; ( offset &gt;&gt;&gt; 4) + nt!KiServiceTable; .printf &quot;%p - %y\n&quot;, $t0, $t0 &#125;
+fffff80252739f60 - nt!NtAccessCheck (fffff802&#96;52739f60)
+fffff80252745450 - nt!NtWorkerFactoryWorkerReady (fffff802&#96;52745450)
+fffff80252b06660 - nt!NtAcceptConnectPort (fffff802&#96;52b06660)
+fffff80252cd3cd0 - nt!NtMapUserPhysicalPagesScatter (fffff802&#96;52cd3cd0)
+fffff802529f75b0 - nt!NtWaitForSingleObject (fffff802&#96;529f75b0)
+fffff802527fab00 - nt!NtCallbackReturn (fffff802&#96;527fab00)
+fffff80252a8bae0 - nt!NtReadFile (fffff802&#96;52a8bae0)
+fffff80252a745a0 - nt!NtDeviceIoControlFile (fffff802&#96;52a745a0)
+fffff80252a8aeb0 - nt!NtWriteFile (fffff802&#96;52a8aeb0)
+fffff80252ad67b0 - nt!NtRemoveIoCompletion (fffff802&#96;52ad67b0)
+fffff80252ad5060 - nt!NtReleaseSemaphore (fffff802&#96;52ad5060)
+fffff80252a89230 - nt!NtReplyWaitReceivePort (fffff802&#96;52a89230)
+fffff80252a2dab0 - nt!NtReplyPort (fffff802&#96;52a2dab0)
+fffff80252a73480 - nt!NtSetInformationThread (fffff802&#96;52a73480)
+fffff80252a72b70 - nt!NtSetEvent (fffff802&#96;52a72b70)
+fffff802529f72e0 - nt!NtClose (fffff802&#96;529f72e0)
+fffff80252a5f310 - nt!NtQueryObject (fffff802&#96;52a5f310)
+fffff80252a77a00 - nt!NtQueryInformationFile (fffff802&#96;52a77a00)
+fffff80252ae2a50 - nt!NtOpenKey (fffff802&#96;52ae2a50)
+fffff802529e8e00 - nt!NtEnumerateValueKey (fffff802&#96;529e8e00)
+fffff80252a02080 - nt!NtFindAtom (fffff802&#96;52a02080)
+fffff80252ab4940 - nt!NtQueryDefaultLocale (fffff802&#96;52ab4940)
+fffff80252a94d20 - nt!NtQueryKey (fffff802&#96;52a94d20)
+fffff80252a953c0 - nt!NtQueryValueKey (fffff802&#96;52a953c0)
+fffff80252ab60e0 - nt!NtAllocateVirtualMemory (fffff802&#96;52ab60e0)
+fffff80252a61850 - nt!NtQueryInformationProcess (fffff802&#96;52a61850)
+fffff80252ae3130 - nt!NtWaitForMultipleObjects32 (fffff802&#96;52ae3130)
+fffff80252aebe60 - nt!NtWriteFileGather (fffff802&#96;52aebe60)
+fffff80252a9fb80 - nt!NtSetInformationProcess (fffff802&#96;52a9fb80)
+fffff80252a519a0 - nt!NtCreateKey (fffff802&#96;52a519a0)
+fffff802529f8ad0 - nt!NtFreeVirtualMemory (fffff802&#96;529f8ad0)
+fffff80252cbeda0 - nt!NtImpersonateClientOfPort (fffff802&#96;52cbeda0)
+fffff80252a72a60 - nt!NtReleaseMutant (fffff802&#96;52a72a60)
+fffff80252a7e5a0 - nt!NtQueryInformationToken (fffff802&#96;52a7e5a0)
+fffff80252aed0a0 - nt!NtRequestWaitReplyPort (fffff802&#96;52aed0a0)
+fffff802529ff3b0 - nt!NtQueryVirtualMemory (fffff802&#96;529ff3b0)
+fffff80252a662b0 - nt!NtOpenThreadToken (fffff802&#96;52a662b0)
+fffff80252a882a0 - nt!NtQueryInformationThread (fffff802&#96;52a882a0)
+fffff80252ad1fc0 - nt!NtOpenProcess (fffff802&#96;52ad1fc0)
+fffff8025268fda0 - nt!NtSetInformationFile (fffff802&#96;5268fda0)
+fffff802529fe690 - nt!NtMapViewOfSection (fffff802&#96;529fe690)
+fffff80252a26bf0 - nt!NtAccessCheckAndAuditAlarm (fffff802&#96;52a26bf0)
+fffff80252afc470 - nt!NtUnmapViewOfSection (fffff802&#96;52afc470)
+fffff80252a89250 - nt!NtReplyWaitReceivePortEx (fffff802&#96;52a89250)
+fffff80252ab3900 - nt!NtTerminateProcess (fffff802&#96;52ab3900)
+fffff80252d4c1c0 - nt!NtSetEventBoostPriority (fffff802&#96;52d4c1c0)
+fffff80252aeb850 - nt!NtReadFileScatter (fffff802&#96;52aeb850)
+fffff80252a662d0 - nt!NtOpenThreadTokenEx (fffff802&#96;52a662d0)
+fffff80252a66a90 - nt!NtOpenProcessTokenEx (fffff802&#96;52a66a90)
+fffff80252aae9b0 - nt!NtQueryPerformanceCounter (fffff802&#96;52aae9b0)
+fffff80252a72420 - nt!NtEnumerateKey (fffff802&#96;52a72420)
+fffff80252a155c0 - nt!NtOpenFile (fffff802&#96;52a155c0)
+fffff80252a96c40 - nt!NtDelayExecution (fffff802&#96;52a96c40)
+fffff80252af2300 - nt!NtQueryDirectoryFile (fffff802&#96;52af2300)
+fffff80252a8e9c0 - nt!NtQuerySystemInformation (fffff802&#96;52a8e9c0)
+fffff80252ae2120 - nt!NtOpenSection (fffff802&#96;52ae2120)
+fffff80252d4bfb0 - nt!NtQueryTimer (fffff802&#96;52d4bfb0)
+fffff80252ae24e0 - nt!NtFsControlFile (fffff802&#96;52ae24e0)
+fffff80252b010c0 - nt!NtWriteVirtualMemory (fffff802&#96;52b010c0)
+fffff80252af0aa0 - nt!NtCloseObjectAuditAlarm (fffff802&#96;52af0aa0)
+fffff802529e8200 - nt!NtDuplicateObject (fffff802&#96;529e8200)
+fffff80252a16450 - nt!NtQueryAttributesFile (fffff802&#96;52a16450)
+fffff80252adad70 - nt!NtClearEvent (fffff802&#96;52adad70)
+fffff802529ea650 - nt!NtReadVirtualMemory (fffff802&#96;529ea650)
+fffff80252ae7c50 - nt!NtOpenEvent (fffff802&#96;52ae7c50)
+fffff80252a180f0 - nt!NtAdjustPrivilegesToken (fffff802&#96;52a180f0)
+fffff80252a2b540 - nt!NtDuplicateToken (fffff802&#96;52a2b540)
+fffff802527f78f0 - nt!NtContinue (fffff802&#96;527f78f0)
+fffff80252b7c0e0 - nt!NtQueryDefaultUILanguage (fffff802&#96;52b7c0e0)
+fffff80252ab3ac0 - nt!NtQueueApcThread (fffff802&#96;52ab3ac0)
+fffff802526f1480 - nt!NtYieldExecution (fffff802&#96;526f1480)
+fffff80252d53990 - nt!NtAddAtom (fffff802&#96;52d53990)
+fffff80252a78db0 - nt!NtCreateEvent (fffff802&#96;52a78db0)
+fffff80252a8e3a0 - nt!NtQueryVolumeInformationFile (fffff802&#96;52a8e3a0)
+fffff802529fa5f0 - nt!NtCreateSection (fffff802&#96;529fa5f0)
+fffff80252ae7810 - nt!NtFlushBuffersFile (fffff802&#96;52ae7810)
+fffff80252a60f60 - nt!NtApphelpCacheControl (fffff802&#96;52a60f60)
+fffff80252d03ed0 - nt!NtCreateProcessEx (fffff802&#96;52d03ed0)
+fffff80252d03f70 - nt!NtCreateThread (fffff802&#96;52d03f70)
+fffff80252a57660 - nt!NtIsProcessInJob (fffff802&#96;52a57660)
+fffff80252a96600 - nt!NtProtectVirtualMemory (fffff802&#96;52a96600)
+fffff80252af9150 - nt!NtQuerySection (fffff802&#96;52af9150)
+fffff80252ab2940 - nt!NtResumeThread (fffff802&#96;52ab2940)
+fffff80252ab3270 - nt!NtTerminateThread (fffff802&#96;52ab3270)
+fffff80252cbeea0 - nt!NtReadRequestData (fffff802&#96;52cbeea0)
+fffff80252a15630 - nt!NtCreateFile (fffff802&#96;52a15630)
+fffff80252afda30 - nt!NtQueryEvent (fffff802&#96;52afda30)
+fffff80252cbf020 - nt!NtWriteRequestData (fffff802&#96;52cbf020)
+fffff80252ae2050 - nt!NtOpenDirectoryObject (fffff802&#96;52ae2050)
+fffff80252a26b40 - nt!NtAccessCheckByTypeAndAuditAlarm (fffff802&#96;52a26b40)
+fffff80252d48a30 - nt!NtQuerySystemTime (fffff802&#96;52d48a30)
+fffff80252a6f1e0 - nt!NtWaitForMultipleObjects (fffff802&#96;52a6f1e0)
+fffff80252ae10c0 - nt!NtSetInformationObject (fffff802&#96;52ae10c0)
+fffff80252aee0f0 - nt!NtCancelIoFile (fffff802&#96;52aee0f0)
+fffff8025266c790 - nt!NtTraceEvent (fffff802&#96;5266c790)
+fffff80252a495f0 - nt!NtPowerInformation (fffff802&#96;52a495f0)
+fffff802529e3650 - nt!NtSetValueKey (fffff802&#96;529e3650)
+fffff802526ffc70 - nt!NtCancelTimer (fffff802&#96;526ffc70)
+fffff80252776b90 - nt!NtSetTimer (fffff802&#96;52776b90)
+fffff80252744e80 - nt!NtAccessCheckByType (fffff802&#96;52744e80)
+fffff802529909a0 - nt!NtAccessCheckByTypeResultList (fffff802&#96;529909a0)
+fffff80252d1e060 - nt!NtAccessCheckByTypeResultListAndAuditAlarm (fffff802&#96;52d1e060)
+fffff80252d1e110 - nt!NtAccessCheckByTypeResultListAndAuditAlarmByHandle (fffff802&#96;52d1e110)
+fffff80252d53ac0 - nt!NtAcquireCrossVmMutant (fffff802&#96;52d53ac0)
+fffff80252b1e8a0 - nt!NtAcquireProcessActivityReference (fffff802&#96;52b1e8a0)
+fffff80252aefc50 - nt!NtAddAtomEx (fffff802&#96;52aefc50)
+fffff80252d4fd30 - nt!NtAddBootEntry (fffff802&#96;52d4fd30)
+fffff80252d4fd60 - nt!NtAddDriverEntry (fffff802&#96;52d4fd60)
+fffff80252a30c60 - nt!NtAdjustGroupsToken (fffff802&#96;52a30c60)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252d094e0 - nt!NtAlertResumeThread (fffff802&#96;52d094e0)
+fffff80252d09600 - nt!NtAlertThread (fffff802&#96;52d09600)
+fffff80252a66150 - nt!NtAlertThreadByThreadId (fffff802&#96;52a66150)
+fffff80252ada2d0 - nt!NtAllocateLocallyUniqueId (fffff802&#96;52ada2d0)
+fffff80252b01750 - nt!NtAllocateReserveObject (fffff802&#96;52b01750)
+fffff80252cd34f0 - nt!NtAllocateUserPhysicalPages (fffff802&#96;52cd34f0)
+fffff80252cd3510 - nt!NtAllocateUserPhysicalPagesEx (fffff802&#96;52cd3510)
+fffff80252b07730 - nt!NtAllocateUuids (fffff802&#96;52b07730)
+fffff80252ab6340 - nt!NtAllocateVirtualMemoryEx (fffff802&#96;52ab6340)
+fffff80252a2a050 - nt!NtAlpcAcceptConnectPort (fffff802&#96;52a2a050)
+fffff80252b0e5b0 - nt!NtAlpcCancelMessage (fffff802&#96;52b0e5b0)
+fffff80252a28560 - nt!NtAlpcConnectPort (fffff802&#96;52a28560)
+fffff80252a285e0 - nt!NtAlpcConnectPortEx (fffff802&#96;52a285e0)
+fffff80252af9a70 - nt!NtAlpcCreatePort (fffff802&#96;52af9a70)
+fffff80252a0d140 - nt!NtAlpcCreatePortSection (fffff802&#96;52a0d140)
+fffff80252ae2550 - nt!NtAlpcCreateResourceReserve (fffff802&#96;52ae2550)
+fffff80252a0fde0 - nt!NtAlpcCreateSectionView (fffff802&#96;52a0fde0)
+fffff80252adf250 - nt!NtAlpcCreateSecurityContext (fffff802&#96;52adf250)
+fffff80252a48b30 - nt!NtAlpcDeletePortSection (fffff802&#96;52a48b30)
+fffff80252cc01a0 - nt!NtAlpcDeleteResourceReserve (fffff802&#96;52cc01a0)
+fffff80252a48a00 - nt!NtAlpcDeleteSectionView (fffff802&#96;52a48a00)
+fffff80252a89990 - nt!NtAlpcDeleteSecurityContext (fffff802&#96;52a89990)
+fffff80252afb310 - nt!NtAlpcDisconnectPort (fffff802&#96;52afb310)
+fffff80252cbf2f0 - nt!NtAlpcImpersonateClientContainerOfPort (fffff802&#96;52cbf2f0)
+fffff80252a878a0 - nt!NtAlpcImpersonateClientOfPort (fffff802&#96;52a878a0)
+fffff80252a2c280 - nt!NtAlpcOpenSenderProcess (fffff802&#96;52a2c280)
+fffff80252afb910 - nt!NtAlpcOpenSenderThread (fffff802&#96;52afb910)
+fffff80252ad4a70 - nt!NtAlpcQueryInformation (fffff802&#96;52ad4a70)
+fffff80252a257c0 - nt!NtAlpcQueryInformationMessage (fffff802&#96;52a257c0)
+fffff80252cbf530 - nt!NtAlpcRevokeSecurityContext (fffff802&#96;52cbf530)
+fffff80252a82200 - nt!NtAlpcSendWaitReceivePort (fffff802&#96;52a82200)
+fffff80252af3c50 - nt!NtAlpcSetInformation (fffff802&#96;52af3c50)
+fffff80252b0ac60 - nt!NtAreMappedFilesTheSame (fffff802&#96;52b0ac60)
+fffff80252a57960 - nt!NtAssignProcessToJobObject (fffff802&#96;52a57960)
+fffff8025270ee70 - nt!NtAssociateWaitCompletionPacket (fffff802&#96;5270ee70)
+fffff802527ffe30 - nt!NtCallEnclave (fffff802&#96;527ffe30)
+fffff80252aee2a0 - nt!NtCancelIoFileEx (fffff802&#96;52aee2a0)
+fffff80252c919b0 - nt!NtCancelSynchronousIoFile (fffff802&#96;52c919b0)
+fffff8025275f630 - nt!NtCancelTimer2 (fffff802&#96;5275f630)
+fffff802526d56b0 - nt!NtCancelWaitCompletionPacket (fffff802&#96;526d56b0)
+fffff802527ccfa0 - nt!NtCommitComplete (fffff802&#96;527ccfa0)
+fffff802527ccfc0 - nt!NtCommitEnlistment (fffff802&#96;527ccfc0)
+fffff80252a52c60 - nt!NtCommitRegistryTransaction (fffff802&#96;52a52c60)
+fffff802527ccfe0 - nt!NtCommitTransaction (fffff802&#96;527ccfe0)
+fffff80252c64d20 - nt!NtCompactKeys (fffff802&#96;52c64d20)
+fffff80252aedb70 - nt!NtCompareObjects (fffff802&#96;52aedb70)
+fffff80252b0a910 - nt!NtCompareSigningLevels (fffff802&#96;52b0a910)
+fffff80252ae8020 - nt!NtCompareTokens (fffff802&#96;52ae8020)
+fffff80252b0a310 - nt!ArbPreprocessEntry (fffff802&#96;52b0a310)
+fffff80252c65000 - nt!NtCompressKey (fffff802&#96;52c65000)
+fffff80252a2e3c0 - nt!NtConnectPort (fffff802&#96;52a2e3c0)
+fffff802527f7900 - nt!NtContinueEx (fffff802&#96;527f7900)
+fffff80252d577d0 - nt!NtConvertBetweenAuxiliaryCounterAndPerformanceCounter (fffff802&#96;52d577d0)
+fffff80252d4c110 - nt!NtCreateCrossVmEvent (fffff802&#96;52d4c110)
+fffff80252d53b90 - nt!NtCreateCrossVmMutant (fffff802&#96;52d53b90)
+fffff80252c82df0 - nt!NtCreateDebugObject (fffff802&#96;52c82df0)
+fffff80252af2060 - nt!NtCreateDirectoryObject (fffff802&#96;52af2060)
+fffff80252af2040 - nt!NtCreateDirectoryObjectEx (fffff802&#96;52af2040)
+fffff80252cd0a50 - nt!NtCreateEnclave (fffff802&#96;52cd0a50)
+fffff802527cd000 - nt!NtCreateEnlistment (fffff802&#96;527cd000)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252b7c0b0 - nt!NtCreateIRTimer (fffff802&#96;52b7c0b0)
+fffff80252aa6930 - nt!NtCreateIoCompletion (fffff802&#96;52aa6930)
+fffff80252a56b20 - nt!NtCreateJobObject (fffff802&#96;52a56b20)
+fffff80252b13470 - nt!ArbAddReserved (fffff802&#96;52b13470)
+fffff80252b56f30 - nt!NtCreateKeyTransacted (fffff802&#96;52b56f30)
+fffff80252bb2660 - nt!NtCreateKeyedEvent (fffff802&#96;52bb2660)
+fffff80252aba860 - nt!NtCreateLowBoxToken (fffff802&#96;52aba860)
+fffff802529cf5b0 - nt!NtCreateMailslotFile (fffff802&#96;529cf5b0)
+fffff80252acad90 - nt!NtCreateMutant (fffff802&#96;52acad90)
+fffff80252afdea0 - nt!NtCreateNamedPipeFile (fffff802&#96;52afdea0)
+fffff80252ba1cb0 - nt!NtCreatePagingFile (fffff802&#96;52ba1cb0)
+fffff80252d09cd0 - nt!NtCreatePartition (fffff802&#96;52d09cd0)
+fffff80252b600a0 - nt!NtCreatePort (fffff802&#96;52b600a0)
+fffff80252af3680 - nt!NtCreatePrivateNamespace (fffff802&#96;52af3680)
+fffff80252d03e40 - nt!NtCreateProcess (fffff802&#96;52d03e40)
+fffff80252d57900 - nt!NtCreateProfile (fffff802&#96;52d57900)
+fffff80252d579e0 - nt!NtCreateProfileEx (fffff802&#96;52d579e0)
+fffff80252b0b700 - nt!NtCreateRegistryTransaction (fffff802&#96;52b0b700)
+fffff802527cd020 - nt!NtCreateResourceManager (fffff802&#96;527cd020)
+fffff80252cc4720 - nt!NtCreateSectionEx (fffff802&#96;52cc4720)
+fffff80252aafd40 - nt!NtCreateSemaphore (fffff802&#96;52aafd40)
+fffff80252afae50 - nt!NtCreateSymbolicLinkObject (fffff802&#96;52afae50)
+fffff80252ab0fb0 - nt!NtCreateThreadEx (fffff802&#96;52ab0fb0)
+fffff80252aabb40 - nt!NtCreateTimer (fffff802&#96;52aabb40)
+fffff80252a0e550 - nt!NtCreateTimer2 (fffff802&#96;52a0e550)
+fffff80252d1f5f0 - nt!NtCreateToken (fffff802&#96;52d1f5f0)
+fffff80252a2f3e0 - nt!NtCreateTokenEx (fffff802&#96;52a2f3e0)
+fffff802527cd040 - nt!NtCreateTransaction (fffff802&#96;527cd040)
+fffff802527cd060 - nt!NtCreateTransactionManager (fffff802&#96;527cd060)
+fffff80252a143e0 - nt!NtCreateUserProcess (fffff802&#96;52a143e0)
+fffff80252ae32a0 - nt!NtCreateWaitCompletionPacket (fffff802&#96;52ae32a0)
+fffff80252b7b8f0 - nt!NtCreateWaitablePort (fffff802&#96;52b7b8f0)
+fffff80252a25da0 - nt!NtCreateWnfStateName (fffff802&#96;52a25da0)
+fffff80252a0cd70 - nt!NtCreateWorkerFactory (fffff802&#96;52a0cd70)
+fffff80252c82ff0 - nt!NtDebugActiveProcess (fffff802&#96;52c82ff0)
+fffff80252c831c0 - nt!NtDebugContinue (fffff802&#96;52c831c0)
+fffff80252af1380 - nt!NtDeleteAtom (fffff802&#96;52af1380)
+fffff80252d4fd90 - nt!NtDeleteBootEntry (fffff802&#96;52d4fd90)
+fffff80252d4ff20 - nt!NtDeleteDriverEntry (fffff802&#96;52d4ff20)
+fffff80252b69e40 - nt!NtDeleteFile (fffff802&#96;52b69e40)
+fffff80252a43680 - nt!NtDeleteKey (fffff802&#96;52a43680)
+fffff80252b22270 - nt!NtDeleteObjectAuditAlarm (fffff802&#96;52b22270)
+fffff80252cdc320 - nt!NtDeletePrivateNamespace (fffff802&#96;52cdc320)
+fffff802529dd640 - nt!NtDeleteValueKey (fffff802&#96;529dd640)
+fffff80252bba370 - nt!NtDeleteWnfStateData (fffff802&#96;52bba370)
+fffff80252a20c30 - nt!NtDeleteWnfStateName (fffff802&#96;52a20c30)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252b6a3c0 - nt!NtDisableLastKnownGood (fffff802&#96;52b6a3c0)
+fffff80252d49220 - nt!NtDisplayString (fffff802&#96;52d49220)
+fffff802529ad330 - nt!NtDrawText (fffff802&#96;529ad330)
+fffff80252b695e0 - nt!NtEnableLastKnownGood (fffff802&#96;52b695e0)
+fffff80252d500b0 - nt!NtEnumerateBootEntries (fffff802&#96;52d500b0)
+fffff80252d50700 - nt!NtEnumerateDriverEntries (fffff802&#96;52d50700)
+fffff80252d50bc0 - nt!NtEnumerateSystemEnvironmentValuesEx (fffff802&#96;52d50bc0)
+fffff802527cd080 - nt!NtEnumerateTransactionObject (fffff802&#96;527cd080)
+fffff80252b07a00 - nt!NtExtendSection (fffff802&#96;52b07a00)
+fffff80252d20ae0 - nt!NtFilterBootOption (fffff802&#96;52d20ae0)
+fffff80252a31cf0 - nt!NtFilterToken (fffff802&#96;52a31cf0)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252ae7840 - nt!NtFlushBuffersFileEx (fffff802&#96;52ae7840)
+fffff80252bbc610 - nt!NtFlushInstallUILanguage (fffff802&#96;52bbc610)
+fffff80252b0a310 - nt!ArbPreprocessEntry (fffff802&#96;52b0a310)
+fffff80252b02090 - nt!NtFlushKey (fffff802&#96;52b02090)
+fffff802526fcee0 - nt!NtFlushProcessWriteBuffers (fffff802&#96;526fcee0)
+fffff80252aff030 - nt!NtFlushVirtualMemory (fffff802&#96;52aff030)
+fffff80252b0a310 - nt!ArbPreprocessEntry (fffff802&#96;52b0a310)
+fffff80252cd3530 - nt!NtFreeUserPhysicalPages (fffff802&#96;52cd3530)
+fffff80252c651e0 - nt!NtFreezeRegistry (fffff802&#96;52c651e0)
+fffff802527cd0a0 - nt!NtFreezeTransactions (fffff802&#96;527cd0a0)
+fffff80252aef050 - nt!NtGetCachedSigningLevel (fffff802&#96;52aef050)
+fffff80252a21440 - nt!NtGetCompleteWnfStateSubscription (fffff802&#96;52a21440)
+fffff80252b0b580 - nt!NtGetContextThread (fffff802&#96;52b0b580)
+fffff80252d046f0 - nt!NtGetCurrentProcessorNumber (fffff802&#96;52d046f0)
+fffff80252d04750 - nt!NtGetCurrentProcessorNumberEx (fffff802&#96;52d04750)
+fffff80252ced290 - nt!NtGetDevicePowerState (fffff802&#96;52ced290)
+fffff80252aed1b0 - nt!NtGetMUIRegistryInfo (fffff802&#96;52aed1b0)
+fffff80252b77c80 - nt!NtGetNextProcess (fffff802&#96;52b77c80)
+fffff80252b02a10 - nt!NtGetNextThread (fffff802&#96;52b02a10)
+fffff80252afe900 - nt!NtGetNlsSectionPtr (fffff802&#96;52afe900)
+fffff802527cd0c0 - nt!NtGetNotificationResourceManager (fffff802&#96;527cd0c0)
+fffff80252636e30 - nt!NtGetWriteWatch (fffff802&#96;52636e30)
+fffff80252a30630 - nt!NtImpersonateAnonymousToken (fffff802&#96;52a30630)
+fffff80252aca470 - nt!NtImpersonateThread (fffff802&#96;52aca470)
+fffff80252cd0ea0 - nt!NtInitializeEnclave (fffff802&#96;52cd0ea0)
+fffff80252a5c910 - nt!NtInitializeNlsFiles (fffff802&#96;52a5c910)
+fffff80252b7a8d0 - nt!NtInitializeRegistry (fffff802&#96;52b7a8d0)
+fffff80252b621b0 - nt!NtInitiatePowerAction (fffff802&#96;52b621b0)
+fffff80252b66cc0 - nt!NtIsSystemResumeAutomatic (fffff802&#96;52b66cc0)
+fffff80252b5f2f0 - nt!NtIsUILanguageComitted (fffff802&#96;52b5f2f0)
+fffff80252bc0d60 - nt!NtListenPort (fffff802&#96;52bc0d60)
+fffff80252b6d7a0 - nt!NtLoadDriver (fffff802&#96;52b6d7a0)
+fffff80252cd1180 - nt!NtLoadEnclaveData (fffff802&#96;52cd1180)
+fffff80252b6ef50 - nt!NtLoadKey (fffff802&#96;52b6ef50)
+fffff80252b6eef0 - nt!NtLoadKey2 (fffff802&#96;52b6eef0)
+fffff80252a50870 - nt!NtLoadKeyEx (fffff802&#96;52a50870)
+fffff80252a9ec90 - nt!NtLockFile (fffff802&#96;52a9ec90)
+fffff80252b9f420 - nt!NtLockProductActivationKeys (fffff802&#96;52b9f420)
+fffff80252bb0380 - nt!NtLockRegistryKey (fffff802&#96;52bb0380)
+fffff8025264cec0 - nt!NtLockVirtualMemory (fffff802&#96;5264cec0)
+fffff80252b1f0a0 - nt!NtMakePermanentObject (fffff802&#96;52b1f0a0)
+fffff80252b0a7e0 - nt!NtMakeTemporaryObject (fffff802&#96;52b0a7e0)
+fffff80252ccba70 - nt!NtManageHotPatch (fffff802&#96;52ccba70)
+fffff80252a1c460 - nt!NtManagePartition (fffff802&#96;52a1c460)
+fffff80252d56810 - nt!NtMapCMFModule (fffff802&#96;52d56810)
+fffff80252cd3a10 - nt!NtMapUserPhysicalPages (fffff802&#96;52cd3a10)
+fffff80252b0a730 - nt!NtMapViewOfSectionEx (fffff802&#96;52b0a730)
+fffff80252d50e80 - nt!NtModifyBootEntry (fffff802&#96;52d50e80)
+fffff80252d50eb0 - nt!NtModifyDriverEntry (fffff802&#96;52d50eb0)
+fffff80252afc740 - nt!NtNotifyChangeDirectoryFile (fffff802&#96;52afc740)
+fffff80252afc7a0 - nt!NtNotifyChangeDirectoryFileEx (fffff802&#96;52afc7a0)
+fffff802529e2150 - nt!NtNotifyChangeKey (fffff802&#96;529e2150)
+fffff802529e2200 - nt!NtNotifyChangeMultipleKeys (fffff802&#96;529e2200)
+fffff80252ae4140 - nt!NtNotifyChangeSession (fffff802&#96;52ae4140)
+fffff802527cd0e0 - nt!NtOpenEnlistment (fffff802&#96;527cd0e0)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252c91700 - nt!NtOpenIoCompletion (fffff802&#96;52c91700)
+fffff802529cfac0 - nt!NtOpenJobObject (fffff802&#96;529cfac0)
+fffff80252a93720 - nt!NtOpenKeyEx (fffff802&#96;52a93720)
+fffff80252c65280 - nt!NtOpenKeyTransacted (fffff802&#96;52c65280)
+fffff80252a52f40 - nt!NtOpenKeyTransactedEx (fffff802&#96;52a52f40)
+fffff80252d57e30 - nt!NtOpenKeyedEvent (fffff802&#96;52d57e30)
+fffff80252af0cc0 - nt!NtOpenMutant (fffff802&#96;52af0cc0)
+fffff80252af8be0 - nt!NtOpenObjectAuditAlarm (fffff802&#96;52af8be0)
+fffff80252bbe550 - nt!NtOpenPartition (fffff802&#96;52bbe550)
+fffff80252af34b0 - nt!NtOpenPrivateNamespace (fffff802&#96;52af34b0)
+fffff80252a66a70 - nt!NtOpenProcessToken (fffff802&#96;52a66a70)
+fffff80252c652a0 - nt!NtOpenRegistryTransaction (fffff802&#96;52c652a0)
+fffff802527cd100 - nt!NtOpenResourceManager (fffff802&#96;527cd100)
+fffff80252af1e80 - nt!NtOpenSemaphore (fffff802&#96;52af1e80)
+fffff80252b0d830 - nt!NtOpenSession (fffff802&#96;52b0d830)
+fffff80252ad7f10 - nt!NtOpenSymbolicLinkObject (fffff802&#96;52ad7f10)
+fffff80252a661c0 - nt!NtOpenThread (fffff802&#96;52a661c0)
+fffff80252d4bf00 - nt!NtOpenTimer (fffff802&#96;52d4bf00)
+fffff802527cd120 - nt!NtOpenTransaction (fffff802&#96;527cd120)
+fffff802527cd140 - nt!NtOpenTransactionManager (fffff802&#96;527cd140)
+fffff802529d8ef0 - nt!NtPlugPlayControl (fffff802&#96;529d8ef0)
+fffff802527cd160 - nt!NtPrePrepareComplete (fffff802&#96;527cd160)
+fffff802527cd180 - nt!NtPrePrepareEnlistment (fffff802&#96;527cd180)
+fffff802527cd1a0 - nt!NtPrepareComplete (fffff802&#96;527cd1a0)
+fffff802527cd1c0 - nt!NtPrepareEnlistment (fffff802&#96;527cd1c0)
+fffff80252a17f00 - nt!NtPrivilegeCheck (fffff802&#96;52a17f00)
+fffff80252b78df0 - nt!NtPrivilegeObjectAuditAlarm (fffff802&#96;52b78df0)
+fffff80252b057c0 - nt!NtPrivilegedServiceAuditAlarm (fffff802&#96;52b057c0)
+fffff802527cd1e0 - nt!NtPropagationComplete (fffff802&#96;527cd1e0)
+fffff802527cd200 - nt!NtPropagationFailed (fffff802&#96;527cd200)
+fffff80252d58c30 - nt!NtPssCaptureVaSpaceBulk (fffff802&#96;52d58c30)
+fffff80252aae8e0 - nt!NtPulseEvent (fffff802&#96;52aae8e0)
+fffff80252d57a50 - nt!NtQueryAuxiliaryCounterFrequency (fffff802&#96;52d57a50)
+fffff80252d50ee0 - nt!NtQueryBootEntryOrder (fffff802&#96;52d50ee0)
+fffff80252d51160 - nt!NtQueryBootOptions (fffff802&#96;52d51160)
+fffff80252761440 - nt!NtQueryDebugFilterState (fffff802&#96;52761440)
+fffff80252a8c710 - nt!NtQueryDirectoryFileEx (fffff802&#96;52a8c710)
+fffff80252a8aa10 - nt!NtQueryDirectoryObject (fffff802&#96;52a8aa10)
+fffff80252d51460 - nt!NtQueryDriverEntryOrder (fffff802&#96;52d51460)
+fffff80252ae9f70 - nt!NtQueryEaFile (fffff802&#96;52ae9f70)
+fffff80252a161c0 - nt!NtQueryFullAttributesFile (fffff802&#96;52a161c0)
+fffff80252aef9e0 - nt!NtQueryInformationAtom (fffff802&#96;52aef9e0)
+fffff80252c91aa0 - nt!NtQueryInformationByName (fffff802&#96;52c91aa0)
+fffff802527cd220 - nt!NtQueryInformationEnlistment (fffff802&#96;527cd220)
+fffff80252a98850 - nt!NtQueryInformationJobObject (fffff802&#96;52a98850)
+fffff80252cbedd0 - nt!NtQueryInformationPort (fffff802&#96;52cbedd0)
+fffff802527cd240 - nt!NtQueryInformationResourceManager (fffff802&#96;527cd240)
+fffff802527cd260 - nt!NtQueryInformationTransaction (fffff802&#96;527cd260)
+fffff802527cd280 - nt!NtQueryInformationTransactionManager (fffff802&#96;527cd280)
+fffff802529b43b0 - nt!NtQueryInformationWorkerFactory (fffff802&#96;529b43b0)
+fffff80252b01a70 - nt!NtQueryInstallUILanguage (fffff802&#96;52b01a70)
+fffff80252b21860 - nt!NtQueryIntervalProfile (fffff802&#96;52b21860)
+fffff80252c91820 - nt!NtQueryIoCompletion (fffff802&#96;52c91820)
+fffff80252a57dc0 - nt!NtQueryLicenseValue (fffff802&#96;52a57dc0)
+fffff80252a54790 - nt!NtQueryMultipleValueKey (fffff802&#96;52a54790)
+fffff80252d53c40 - nt!NtQueryMutant (fffff802&#96;52d53c40)
+fffff80252c653f0 - nt!NtQueryOpenSubKeys (fffff802&#96;52c653f0)
+fffff80252c65610 - nt!NtQueryOpenSubKeysEx (fffff802&#96;52c65610)
+fffff80252b13480 - nt!CmpCleanUpHigherLayerKcbCachesPreCallback (fffff802&#96;52b13480)
+fffff80252c92c50 - nt!NtQueryQuotaInformationFile (fffff802&#96;52c92c50)
+fffff80252a814e0 - nt!NtQuerySecurityAttributesToken (fffff802&#96;52a814e0)
+fffff80252adb2d0 - nt!NtQuerySecurityObject (fffff802&#96;52adb2d0)
+fffff80252d18a60 - nt!NtQuerySecurityPolicy (fffff802&#96;52d18a60)
+fffff80252d53800 - nt!NtQuerySemaphore (fffff802&#96;52d53800)
+fffff80252ad8060 - nt!NtQuerySymbolicLinkObject (fffff802&#96;52ad8060)
+fffff80252d51790 - nt!NtQuerySystemEnvironmentValue (fffff802&#96;52d51790)
+fffff80252b0d9d0 - nt!NtQuerySystemEnvironmentValueEx (fffff802&#96;52b0d9d0)
+fffff80252ae9b60 - nt!NtQuerySystemInformationEx (fffff802&#96;52ae9b60)
+fffff80252b0bf00 - nt!NtQueryTimerResolution (fffff802&#96;52b0bf00)
+fffff80252a22ab0 - nt!NtQueryWnfStateData (fffff802&#96;52a22ab0)
+fffff80252af6230 - nt!NtQueryWnfStateNameInformation (fffff802&#96;52af6230)
+fffff80252ab36d0 - nt!NtQueueApcThreadEx (fffff802&#96;52ab36d0)
+fffff802527f7bc0 - nt!NtRaiseException (fffff802&#96;527f7bc0)
+fffff80252d534b0 - nt!NtRaiseHardError (fffff802&#96;52d534b0)
+fffff802527cd2a0 - nt!NtReadOnlyEnlistment (fffff802&#96;527cd2a0)
+fffff802527cd2c0 - nt!NtRecoverEnlistment (fffff802&#96;527cd2c0)
+fffff802527cd2e0 - nt!NtRecoverResourceManager (fffff802&#96;527cd2e0)
+fffff802527cd300 - nt!NtRecoverTransactionManager (fffff802&#96;527cd300)
+fffff802527cd820 - nt!NtRegisterProtocolAddressInformation (fffff802&#96;527cd820)
+fffff80252b0ba10 - nt!NtRegisterThreadTerminatePort (fffff802&#96;52b0ba10)
+fffff80252d57f30 - nt!NtReleaseKeyedEvent (fffff802&#96;52d57f30)
+fffff802526823b0 - nt!NtReleaseWorkerFactoryWorker (fffff802&#96;526823b0)
+fffff802529f76f0 - nt!NtRemoveIoCompletionEx (fffff802&#96;529f76f0)
+fffff80252c833c0 - nt!NtRemoveProcessDebug (fffff802&#96;52c833c0)
+fffff80252c65950 - nt!NtRenameKey (fffff802&#96;52c65950)
+fffff802527cd840 - nt!NtRenameTransactionManager (fffff802&#96;527cd840)
+fffff80252c65e50 - nt!NtReplaceKey (fffff802&#96;52c65e50)
+fffff802529c4c70 - nt!NtReplacePartitionUnit (fffff802&#96;529c4c70)
+fffff80252cbef00 - nt!NtReplyWaitReplyPort (fffff802&#96;52cbef00)
+fffff80252b00200 - nt!NtRequestPort (fffff802&#96;52b00200)
+fffff80252abcd30 - nt!NtResetEvent (fffff802&#96;52abcd30)
+fffff802529f85f0 - nt!NtResetWriteWatch (fffff802&#96;529f85f0)
+fffff80252c661e0 - nt!NtRestoreKey (fffff802&#96;52c661e0)
+fffff80252d09680 - nt!NtResumeProcess (fffff802&#96;52d09680)
+fffff8025297cb30 - nt!NtRevertContainerImpersonation (fffff802&#96;5297cb30)
+fffff802527cd320 - nt!NtRollbackComplete (fffff802&#96;527cd320)
+fffff802527cd340 - nt!NtRollbackEnlistment (fffff802&#96;527cd340)
+fffff80252b20d80 - nt!NtRollbackRegistryTransaction (fffff802&#96;52b20d80)
+fffff802527cd360 - nt!NtRollbackTransaction (fffff802&#96;527cd360)
+fffff802527cd8a0 - nt!NtRollforwardTransactionManager (fffff802&#96;527cd8a0)
+fffff80252c66490 - nt!NtSaveKey (fffff802&#96;52c66490)
+fffff80252b16790 - nt!NtSaveKeyEx (fffff802&#96;52b16790)
+fffff80252c664b0 - nt!NtSaveMergedKeys (fffff802&#96;52c664b0)
+fffff80252a2dcc0 - nt!NtSecureConnectPort (fffff802&#96;52a2dcc0)
+fffff80252bbf3e0 - nt!NtSerializeBoot (fffff802&#96;52bbf3e0)
+fffff80252d51ab0 - nt!NtSetBootEntryOrder (fffff802&#96;52d51ab0)
+fffff80252d51cc0 - nt!NtSetBootOptions (fffff802&#96;52d51cc0)
+fffff80252b18380 - nt!NtSetCachedSigningLevel (fffff802&#96;52b18380)
+fffff80252b183b0 - nt!NtSetCachedSigningLevel2 (fffff802&#96;52b183b0)
+fffff80252d082d0 - nt!NtSetContextThread (fffff802&#96;52d082d0)
+fffff80252b8e010 - nt!NtSetDebugFilterState (fffff802&#96;52b8e010)
+fffff80252bbee70 - nt!NtSetDefaultHardErrorPort (fffff802&#96;52bbee70)
+fffff80252b79220 - nt!NtSetDefaultLocale (fffff802&#96;52b79220)
+fffff80252b79200 - nt!NtSetDefaultUILanguage (fffff802&#96;52b79200)
+fffff80252d51ed0 - nt!NtSetDriverEntryOrder (fffff802&#96;52d51ed0)
+fffff80252b1e380 - nt!NtSetEaFile (fffff802&#96;52b1e380)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff8025275fc50 - nt!NtSetIRTimer (fffff802&#96;5275fc50)
+fffff80252c83530 - nt!NtSetInformationDebugObject (fffff802&#96;52c83530)
+fffff802527cd380 - nt!NtSetInformationEnlistment (fffff802&#96;527cd380)
+fffff80252a1a940 - nt!NtSetInformationJobObject (fffff802&#96;52a1a940)
+fffff80252a71fc0 - nt!NtSetInformationKey (fffff802&#96;52a71fc0)
+fffff802527cd3a0 - nt!NtSetInformationResourceManager (fffff802&#96;527cd3a0)
+fffff80252cd9960 - nt!NtSetInformationSymbolicLink (fffff802&#96;52cd9960)
+fffff80252ab9460 - nt!NtSetInformationToken (fffff802&#96;52ab9460)
+fffff802527cd3c0 - nt!NtSetInformationTransaction (fffff802&#96;527cd3c0)
+fffff802527cd860 - nt!NtSetInformationTransactionManager (fffff802&#96;527cd860)
+fffff80252a06330 - nt!NtSetInformationVirtualMemory (fffff802&#96;52a06330)
+fffff80252666350 - nt!NtSetInformationWorkerFactory (fffff802&#96;52666350)
+fffff80252b21b20 - nt!NtSetIntervalProfile (fffff802&#96;52b21b20)
+fffff80252ae4590 - nt!NtSetIoCompletion (fffff802&#96;52ae4590)
+fffff80252a72920 - nt!NtSetIoCompletionEx (fffff802&#96;52a72920)
+fffff802527ccce0 - nt!BvgaSetVirtualFrameBuffer (fffff802&#96;527ccce0)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252c93360 - nt!NtSetQuotaInformationFile (fffff802&#96;52c93360)
+fffff80252a26780 - nt!NtSetSecurityObject (fffff802&#96;52a26780)
+fffff80252d520e0 - nt!NtSetSystemEnvironmentValue (fffff802&#96;52d520e0)
+fffff80252d52400 - nt!NtSetSystemEnvironmentValueEx (fffff802&#96;52d52400)
+fffff80252aa9c30 - nt!NtSetSystemInformation (fffff802&#96;52aa9c30)
+fffff80252d956b0 - nt!NtSetSystemPowerState (fffff802&#96;52d956b0)
+fffff80252d48ab0 - nt!NtSetSystemTime (fffff802&#96;52d48ab0)
+fffff80252a4e8c0 - nt!NtSetThreadExecutionState (fffff802&#96;52a4e8c0)
+fffff8025267ed40 - nt!NtSetTimer2 (fffff802&#96;5267ed40)
+fffff80252611310 - nt!NtSetTimerEx (fffff802&#96;52611310)
+fffff80252aa8f90 - nt!NtSetTimerResolution (fffff802&#96;52aa8f90)
+fffff80252bb3ee0 - nt!NtSetUuidSeed (fffff802&#96;52bb3ee0)
+fffff80252b5a260 - nt!NtSetVolumeInformationFile (fffff802&#96;52b5a260)
+fffff80252af7bc0 - nt!NtSetWnfProcessNotificationEvent (fffff802&#96;52af7bc0)
+fffff802529ad4b0 - nt!NtShutdownSystem (fffff802&#96;529ad4b0)
+fffff802527582e0 - nt!NtShutdownWorkerFactory (fffff802&#96;527582e0)
+fffff8025295f620 - nt!NtSignalAndWaitForSingleObject (fffff802&#96;5295f620)
+fffff802527cd880 - nt!NtSinglePhaseReject (fffff802&#96;527cd880)
+fffff80252d57ac0 - nt!NtStartProfile (fffff802&#96;52d57ac0)
+fffff80252d57d30 - nt!NtStopProfile (fffff802&#96;52d57d30)
+fffff80252a22650 - nt!NtSubscribeWnfStateChange (fffff802&#96;52a22650)
+fffff80252d09700 - nt!NtSuspendProcess (fffff802&#96;52d09700)
+fffff80252b093a0 - nt!NtSuspendThread (fffff802&#96;52b093a0)
+fffff80252bbc780 - nt!NtSystemDebugControl (fffff802&#96;52bbc780)
+fffff80252cd1800 - nt!NtTerminateEnclave (fffff802&#96;52cd1800)
+fffff80252a55dc0 - nt!NtTerminateJobObject (fffff802&#96;52a55dc0)
+fffff80252af9a40 - nt!NtTestAlert (fffff802&#96;52af9a40)
+fffff80252c666f0 - nt!NtThawRegistry (fffff802&#96;52c666f0)
+fffff802527cd3e0 - nt!NtThawTransactions (fffff802&#96;527cd3e0)
+fffff80252a8d1c0 - nt!NtTraceControl (fffff802&#96;52a8d1c0)
+fffff80252d526b0 - nt!NtTranslateFilePath (fffff802&#96;52d526b0)
+fffff80252cbabd0 - nt!NtUmsThreadYield (fffff802&#96;52cbabd0)
+fffff80252c984e0 - nt!NtUnloadDriver (fffff802&#96;52c984e0)
+fffff80252a4f480 - nt!NtUnloadKey (fffff802&#96;52a4f480)
+fffff80252b60b20 - nt!NtUnloadKey2 (fffff802&#96;52b60b20)
+fffff80252a4f7e0 - nt!NtUnloadKeyEx (fffff802&#96;52a4f7e0)
+fffff80252adea50 - nt!NtUnlockFile (fffff802&#96;52adea50)
+fffff80252656660 - nt!NtUnlockVirtualMemory (fffff802&#96;52656660)
+fffff80252a00720 - nt!NtUnmapViewOfSectionEx (fffff802&#96;52a00720)
+fffff80252a20290 - nt!NtUnsubscribeWnfStateChange (fffff802&#96;52a20290)
+fffff80252a221d0 - nt!NtUpdateWnfStateData (fffff802&#96;52a221d0)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252adf1e0 - nt!NtWaitForAlertByThreadId (fffff802&#96;52adf1e0)
+fffff80252c836c0 - nt!NtWaitForDebugEvent (fffff802&#96;52c836c0)
+fffff80252d582f0 - nt!NtWaitForKeyedEvent (fffff802&#96;52d582f0)
+fffff8025260ff10 - nt!NtWaitForWorkViaWorkerFactory (fffff802&#96;5260ff10)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff80252b13570 - nt!NT_DISK::GetPnpProperty (fffff802&#96;52b13570)
+fffff802529c73b0 - nt!NtLoadKey3 (fffff802&#96;529c73b0)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h3 id="IDT-interrupt-descriptor-table"><a href="#IDT-interrupt-descriptor-table" class="headerlink" title="IDT (interrupt descriptor table)"></a>IDT (interrupt descriptor table)</h3><pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly">lkd&gt; !idt
+
+Dumping IDT: fffff8025075f000
+
+00:	fffff80252e12100 nt!KiDivideErrorFaultShadow
+01:	fffff80252e12180 nt!KiDebugTrapOrFaultShadow	Stack &#x3D; 0xFFFFF802507639D0
+02:	fffff80252e12240 nt!KiNmiInterruptShadow	Stack &#x3D; 0xFFFFF802507637D0
+03:	fffff80252e122c0 nt!KiBreakpointTrapShadow
+04:	fffff80252e12340 nt!KiOverflowTrapShadow
+05:	fffff80252e123c0 nt!KiBoundFaultShadow
+06:	fffff80252e12440 nt!KiInvalidOpcodeFaultShadow
+07:	fffff80252e124c0 nt!KiNpxNotAvailableFaultShadow
+08:	fffff80252e12540 nt!KiDoubleFaultAbortShadow	Stack &#x3D; 0xFFFFF802507633D0
+09:	fffff80252e125c0 nt!KiNpxSegmentOverrunAbortShadow
+0a:	fffff80252e12640 nt!KiInvalidTssFaultShadow
+0b:	fffff80252e126c0 nt!KiSegmentNotPresentFaultShadow
+0c:	fffff80252e12740 nt!KiStackFaultShadow
+0d:	fffff80252e127c0 nt!KiGeneralProtectionFaultShadow
+0e:	fffff80252e12840 nt!KiPageFaultShadow
+10:	fffff80252e128c0 nt!KiFloatingErrorFaultShadow
+11:	fffff80252e12940 nt!KiAlignmentFaultShadow
+12:	fffff80252e129c0 nt!KiMcheckAbortShadow	Stack &#x3D; 0xFFFFF802507635D0
+13:	fffff80252e12ac0 nt!KiXmmExceptionShadow
+14:	fffff80252e12b40 nt!KiVirtualizationExceptionShadow
+15:	fffff80252e12bc0 nt!KiControlProtectionFaultShadow
+1f:	fffff80252e12c40 nt!KiApcInterruptShadow
+20:	fffff80252e12cc0 nt!KiSwInterruptShadow
+29:	fffff80252e12d40 nt!KiRaiseSecurityCheckFailureShadow
+2c:	fffff80252e12dc0 nt!KiRaiseAssertionShadow
+2d:	fffff80252e12e40 nt!KiDebugServiceTrapShadow
+2e:	fffff80252e12ec0 nt!KiSystemServiceShadow
+2f:	fffff80252e12f40 nt!KiDpcInterruptShadow
+30:	fffff80252e12fc0 nt!KiHvInterruptShadow
+31:	fffff80252e13040 nt!KiVmbusInterrupt0Shadow
+32:	fffff80252e130c0 nt!KiVmbusInterrupt1Shadow
+33:	fffff80252e13140 nt!KiVmbusInterrupt2Shadow
+34:	fffff80252e131c0 nt!KiVmbusInterrupt3Shadow
+35:	fffff80252e13468 nt!HalpInterruptCmciService (KINTERRUPT fffff802530f2ec0)
+
+36:	fffff80252e13470 nt!HalpInterruptCmciService (KINTERRUPT fffff802530f3100)
+
+50:	fffff80252e13540 0xfffff80256624d20 (KINTERRUPT ffff81814970dc80)
+
+51:	fffff80252e13548 0xfffff80256a0fd30 (KINTERRUPT ffff81814970d3c0)
+
+52:	fffff80252e13550 0xfffff802577c7960 (KINTERRUPT ffff818148521a00)
+
+53:	fffff80252e13558 0xfffff802561d3c30 (KINTERRUPT ffff818148521c80)
+
+60:	fffff80252e135c0 0xfffff8026cce6790 (KINTERRUPT ffff81814970d000)
+
+61:	fffff80252e135c8 0xfffff80256a0fd30 (KINTERRUPT ffff81814970d500)
+
+62:	fffff80252e135d0 0xfffff802577c7960 (KINTERRUPT ffff8181485218c0)
+
+63:	fffff80252e135d8 0xfffff802561d3c30 (KINTERRUPT ffff818148521780)
+
+71:	fffff80252e13648 0xfffff80256a0fd30 (KINTERRUPT ffff81814970d640)
+
+72:	fffff80252e13650 0xfffff80263a0d850 (KINTERRUPT ffff818148521280)
+
+81:	fffff80252e136c8 0xfffff80256623bb0 (KINTERRUPT ffff81814970d780)
+
+82:	fffff80252e136d0 0xfffff802561d3c30 (KINTERRUPT ffff818148521dc0)
+
+83:	fffff80252e136d8 0xfffff80263a0d850 (KINTERRUPT ffff818148521140)
+
+91:	fffff80252e13748 0xfffff80256624d20 (KINTERRUPT ffff81814970d8c0)
+
+93:	fffff80252e13758 0xfffff802561d3c30 (KINTERRUPT ffff818148521500)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff818148521000)
+
+a0:	fffff80252e137c0 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7dc0)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7c80)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7b40)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7a00)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f78c0)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7780)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7640)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7500)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f73c0)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7280)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7140)
+
+	                 0xfffff802561d3c30 (KINTERRUPT ffff81814a4f7000)
+
+a1:	fffff80252e137c8 0xfffff80256624d20 (KINTERRUPT ffff81814970da00)
+
+a2:	fffff80252e137d0 0xfffff80256a0fd30 (KINTERRUPT ffff81814970d140)
+
+a3:	fffff80252e137d8 0xfffff802561d3c30 (KINTERRUPT ffff818148521640)
+
+b0:	fffff80252e13840 0xfffff802564f5c40 (KINTERRUPT ffff81814970ddc0)
+
+b1:	fffff80252e13848 0xfffff80256624d20 (KINTERRUPT ffff81814970db40)
+
+b2:	fffff80252e13850 0xfffff80256a0fd30 (KINTERRUPT ffff81814970d280)
+
+b3:	fffff80252e13858 0xfffff802561d3c30 (KINTERRUPT ffff818148521b40)
+
+cd:	fffff80252e13928 nt!HalpInterruptThermalService (KINTERRUPT ffff91870a51a500)
+
+d1:	fffff80252e13948 nt!HalpTimerClockInterrupt (KINTERRUPT fffff802530f38e0)
+
+d2:	fffff80252e13950 nt!HalpTimerClockIpiRoutine (KINTERRUPT fffff802530f37c0)
+
+d7:	fffff80252e13978 nt!HalpInterruptRebootService (KINTERRUPT fffff802530f3580)
+
+d8:	fffff80252e13980 nt!HalpInterruptStubService (KINTERRUPT fffff802530f3340)
+
+df:	fffff80252e139b8 nt!HalpInterruptSpuriousService (KINTERRUPT fffff802530f3220)
+
+e1:	fffff80252e13240 nt!KiIpiInterruptShadow
+e2:	fffff80252e139d0 nt!HalpInterruptLocalErrorService (KINTERRUPT fffff802530f3460)
+
+e3:	fffff80252e139d8 nt!HalpInterruptDeferredRecoveryService (KINTERRUPT fffff802530f2fe0)
+
+fe:	fffff80252e13ab0 nt!HalpPerfInterrupt (KINTERRUPT fffff802530f36a0)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">I'm so cute. Please give me money.</div><div id="qr" style="display:none;"><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/wr-web/picture/zhifubao_reward.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/wr-web/picture/zhifubao_reward.png" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a target="_blank" rel="noopener" href="https://cdn.jsdelivr.net/gh/wr-web/picture/wechat_reward.png"><img loading="lazy" src="https://cdn.jsdelivr.net/gh/wr-web/picture/wechat_reward.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>RT</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://wr-web.github.io/2021/05/22/dll_injection_hook/" title="Dll INJECTION &amp;&amp; HOOK">https://wr-web.github.io/2021/05/22/dll_injection_hook/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/07/19/rctf_valgrind/" rel="prev" title="RCTF Valgrind"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">RCTF Valgrind</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/04/22/fread/" rel="next" title="fread ?!"><span class="post-nav-text">fread ?!</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br></div></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> RT</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.0.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.7.0</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#6200ee" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
