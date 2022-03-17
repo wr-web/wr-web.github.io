@@ -6,7 +6,7 @@
   <link href="https://wr-web.github.io/atom.xml" rel="self"/>
   
   <link href="https://wr-web.github.io/"/>
-  <updated>2022-03-16T05:21:12.123Z</updated>
+  <updated>2022-03-17T06:30:47.975Z</updated>
   <id>https://wr-web.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>DX12 第八章学习</title>
+    <link href="https://wr-web.github.io/2022/03/17/d3d12-8/"/>
+    <id>https://wr-web.github.io/2022/03/17/d3d12-8/</id>
+    <published>2022-03-17T12:00:00.000Z</published>
+    <updated>2022-03-17T06:30:47.975Z</updated>
+    
+    
+    <summary type="html">learn from DX12</summary>
+    
+    
+    
+    <category term="DX12" scheme="https://wr-web.github.io/categories/DX12/"/>
+    
+    
+    <category term="directX 12" scheme="https://wr-web.github.io/tags/directX-12/"/>
+    
+    <category term="图形学" scheme="https://wr-web.github.io/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>DX12 第七章习题</title>
