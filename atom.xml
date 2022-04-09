@@ -40,6 +40,29 @@
   </entry>
   
   <entry>
+    <title>HGAME2022_部分PWN</title>
+    <link href="https://wr-web.github.io/2022/04/07/HGAME2022-%E9%83%A8%E5%88%86PWN/"/>
+    <id>https://wr-web.github.io/2022/04/07/HGAME2022-%E9%83%A8%E5%88%86PWN/</id>
+    <published>2022-04-07T12:00:00.000Z</published>
+    <updated>2022-04-07T06:37:17.823Z</updated>
+    
+    
+    <summary type="html">PWN</summary>
+    
+    
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/categories/HGAME/"/>
+    
+    <category term="留坑" scheme="https://wr-web.github.io/categories/HGAME/%E7%95%99%E5%9D%91/"/>
+    
+    
+    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
+    
+    <category term="HGAME" scheme="https://wr-web.github.io/tags/HGAME/"/>
+    
+  </entry>
+  
+  <entry>
     <title>DX12 第八章学习</title>
     <link href="https://wr-web.github.io/2022/03/17/d3d12-8/"/>
     <id>https://wr-web.github.io/2022/03/17/d3d12-8/</id>
@@ -438,27 +461,6 @@
     <category term="Windows" scheme="https://wr-web.github.io/tags/Windows/"/>
     
     <category term="留坑" scheme="https://wr-web.github.io/tags/%E7%95%99%E5%9D%91/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>WIN HANDLE</title>
-    <link href="https://wr-web.github.io/2020/09/27/win_handle/"/>
-    <id>https://wr-web.github.io/2020/09/27/win_handle/</id>
-    <published>2020-09-27T12:00:00.000Z</published>
-    <updated>2022-03-07T09:50:27.937Z</updated>
-    
-    
-    <summary type="html">HANDLE</summary>
-    
-    
-    
-    <category term="Windows" scheme="https://wr-web.github.io/categories/Windows/"/>
-    
-    
-    <category term="Windows" scheme="https://wr-web.github.io/tags/Windows/"/>
-    
-    <category term="Handle" scheme="https://wr-web.github.io/tags/Handle/"/>
     
   </entry>
   
