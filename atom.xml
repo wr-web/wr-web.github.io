@@ -38,25 +38,6 @@
   </entry>
   
   <entry>
-    <title>Crack 010Editor</title>
-    <link href="https://wr-web.github.io/2022/04/11/crack_010editor/"/>
-    <id>https://wr-web.github.io/2022/04/11/crack_010editor/</id>
-    <published>2022-04-11T12:00:00.000Z</published>
-    <updated>2022-04-11T10:30:37.899Z</updated>
-    
-    
-    <summary type="html">I will pay if I were rich.</summary>
-    
-    
-    
-    <category term="Crack" scheme="https://wr-web.github.io/categories/Crack/"/>
-    
-    
-    <category term="Crack" scheme="https://wr-web.github.io/tags/Crack/"/>
-    
-  </entry>
-  
-  <entry>
     <title>HGAME2022_partialPWN</title>
     <link href="https://wr-web.github.io/2022/04/07/HGAME2022-partialPWN/"/>
     <id>https://wr-web.github.io/2022/04/07/HGAME2022-partialPWN/</id>
@@ -457,6 +438,27 @@
     <category term="mark" scheme="https://wr-web.github.io/tags/mark/"/>
     
     <category term="book" scheme="https://wr-web.github.io/tags/book/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>进程/线程 的实际入口</title>
+    <link href="https://wr-web.github.io/2020/09/28/thread_process_loader/"/>
+    <id>https://wr-web.github.io/2020/09/28/thread_process_loader/</id>
+    <published>2020-09-28T12:00:00.000Z</published>
+    <updated>2022-03-15T08:12:59.517Z</updated>
+    
+    
+    <summary type="html">how windows load process</summary>
+    
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/categories/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/tags/Windows/"/>
+    
+    <category term="留坑" scheme="https://wr-web.github.io/tags/%E7%95%99%E5%9D%91/"/>
     
   </entry>
   
