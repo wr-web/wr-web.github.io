@@ -1,175 +1,296 @@
-/* global CONFIG */
-
-HTMLElement.prototype.wrap = function (wrapper) {
-  this.parentNode.insertBefore(wrapper, this);
-  this.parentNode.removeChild(this);
-  wrapper.appendChild(this);
-};
-
-/**
- * 公共辅助函数
- */
-Yun.utils = {
-  /**
-   * 是否为主页
-   * @returns {boolean}
-   */
-  isHome() {
-    return window.location.pathname === CONFIG.root;
+const btf = {
+  debounce: (func, wait = 0, immediate = false) => {
+    let timeout
+    return (...args) => {
+      const later = () => {
+        timeout = null
+        if (!immediate) func(...args)
+      }
+      const callNow = immediate && !timeout
+      clearTimeout(timeout)
+      timeout = setTimeout(later, wait)
+      if (callNow) func(...args)
+    }
   },
 
-  /**
-   * 包裹表格，添加 class 以控制 table 样式
-   */
-  wrapTable() {
-    document.querySelectorAll("table").forEach((el) => {
-      const container = document.createElement("div");
-      container.className = "table-container";
-      el.wrap(container);
-    });
+  throttle: function (func, wait, options = {}) {
+    let timeout, context, args
+    let previous = 0
+
+    const later = () => {
+      previous = options.leading === false ? 0 : new Date().getTime()
+      timeout = null
+      func.apply(context, args)
+      if (!timeout) context = args = null
+    }
+
+    const throttled = (...params) => {
+      const now = new Date().getTime()
+      if (!previous && options.leading === false) previous = now
+      const remaining = wait - (now - previous)
+      context = this
+      args = params
+      if (remaining <= 0 || remaining > wait) {
+        if (timeout) {
+          clearTimeout(timeout)
+          timeout = null
+        }
+        previous = now
+        func.apply(context, args)
+        if (!timeout) context = args = null
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining)
+      }
+    }
+
+    return throttled
   },
 
-  /**
-   * 动态获取脚本，并执行回调函数
-   * @param {*} url
-   * @param {*} callback
-   * @param {*} condition 是否存在对应实例，判断是否加载脚本
-   */
-  getScript(url, callback, condition) {
-    if (condition) {
-      callback();
+  sidebarPaddingR: () => {
+    const innerWidth = window.innerWidth
+    const clientWidth = document.body.clientWidth
+    const paddingRight = innerWidth - clientWidth
+    if (innerWidth !== clientWidth) {
+      document.body.style.paddingRight = paddingRight + 'px'
+    }
+  },
+
+  snackbarShow: (text, showAction = false, duration = 2000) => {
+    const { position, bgLight, bgDark } = GLOBAL_CONFIG.Snackbar
+    const bg = document.documentElement.getAttribute('data-theme') === 'light' ? bgLight : bgDark
+    Snackbar.show({
+      text,
+      backgroundColor: bg,
+      showAction,
+      duration,
+      pos: position,
+      customClass: 'snackbar-css'
+    })
+  },
+
+  diffDate: (d, more = false) => {
+    const dateNow = new Date()
+    const datePost = new Date(d)
+    const dateDiff = dateNow.getTime() - datePost.getTime()
+    const minute = 1000 * 60
+    const hour = minute * 60
+    const day = hour * 24
+    const month = day * 30
+    const { dateSuffix } = GLOBAL_CONFIG
+
+    if (!more) return parseInt(dateDiff / day)
+
+    const monthCount = dateDiff / month
+    const dayCount = dateDiff / day
+    const hourCount = dateDiff / hour
+    const minuteCount = dateDiff / minute
+
+    if (monthCount > 12) return datePost.toISOString().slice(0, 10)
+    if (monthCount >= 1) return `${parseInt(monthCount)} ${dateSuffix.month}`
+    if (dayCount >= 1) return `${parseInt(dayCount)} ${dateSuffix.day}`
+    if (hourCount >= 1) return `${parseInt(hourCount)} ${dateSuffix.hour}`
+    if (minuteCount >= 1) return `${parseInt(minuteCount)} ${dateSuffix.min}`
+    return dateSuffix.just
+  },
+
+  loadComment: (dom, callback) => {
+    if ('IntersectionObserver' in window) {
+      const observerItem = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          callback()
+          observerItem.disconnect()
+        }
+      }, { threshold: [0] })
+      observerItem.observe(dom)
     } else {
-      const script = document.createElement("script");
-      script.onload = () => {
-        setTimeout(callback);
-      };
-      script.src = url;
-      document.head.appendChild(script);
+      callback()
     }
   },
 
-  /**
-   * click btn to copy codeblock
-   */
-  insertCopyCodeBtn() {
-    const codeblocks = document.querySelectorAll("pre[class*='language-']");
+  scrollToDest: (pos, time = 500) => {
+    const currentPos = window.pageYOffset
+    const isNavFixed = document.getElementById('page-header').classList.contains('fixed')
+    if (currentPos > pos || isNavFixed) pos = pos - 70
 
-    codeblocks.forEach((codeblock) => {
-      if (!CONFIG.copycode) return;
+    if ('scrollBehavior' in document.documentElement.style) {
+      window.scrollTo({
+        top: pos,
+        behavior: 'smooth'
+      })
+      return
+    }
 
-      const container = document.createElement("div");
-      container.className = "code-container";
-      codeblock.wrap(container);
-
-      container.insertAdjacentHTML(
-        "beforeend",
-        '<div class="copy-btn"><svg class="icon"><use xlink:href="#icon-file-copy-line" aria-label="copy"></use></svg></div>'
-      );
-
-      const copyBtn = container.querySelector(".copy-btn");
-      copyBtn.addEventListener("click", () => {
-        const lines =
-          container.querySelector("code[class*='language-']") ||
-          container.querySelector(".token");
-        const code = lines.innerText;
-        const ta = document.createElement("textarea");
-        ta.style.top = window.scrollY + "px"; // Prevent page scrolling
-        ta.style.position = "absolute";
-        ta.style.opacity = "0";
-        ta.readOnly = true;
-        ta.value = code;
-        document.body.append(ta);
-        ta.select();
-        ta.setSelectionRange(0, code.length);
-        ta.readOnly = false;
-        // copy success
-        const result = document.execCommand("copy");
-        const iconName = result ? "#icon-check-line" : "#icon-timer-line";
-        const iconSvg = copyBtn.querySelector("svg use");
-        iconSvg.setAttribute("xlink:href", iconName);
-        iconSvg.setAttribute("color", result ? "green" : "red");
-
-        ta.blur(); // For iOS
-        copyBtn.blur();
-        document.body.removeChild(ta);
-      });
-
-      container.addEventListener("mouseleave", () => {
-        setTimeout(() => {
-          const iconSvg = copyBtn.querySelector("svg use");
-          iconSvg.setAttribute("xlink:href", "#icon-file-copy-line");
-          iconSvg.setAttribute("color", "gray");
-        }, 200);
-      });
-    });
+    let start = null
+    pos = +pos
+    window.requestAnimationFrame(function step (currentTime) {
+      start = !start ? currentTime : start
+      const progress = currentTime - start
+      if (currentPos < pos) {
+        window.scrollTo(0, ((pos - currentPos) * progress / time) + currentPos)
+      } else {
+        window.scrollTo(0, currentPos - ((currentPos - pos) * progress / time))
+      }
+      if (progress < time) {
+        window.requestAnimationFrame(step)
+      } else {
+        window.scrollTo(0, pos)
+      }
+    })
   },
 
-  /**
-   * 使用 KaTeX 渲染公式
-   * 须已引入 KaTeX CDN
-   * https://github.com/KaTeX/KaTeX
-   */
-  renderKatex() {
-    if (typeof renderMathInElement !== "undefined") {
-      renderMathInElement(document.body, {
-        delimiters: [
-          { left: "$$", right: "$$", display: true },
-          { left: "$", right: "$", display: false },
-          { left: "\\(", right: "\\)", display: false },
-          { left: "\\[", right: "\\]", display: true },
-        ],
-      });
-    } else {
-      console.error(
-        "Please check if you have introduced KaTeX(https://github.com/KaTeX/KaTeX) CDN."
-      );
+  animateIn: (ele, text) => {
+    ele.style.display = 'block'
+    ele.style.animation = text
+  },
+
+  animateOut: (ele, text) => {
+    ele.addEventListener('animationend', function f () {
+      ele.style.display = ''
+      ele.style.animation = ''
+      ele.removeEventListener('animationend', f)
+    })
+    ele.style.animation = text
+  },
+
+  wrap: (selector, eleType, options) => {
+    const createEle = document.createElement(eleType)
+    for (const [key, value] of Object.entries(options)) {
+      createEle.setAttribute(key, value)
+    }
+    selector.parentNode.insertBefore(createEle, selector)
+    createEle.appendChild(selector)
+  },
+
+  isHidden: ele => ele.offsetHeight === 0 && ele.offsetWidth === 0,
+
+  getEleTop: ele => {
+    let actualTop = ele.offsetTop
+    let current = ele.offsetParent
+
+    while (current !== null) {
+      actualTop += current.offsetTop
+      current = current.offsetParent
+    }
+
+    return actualTop
+  },
+
+  loadLightbox: ele => {
+    const service = GLOBAL_CONFIG.lightbox
+
+    if (service === 'mediumZoom') {
+      mediumZoom(ele, { background: 'var(--zoom-bg)' })
+    }
+
+    if (service === 'fancybox') {
+      Array.from(ele).forEach(i => {
+        if (i.parentNode.tagName !== 'A') {
+          const dataSrc = i.dataset.lazySrc || i.src
+          const dataCaption = i.title || i.alt || ''
+          btf.wrap(i, 'a', { href: dataSrc, 'data-fancybox': 'gallery', 'data-caption': dataCaption, 'data-thumb': dataSrc })
+        }
+      })
+
+      if (!window.fancyboxRun) {
+        Fancybox.bind('[data-fancybox]', {
+          Hash: false,
+          Thumbs: {
+            showOnStart: false
+          },
+          Images: {
+            Panzoom: {
+              maxScale: 4
+            }
+          },
+          Carousel: {
+            transition: 'slide'
+          },
+          Toolbar: {
+            display: {
+              left: ['infobar'],
+              middle: [
+                'zoomIn',
+                'zoomOut',
+                'toggle1to1',
+                'rotateCCW',
+                'rotateCW',
+                'flipX',
+                'flipY'
+              ],
+              right: ['slideshow', 'thumbs', 'close']
+            }
+          }
+        })
+        window.fancyboxRun = true
+      }
     }
   },
 
-  /**
-   * 注册监听滚动百分比事件
-   */
-  registerScrollPercent() {
-    const backToTop = document.querySelector("#back-to-top");
-    const progressCircle = document.querySelector("#progressCircle");
-
-    if (!backToTop) {
-      return;
+  setLoading: {
+    add: ele => {
+      const html = `
+        <div class="loading-container">
+          <div class="loading-item">
+            <div></div><div></div><div></div><div></div><div></div>
+          </div>
+        </div>
+      `
+      ele.insertAdjacentHTML('afterend', html)
+    },
+    remove: ele => {
+      ele.nextElementSibling.remove()
     }
-
-    /**
-     * 页面滚动百分比
-     * @param {number} curTop
-     */
-    function scrollPercent(curTop) {
-      const bodyHeight = document.body.clientHeight;
-      const windowHeight = window.innerHeight;
-      const circumference = progressCircle.r.baseVal.value * 2 * Math.PI;
-      const offset =
-        circumference - (curTop / (bodyHeight - windowHeight)) * circumference;
-      progressCircle.setAttribute(
-        "stroke-dasharray",
-        `${circumference} ${circumference}`
-      );
-      progressCircle.setAttribute("stroke-dashoffset", offset);
-    }
-
-    window.addEventListener("scroll", () => {
-      backToTop.classList.toggle("show", window.scrollY > 64);
-      scrollPercent(window.scrollY);
-    });
   },
 
-  /**
-   * 注册切换侧边栏按钮事件
-   */
-  registerToggleSidebar() {
-    const toggleBtns = document.querySelectorAll(".sidebar-toggle");
-    toggleBtns.forEach((el) => {
-      el.addEventListener("click", () => {
-        document.querySelector(".hamburger").classList.toggle("is-active");
-        document.querySelector(".container").classList.toggle("sidebar-open");
-      });
-    });
+  updateAnchor: (anchor) => {
+    if (anchor !== window.location.hash) {
+      if (!anchor) anchor = location.pathname
+      const title = GLOBAL_CONFIG_SITE.title
+      window.history.replaceState({
+        url: location.href,
+        title
+      }, title, anchor)
+    }
   },
-};
+
+  getScrollPercent: (currentTop, ele) => {
+    const docHeight = ele.clientHeight
+    const winHeight = document.documentElement.clientHeight
+    const headerHeight = ele.offsetTop
+    const contentMath = (docHeight > winHeight) ? (docHeight - winHeight) : (document.documentElement.scrollHeight - winHeight)
+    const scrollPercent = (currentTop - headerHeight) / (contentMath)
+    const scrollPercentRounded = Math.round(scrollPercent * 100)
+    const percentage = (scrollPercentRounded > 100) ? 100 : (scrollPercentRounded <= 0) ? 0 : scrollPercentRounded
+    return percentage
+  },
+
+  addGlobalFn: (key, fn, name = false, parent = window) => {
+    const globalFn = parent.globalFn || {}
+    const keyObj = globalFn[key] || {}
+
+    if (name && keyObj[name]) return
+
+    name = name || Object.keys(keyObj).length
+    keyObj[name] = fn
+    globalFn[key] = keyObj
+    parent.globalFn = globalFn
+  },
+
+  addEventListenerPjax: (ele, event, fn, option = false) => {
+    ele.addEventListener(event, fn, option)
+    btf.addGlobalFn('pjax', () => {
+      ele.removeEventListener(event, fn, option)
+    })
+  },
+
+  removeGlobalFnEvent: (key, parent = window) => {
+    const { globalFn = {} } = parent
+    const keyObj = globalFn[key] || {}
+    const keyArr = Object.keys(keyObj)
+    if (!keyArr.length) return
+    keyArr.forEach(i => {
+      keyObj[i]()
+    })
+    delete parent.globalFn[key]
+  }
+}
