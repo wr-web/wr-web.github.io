@@ -1,6 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>静态分析相关综述笔记</title>
+    <url>/2023/10/12/%E6%95%A3%E8%A8%98-10-12-23/</url>
+    <content><![CDATA[<p>磕磕绊绊的读了一篇讲静态分析框架的论文，发现自己没有提炼自己的知识，有一种 “哦,原来是这样” 的似懂非懂的傲慢。</p>
+<p>读了一些综述，打算把这些东西再梳理一遍。</p>
+<p>以下的内容非常散，如果对文章感兴趣又不想看文字，看图片部分就够了。</p>
+<h1 id="二进制代码安全分析综述（部分）"><a href="#二进制代码安全分析综述（部分）" class="headerlink" title="二进制代码安全分析综述（部分）"></a>二进制代码安全分析综述（部分）</h1><p>作者主要来自复旦大学的软件学院与上海市数据科学重点实验室</p>
+<h2 id="引言-摘"><a href="#引言-摘" class="headerlink" title="引言-摘"></a>引言-摘</h2><p>软件安全分析笼统的说可归类两种</p>
+<ul>
+<li>源代码级别</li>
+<li>二进制级别</li>
+</ul>
+<p>作者讲了二者的区别，</p>
+<blockquote>
+<p>二进制级别的代码分析上存在着一定的挑战，首 先软件程序需要从源代码经过编译、优化之后生成二 进制可执行程序，二进制代码可读性降低，且在程序的</p>
+<p>编译过程中往往会丢失掉上层的结构和类型等信息 (例如将变量和数据结构存到通用寄存器或者内存中1， 从而导致分析任务更严峻，难度更大;</p>
+</blockquote>
+<p>有一点点疑问🤔。关于优化后失掉上层的结构和类型等信息。虽然可能失掉了源码级别的符号，但是如果能够还原出部分符号，这个符号是最贴近实际运行的，而且信息量也是非常大的，比如编译期的反射在二进制眼前就是非常直白的存在。再另一个综述中了解到有一篇说可以追踪变量的使用自动的还原出结构体，可能这一篇不够详细。</p>
+<p><strong>二进制安全分析按照是否要运行可以分为</strong></p>
+<ul>
+<li>静态分析</li>
+<li>动态分析</li>
+<li>静态混合的分析技术</li>
+</ul>
+<p>静态二进制安全分析技术</p>
+<p>静态分析二进制安全技术可以归纳</p>
+<ul>
+<li>找已知的漏洞–代码相似性分析（Pewny等人2015检测代码相似性跨指令集架构，Feng等人2014二进制代码语意相似性检测，Xu等人2020，Jang等人2021的）</li>
+<li>找未知的漏洞–数据流分析，符号验证等方法</li>
+</ul>
+<p>值得一提，使用神经网络算法精确查找二进制代码的安全漏洞方法也开始使用。</p>
+<p><strong>发现高价值漏洞（尚未被发现的漏洞）</strong></p>
+<ul>
+<li><strong>IntScope</strong>用<strong>符号执行技术</strong>对程序中的数据流进行分析</li>
+<li><strong>PiOs</strong> 对ios系统的手机软件进行漏洞检测，对可执行文件构建**控制流图(CFG)**，标记代码中的敏感数据以及可以泄露数据的代码段。</li>
+<li><strong>FirmaliceH</strong> 使用<strong>符号验证</strong>的方法，通过对固件软件中可能的申请 权限的敏感控制流进行分析，得出能够到达获得高级权限或者绕过权限的控制流路径</li>
+<li>除了对用户程序以及嵌入式程序的 漏洞检测外，日常使用的Linux操作系统、Windows 操作系统以及Apple kemel也存在着一定的漏洞，<strong>DRCHCEKER</strong>、<strong>digtoolH</strong>以及<strong>iDEA</strong>分别使用<strong>一些静态二进制安全分析方法的组合</strong>完成了对上述操作系 统的漏洞检测，主要是针对权限泄露、信息泄露等 漏洞.</li>
+</ul>
+<p>新势力 ”神经网络、机器学习算法“ –<strong>VESTING</strong>（核心思想：代码相似性）。<strong>Ouyang</strong> 使用 <strong>NLP</strong> 中的深度学习神经网络来进行漏洞检测，其核心是代码相似性分析（<strong>Word2Vec，LSTM</strong>）。</p>
+<h2 id="动态二进制安全分析技术"><a href="#动态二进制安全分析技术" class="headerlink" title="动态二进制安全分析技术"></a>动态二进制安全分析技术</h2><p>原因：静态分析无法获得动态信息，分析粒度的的系统级别行为（系统异常处理？这里有一点模糊），导致静态分析灵活性和精度差。</p>
+<p>动态二进制安全经常使用插桩技术，经典的工具有 PIN，<strong>DynamoRIO</strong>，<strong>Valgrind</strong>，<strong>DynInst</strong> 和 <strong>Libdetox</strong>。</p>
+<p>系统级动态二进制插桩工具，最常见基于<strong>QEMU</strong>，工具有<strong>QTrace</strong>，<strong>Panda</strong>，<strong>PEMU</strong>。</p>
+<p>动态污点追踪，<strong>Dytan</strong>，<strong>Minemu</strong>（x86 based），<strong>TaintDroid</strong>（for Android）。</p>
+<p>恶意软件检测，<strong>X-Force</strong>（动态二进制插桩，无崩溃模型）。Bernadi 等人提出基于过程挖掘的恶意软件检测方法，系统调用序列作为指纹，训练分类器进行分类。Arora 等人提出网络流量特征+规则分类器。</p>
+<p><strong>LOOP</strong> 检测&#x2F;分析<strong>不透明谓词</strong>（运行时不可知）</p>
+<p>找到一个比较好的讲<strong>不透明谓词</strong>的例子：</p>
+<p><img src="https://i.imgs.ovh/2023/10/12/XtSe3.md.png"></p>
+<p><strong>K-Hunt</strong> 检测二进制可执行文件中不安全密钥。原理有点类似污点追踪。</p>
+<p><strong>QVMII，Qelt</strong> 系统级动态二进制插桩工具。</p>
+<p>动静混合方法不展开了，以下是上面工具的评价。</p>
+<p><img src="https://i.imgs.ovh/2023/10/12/Xtu99.png" alt="image-20231011133802185"></p>
+<p>作者认为未来有以下挑战</p>
+<ul>
+<li>精度，效率，代码覆盖率的矛盾</li>
+<li>智能化</li>
+<li>类型恢复</li>
+<li>内核代码安全分析</li>
+</ul>
+<p>例子比较经典<del>（老</del>，最后关于未来的挑战，感觉角度有一点少。</p>
+<h1 id="程序分析研究进展（综述）"><a href="#程序分析研究进展（综述）" class="headerlink" title="程序分析研究进展（综述）"></a>程序分析研究进展（综述）</h1><p>来自软件学报的一篇比较不错的综述</p>
+<p>讲解了程序分析的几种技术</p>
+<ul>
+<li>抽象解释</li>
+</ul>
+<p>抽象解释中抽象域的概念目前实在难以理解，找到知乎的比较好的文章 <a href="https://zhuanlan.zhihu.com/p/602442089">https://zhuanlan.zhihu.com/p/602442089</a></p>
+<ul>
+<li>数据流分析</li>
+<li>基于摘要的过程间分析</li>
+<li>符号执行</li>
+<li>动态分析</li>
+<li>基于机器学的程序分析</li>
+</ul>
+<p>需要注意的是这些概念并不是独立的。</p>
+<p>面向特定软件的程序分析技术</p>
+<ul>
+<li>移动应用软件</li>
+<li>并发软件</li>
+<li>分布式系统</li>
+<li>二进制代码（上一篇综述详细描述的）</li>
+</ul>
+<p>展望</p>
+<ul>
+<li>面向智能合约的程序分析</li>
+<li>面向机器学习的程序分析</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Notes</category>
+      </categories>
+      <tags>
+        <tag>paper</tag>
+        <tag>Notes</tag>
+        <tag>Static Analysis</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>论文阅读笔记</title>
     <url>/2023/10/08/%E6%95%A3%E8%A8%98-10-8-23/</url>
     <content><![CDATA[<p>今天分享一来自 ISSTA 2023 的静态分析文章。Tai-e: A Developer-Friendly Static Analysis Framework for Java by Harnessing the Good Designs of Classics</p>
@@ -355,101 +450,6 @@ NOT: | $TYPE $START(...) &#123;
       <tags>
         <tag>Notes</tag>
         <tag>LLVM</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>静态分析相关综述笔记</title>
-    <url>/2023/09/23/%E6%95%A3%E8%A8%98-10-12-23/</url>
-    <content><![CDATA[<p>磕磕绊绊的读了一篇讲静态分析框架的论文，发现自己没有提炼自己的知识，有一种 “哦,原来是这样” 的似懂非懂的傲慢。</p>
-<p>读了一些综述，打算把这些东西再梳理一遍。</p>
-<p>以下的内容非常散，如果对文章感兴趣又不想看文字，看图片部分就够了。</p>
-<h1 id="二进制代码安全分析综述（部分）"><a href="#二进制代码安全分析综述（部分）" class="headerlink" title="二进制代码安全分析综述（部分）"></a>二进制代码安全分析综述（部分）</h1><p>作者主要来自复旦大学的软件学院与上海市数据科学重点实验室</p>
-<h2 id="引言-摘"><a href="#引言-摘" class="headerlink" title="引言-摘"></a>引言-摘</h2><p>软件安全分析笼统的说可归类两种</p>
-<ul>
-<li>源代码级别</li>
-<li>二进制级别</li>
-</ul>
-<p>作者讲了二者的区别，</p>
-<blockquote>
-<p>二进制级别的代码分析上存在着一定的挑战，首 先软件程序需要从源代码经过编译、优化之后生成二 进制可执行程序，二进制代码可读性降低，且在程序的</p>
-<p>编译过程中往往会丢失掉上层的结构和类型等信息 (例如将变量和数据结构存到通用寄存器或者内存中1， 从而导致分析任务更严峻，难度更大;</p>
-</blockquote>
-<p>有一点点疑问🤔。关于优化后失掉上层的结构和类型等信息。虽然可能失掉了源码级别的符号，但是如果能够还原出部分符号，这个符号是最贴近实际运行的，而且信息量也是非常大的，比如编译期的反射在二进制眼前就是非常直白的存在。再另一个综述中了解到有一篇说可以追踪变量的使用自动的还原出结构体，可能这一篇不够详细。</p>
-<p><strong>二进制安全分析按照是否要运行可以分为</strong></p>
-<ul>
-<li>静态分析</li>
-<li>动态分析</li>
-<li>静态混合的分析技术</li>
-</ul>
-<p>静态二进制安全分析技术</p>
-<p>静态分析二进制安全技术可以归纳</p>
-<ul>
-<li>找已知的漏洞–代码相似性分析（Pewny等人2015检测代码相似性跨指令集架构，Feng等人2014二进制代码语意相似性检测，Xu等人2020，Jang等人2021的）</li>
-<li>找未知的漏洞–数据流分析，符号验证等方法</li>
-</ul>
-<p>值得一提，使用神经网络算法精确查找二进制代码的安全漏洞方法也开始使用。</p>
-<p><strong>发现高价值漏洞（尚未被发现的漏洞）</strong></p>
-<ul>
-<li><strong>IntScope</strong>用<strong>符号执行技术</strong>对程序中的数据流进行分析</li>
-<li><strong>PiOs</strong> 对ios系统的手机软件进行漏洞检测，对可执行文件构建**控制流图(CFG)**，标记代码中的敏感数据以及可以泄露数据的代码段。</li>
-<li><strong>FirmaliceH</strong> 使用<strong>符号验证</strong>的方法，通过对固件软件中可能的申请 权限的敏感控制流进行分析，得出能够到达获得高级权限或者绕过权限的控制流路径</li>
-<li>除了对用户程序以及嵌入式程序的 漏洞检测外，日常使用的Linux操作系统、Windows 操作系统以及Apple kemel也存在着一定的漏洞，<strong>DRCHCEKER</strong>、<strong>digtoolH</strong>以及<strong>iDEA</strong>分别使用<strong>一些静态二进制安全分析方法的组合</strong>完成了对上述操作系 统的漏洞检测，主要是针对权限泄露、信息泄露等 漏洞.</li>
-</ul>
-<p>新势力 ”神经网络、机器学习算法“ –<strong>VESTING</strong>（核心思想：代码相似性）。<strong>Ouyang</strong> 使用 <strong>NLP</strong> 中的深度学习神经网络来进行漏洞检测，其核心是代码相似性分析（<strong>Word2Vec，LSTM</strong>）。</p>
-<h2 id="动态二进制安全分析技术"><a href="#动态二进制安全分析技术" class="headerlink" title="动态二进制安全分析技术"></a>动态二进制安全分析技术</h2><p>原因：静态分析无法获得动态信息，分析粒度的的系统级别行为（系统异常处理？这里有一点模糊），导致静态分析灵活性和精度差。</p>
-<p>动态二进制安全经常使用插桩技术，经典的工具有 PIN，<strong>DynamoRIO</strong>，<strong>Valgrind</strong>，<strong>DynInst</strong> 和 <strong>Libdetox</strong>。</p>
-<p>系统级动态二进制插桩工具，最常见基于<strong>QEMU</strong>，工具有<strong>QTrace</strong>，<strong>Panda</strong>，<strong>PEMU</strong>。</p>
-<p>动态污点追踪，<strong>Dytan</strong>，<strong>Minemu</strong>（x86 based），<strong>TaintDroid</strong>（for Android）。</p>
-<p>恶意软件检测，<strong>X-Force</strong>（动态二进制插桩，无崩溃模型）。Bernadi 等人提出基于过程挖掘的恶意软件检测方法，系统调用序列作为指纹，训练分类器进行分类。Arora 等人提出网络流量特征+规则分类器。</p>
-<p><strong>LOOP</strong> 检测&#x2F;分析<strong>不透明谓词</strong>（运行时不可知）</p>
-<p>找到一个比较好的讲<strong>不透明谓词</strong>的例子：</p>
-<p><img src="https://i.imgs.ovh/2023/10/12/XtSe3.md.png"></p>
-<p><strong>K-Hunt</strong> 检测二进制可执行文件中不安全密钥。原理有点类似污点追踪。</p>
-<p><strong>QVMII，Qelt</strong> 系统级动态二进制插桩工具。</p>
-<p>动静混合方法不展开了，以下是上面工具的评价。</p>
-<p><img src="https://i.imgs.ovh/2023/10/12/Xtu99.png" alt="image-20231011133802185"></p>
-<p>作者认为未来有以下挑战</p>
-<ul>
-<li>精度，效率，代码覆盖率的矛盾</li>
-<li>智能化</li>
-<li>类型恢复</li>
-<li>内核代码安全分析</li>
-</ul>
-<p>例子比较经典<del>（老</del>，最后关于未来的挑战，感觉角度有一点少。</p>
-<h1 id="程序分析研究进展（综述）"><a href="#程序分析研究进展（综述）" class="headerlink" title="程序分析研究进展（综述）"></a>程序分析研究进展（综述）</h1><p>来自软件学报的一篇比较不错的综述</p>
-<p>讲解了程序分析的几种技术</p>
-<ul>
-<li>抽象解释</li>
-</ul>
-<p>抽象解释中抽象域的概念目前实在难以理解，找到知乎的比较好的文章 <a href="https://zhuanlan.zhihu.com/p/602442089">https://zhuanlan.zhihu.com/p/602442089</a></p>
-<ul>
-<li>数据流分析</li>
-<li>基于摘要的过程间分析</li>
-<li>符号执行</li>
-<li>动态分析</li>
-<li>基于机器学的程序分析</li>
-</ul>
-<p>需要注意的是这些概念并不是独立的。</p>
-<p>面向特定软件的程序分析技术</p>
-<ul>
-<li>移动应用软件</li>
-<li>并发软件</li>
-<li>分布式系统</li>
-<li>二进制代码（上一篇综述详细描述的）</li>
-</ul>
-<p>展望</p>
-<ul>
-<li>面向智能合约的程序分析</li>
-<li>面向机器学习的程序分析</li>
-</ul>
-]]></content>
-      <categories>
-        <category>Notes</category>
-      </categories>
-      <tags>
-        <tag>paper</tag>
-        <tag>Notes</tag>
-        <tag>Static Analysis</tag>
       </tags>
   </entry>
   <entry>
