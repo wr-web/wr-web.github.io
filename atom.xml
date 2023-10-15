@@ -6,7 +6,7 @@
   <link href="https://wr-web.github.io/atom.xml" rel="self"/>
   
   <link href="https://wr-web.github.io/"/>
-  <updated>2023-10-14T02:39:06.318Z</updated>
+  <updated>2023-10-15T03:57:34.465Z</updated>
   <id>https://wr-web.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>论文笔记:Tracer:Signature-based Static Analysis for Detecting Recurring Vulnerabilities</title>
+    <link href="https://wr-web.github.io/2023/10/15/%E6%95%A3%E8%A8%98-10-14-23/"/>
+    <id>https://wr-web.github.io/2023/10/15/%E6%95%A3%E8%A8%98-10-14-23/</id>
+    <published>2023-10-15T04:00:00.000Z</published>
+    <updated>2023-10-15T03:57:34.465Z</updated>
+    
+    
+    <summary type="html">散記</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/categories/Notes/"/>
+    
+    <category term="Paper" scheme="https://wr-web.github.io/categories/Notes/Paper/"/>
+    
+    
+    <category term="paper" scheme="https://wr-web.github.io/tags/paper/"/>
+    
+    <category term="Notes" scheme="https://wr-web.github.io/tags/Notes/"/>
+    
+    <category term="Static Analysis" scheme="https://wr-web.github.io/tags/Static-Analysis/"/>
+    
+    <category term="vulnerability mining" scheme="https://wr-web.github.io/tags/vulnerability-mining/"/>
+    
+  </entry>
   
   <entry>
     <title>散記</title>
@@ -438,37 +465,6 @@
     <category term="符号执行" scheme="https://wr-web.github.io/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
     
     <category term="angr" scheme="https://wr-web.github.io/tags/angr/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>RCTF Valgrind</title>
-    <link href="https://wr-web.github.io/2021/07/19/rctf_valgrind/"/>
-    <id>https://wr-web.github.io/2021/07/19/rctf_valgrind/</id>
-    <published>2021-07-19T12:00:00.000Z</published>
-    <updated>2022-03-07T10:25:37.846Z</updated>
-    
-    
-    <summary type="html">rctf wp</summary>
-    
-    
-    
-    <category term="符号执行" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
-    
-    <category term="Angr" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/"/>
-    
-    <category term="RCTF" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/RCTF/"/>
-    
-    
-    <category term="符号执行" scheme="https://wr-web.github.io/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
-    
-    <category term="angr" scheme="https://wr-web.github.io/tags/angr/"/>
-    
-    <category term="留坑" scheme="https://wr-web.github.io/tags/%E7%95%99%E5%9D%91/"/>
-    
-    <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
-    
-    <category term="RCTF" scheme="https://wr-web.github.io/tags/RCTF/"/>
     
   </entry>
   
