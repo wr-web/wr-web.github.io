@@ -6,7 +6,7 @@
   <link href="https://wr-web.github.io/atom.xml" rel="self"/>
   
   <link href="https://wr-web.github.io/"/>
-  <updated>2023-10-13T14:51:52.575Z</updated>
+  <updated>2023-10-14T02:39:06.318Z</updated>
   <id>https://wr-web.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>散記</title>
+    <link href="https://wr-web.github.io/2023/10/14/%E6%95%A3%E8%A8%98-10-13-23/"/>
+    <id>https://wr-web.github.io/2023/10/14/%E6%95%A3%E8%A8%98-10-13-23/</id>
+    <published>2023-10-14T04:00:00.000Z</published>
+    <updated>2023-10-14T02:39:06.318Z</updated>
+    
+    
+    <summary type="html">散記</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/categories/Notes/"/>
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/tags/Notes/"/>
+    
+    <category term="抽象解释" scheme="https://wr-web.github.io/tags/%E6%8A%BD%E8%B1%A1%E8%A7%A3%E9%87%8A/"/>
+    
+    <category term="数值程序分析" scheme="https://wr-web.github.io/tags/%E6%95%B0%E5%80%BC%E7%A8%8B%E5%BA%8F%E5%88%86%E6%9E%90/"/>
+    
+    <category term="抽象域" scheme="https://wr-web.github.io/tags/%E6%8A%BD%E8%B1%A1%E5%9F%9F/"/>
+    
+  </entry>
   
   <entry>
     <title>静态分析相关综述笔记</title>
@@ -444,29 +469,6 @@
     <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
     
     <category term="RCTF" scheme="https://wr-web.github.io/tags/RCTF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Dll INJECTION &amp;&amp; HOOK</title>
-    <link href="https://wr-web.github.io/2021/05/22/dll_injection_hook/"/>
-    <id>https://wr-web.github.io/2021/05/22/dll_injection_hook/</id>
-    <published>2021-05-22T12:00:00.000Z</published>
-    <updated>2022-04-12T11:08:56.279Z</updated>
-    
-    
-    <summary type="html">learn hook</summary>
-    
-    
-    
-    <category term="Windows" scheme="https://wr-web.github.io/categories/Windows/"/>
-    
-    
-    <category term="留坑" scheme="https://wr-web.github.io/tags/%E7%95%99%E5%9D%91/"/>
-    
-    <category term="Hacking" scheme="https://wr-web.github.io/tags/Hacking/"/>
-    
-    <category term="DLL hook" scheme="https://wr-web.github.io/tags/DLL-hook/"/>
     
   </entry>
   

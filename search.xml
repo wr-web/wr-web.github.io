@@ -1,6 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>散記</title>
+    <url>/2023/10/14/%E6%95%A3%E8%A8%98-10-13-23/</url>
+    <content><![CDATA[<blockquote>
+<p> 打算早上先看一個視頻，具體瞭解一下抽象解釋的相關概念，下午把 Tracer: Signature-based Static Analysis for Detecting Recurring Vulnerabilities 看了</p>
+</blockquote>
+<p> SIG-程序分析 技术沙龙 数值程序分析—陈立前（国防科技大学）</p>
+<p>不變式（值）生成</p>
+<p>抽象解釋：對程序語義進行抽象（近似）的通用理論</p>
+<p>Galois 連接</p>
+<p>抽象域</p>
+<p><img src="https://i.imgs.ovh/2023/10/14/XyLPT.png" alt="image-20231014095701310"></p>
+<p>數值抽象域，在其上的析取，合取</p>
+<p><img src="https://i.imgs.ovh/2023/10/14/XyPip.png" alt="image-20231014095821500"></p>
+<p>多面躰域（綫性不等式域），八邊形域（刻畫+1,-1,0，兩個變量之間的關係）</p>
+<p>上近似：無漏報但是可能存在誤報</p>
+<p>凸抽象域（綫性抽象域），凸抽象域（區間綫性抽象域，絕對值綫性抽象域）</p>
+<p>數值程式分析</p>
+<ul>
+<li>結合抽象域與SMT的程式分析</li>
+<li>軟件中資源使用量上界分析</li>
+<li>神經網絡架構中的數值缺陷檢測</li>
+</ul>
+<p>他人提問:</p>
+<ul>
+<li>應該選擇什麽樣的抽象域</li>
+<li>怎麽去自動化地檢測抽象域的精度</li>
+<li>…</li>
+</ul>
+]]></content>
+      <categories>
+        <category>Notes</category>
+      </categories>
+      <tags>
+        <tag>Notes</tag>
+        <tag>抽象解释</tag>
+        <tag>数值程序分析</tag>
+        <tag>抽象域</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>静态分析相关综述笔记</title>
     <url>/2023/10/12/%E6%95%A3%E8%A8%98-10-12-23/</url>
     <content><![CDATA[<p>磕磕绊绊的读了一篇讲静态分析框架的论文，发现自己没有提炼自己的知识，有一种 “哦,原来是这样” 的似懂非懂的傲慢。</p>
