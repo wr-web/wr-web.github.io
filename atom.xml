@@ -6,7 +6,7 @@
   <link href="https://wr-web.github.io/atom.xml" rel="self"/>
   
   <link href="https://wr-web.github.io/"/>
-  <updated>2023-10-15T05:30:44.227Z</updated>
+  <updated>2023-10-23T11:25:27.678Z</updated>
   <id>https://wr-web.github.io/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>如何给 LLVM RISCV 添加一条“指令”</title>
+    <link href="https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/"/>
+    <id>https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/</id>
+    <published>2023-10-21T04:00:00.000Z</published>
+    <updated>2023-10-23T11:25:27.678Z</updated>
+    
+    
+    <summary type="html">llvm riscv 添加一条“指令”</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/categories/Notes/"/>
+    
+    
+    <category term="LLVM" scheme="https://wr-web.github.io/tags/LLVM/"/>
+    
+    <category term="project" scheme="https://wr-web.github.io/tags/project/"/>
+    
+    <category term="ISA" scheme="https://wr-web.github.io/tags/ISA/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>算法學習笔记</title>
+    <link href="https://wr-web.github.io/2023/10/18/Dynamic%20Programming/"/>
+    <id>https://wr-web.github.io/2023/10/18/Dynamic%20Programming/</id>
+    <published>2023-10-18T04:00:00.000Z</published>
+    <updated>2023-10-23T11:25:43.551Z</updated>
+    
+    
+    <summary type="html">散記</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/categories/Notes/"/>
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/tags/Notes/"/>
+    
+    <category term="Algorithm" scheme="https://wr-web.github.io/tags/Algorithm/"/>
+    
+    <category term="Dynamic Programming" scheme="https://wr-web.github.io/tags/Dynamic-Programming/"/>
+    
+  </entry>
   
   <entry>
     <title>论文笔记:Tracer:Signature-based Static Analysis for Detecting Recurring Vulnerabilities</title>
@@ -425,52 +471,6 @@
     <category term="directX 12" scheme="https://wr-web.github.io/tags/directX-12/"/>
     
     <category term="图形学" scheme="https://wr-web.github.io/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>SCTF 2021 ret2text</title>
-    <link href="https://wr-web.github.io/2021/12/27/sctf_2021_ret2text/"/>
-    <id>https://wr-web.github.io/2021/12/27/sctf_2021_ret2text/</id>
-    <published>2021-12-27T12:00:00.000Z</published>
-    <updated>2023-10-15T07:41:24.365Z</updated>
-    
-    
-    <summary type="html">sctf WP</summary>
-    
-    
-    
-    <category term="符号执行" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
-    
-    <category term="Angr" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/"/>
-    
-    
-    <category term="符号执行" scheme="https://wr-web.github.io/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
-    
-    <category term="angr" scheme="https://wr-web.github.io/tags/angr/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Angr 学习与实践</title>
-    <link href="https://wr-web.github.io/2021/08/16/angr_learn_introduction/"/>
-    <id>https://wr-web.github.io/2021/08/16/angr_learn_introduction/</id>
-    <published>2021-08-16T12:00:00.000Z</published>
-    <updated>2023-10-15T07:41:09.265Z</updated>
-    
-    
-    <summary type="html">learn angr and some wp</summary>
-    
-    
-    
-    <category term="符号执行" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
-    
-    <category term="Angr" scheme="https://wr-web.github.io/categories/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/Angr/"/>
-    
-    
-    <category term="符号执行" scheme="https://wr-web.github.io/tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/"/>
-    
-    <category term="angr" scheme="https://wr-web.github.io/tags/angr/"/>
     
   </entry>
   
