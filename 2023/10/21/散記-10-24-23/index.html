@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>如何给 LLVM RISCV 添加一条“指令” | R0gerThat</title><meta name="author" content="RT"><meta name="copyright" content="RT"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="llvm riscv 添加一条“指令”">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何给 LLVM RISCV 添加一条“指令”">
+<meta property="og:url" content="https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/index.html">
+<meta property="og:site_name" content="R0gerThat">
+<meta property="og:description" content="llvm riscv 添加一条“指令”">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.imgs.ovh/2023/10/21/2STWC.jpeg">
+<meta property="article:published_time" content="2023-10-21T04:00:00.000Z">
+<meta property="article:modified_time" content="2023-10-24T17:04:25.880Z">
+<meta property="article:author" content="RT">
+<meta property="article:tag" content="LLVM">
+<meta property="article:tag" content="project">
+<meta property="article:tag" content="ISA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgs.ovh/2023/10/21/2STWC.jpeg"><link rel="shortcut icon" href="https://i.imgs.ovh/2023/10/13/XDJVK.jpeg"><link rel="canonical" href="https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '如何给 LLVM RISCV 添加一条“指令”',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-10-25 01:04:25'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="R0gerThat" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.imgs.ovh/2023/10/13/XDQ7p.jpeg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.imgs.ovh/2023/10/21/2STWC.jpeg')"><nav id="nav"><span id="blog-info"><a href="/" title="R0gerThat"><span class="site-name">R0gerThat</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">如何给 LLVM RISCV 添加一条“指令”</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-10-21T04:00:00.000Z" title="发表于 2023-10-21 12:00:00">2023-10-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-10-24T17:04:25.880Z" title="更新于 2023-10-25 01:04:25">2023-10-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Notes/">Notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="如何给 LLVM RISCV 添加一条“指令”"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="实验报告-Pat改进"><a href="#实验报告-Pat改进" class="headerlink" title="实验报告(Pat改进)"></a>实验报告(Pat改进)</h1><h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><ul>
+<li><input checked="" disabled="" type="checkbox"> 完成指令编码设计（4分）</li>
+<li><input checked="" disabled="" type="checkbox"> 能够通过自己编写的至少2个正确汇编测试程序，生成正确的madd指令编码（4分）</li>
+<li><input checked="" disabled="" type="checkbox"> 能够通过自己编写的至少2个错误汇编测试程序，进行适当的错误处理（4分）</li>
+<li><input checked="" disabled="" type="checkbox"> 能够通过自己编写的至少1个C语言测试程序，生成正确的madd汇编指令（4分）</li>
+<li><input checked="" disabled="" type="checkbox"> 编码规范，风格良好，注释适当，架构合理（4分）</li>
+</ul>
+<p>额外完成的</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 使用比较合适的测试方法</li>
+<li><input checked="" disabled="" type="checkbox"> 可以给 llvm 前端也添加相应的支持，支持高级语言的内联汇编或者内置函数生成对应的汇编</li>
+</ul>
+<h2 id="代码-Patch"><a href="#代码-Patch" class="headerlink" title="代码 Patch"></a>代码 Patch</h2><h3 id="主模块"><a href="#主模块" class="headerlink" title="主模块"></a>主模块</h3><pre class="line-numbers language-none"><code class="language-none">rt@rogerthat ~&#x2F;m&#x2F;llvm-project-llvmorg-13.0.0 (master)&gt; git format-patch 3c115231b000ed300a6f0551b5b30bd549d566f3
+0001-Add-builtin-__builtin_riscv_madd.patch
+0002-Edit-Emit-function-type-error-and-grammer-error.patch
+0003-Repair-fix-int_riscv_madd-type.patch
+0004-Edit-no-changes.patch
+0005-Edit-edit-comment.patch
+0006-Add-test-cases-instruction-ID-case.patch
+0007-Info-submodule-updated.patch
+0008-Edit-format-code.patch<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="子模块-（llvm-x2F-lib-x2F-Target-x2F-RISCV）"><a href="#子模块-（llvm-x2F-lib-x2F-Target-x2F-RISCV）" class="headerlink" title="子模块 （llvm&#x2F;lib&#x2F;Target&#x2F;RISCV）"></a>子模块 （llvm&#x2F;lib&#x2F;Target&#x2F;RISCV）</h3><pre class="line-numbers language-none"><code class="language-none">rt@rogerthat ~&#x2F;m&#x2F;l&#x2F;l&#x2F;l&#x2F;T&#x2F;RISCV (master)&gt; git format-patch 60950388fdb2be61593e2552100ed49186cf6b14
+0001-Add-Pat-intr-mov-MADD-to-RISCVInstrInfoM.td.patch
+0002-Edit-MADD-duplicated.patch
+0003-Add-MADDW-MADD.patch
+0004-Edit-edit-format.patch
+0005-Add-specific-instruction-error.patch
+0006-ADD-new-madd-pattern.patch<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h2><h3 id="安装与编译"><a href="#安装与编译" class="headerlink" title="安装与编译"></a>安装与编译</h3><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">wget https:&#x2F;&#x2F;github.com&#x2F;llvm&#x2F;llvm-project&#x2F;archive&#x2F;refs&#x2F;tags&#x2F;llvmorg-13.0.0.tar.gz
+tar -xzf llvmorg-13.0.0.tar.gz
+cd llvm-project-llvmorg-13.0.0
+mkdir build install 
+cd build
+cmake -DLLVM_ENABLE_PROJECTS&#x3D;&quot;clang&quot; \
+	-DLLVM_TARGETS_TO_BUILD&#x3D;&quot;RISCV&quot; \
+	-DCMAKE_BUILD_TYPE&#x3D;Debug \
+	-DCMAKE_INSTALL_PREFIX&#x3D;(pwd)&#x2F;compile&#x2F;llvm-project-llvmorg-13.0.0&#x2F;install \
+	..&#x2F;llvm
+make -j3 &#x2F;&#x2F; 怕炸内存,32G内存8个核编译在链接的时候很容易炸内存<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="应用-patch"><a href="#应用-patch" class="headerlink" title="应用 patch"></a>应用 patch</h3><p><code>git apply $diff</code> 或者</p>
+<p><code>git am *.patch</code> </p>
+<p><strong>注意有两个模块</strong></p>
+<h2 id="指令编码"><a href="#指令编码" class="headerlink" title="指令编码"></a>指令编码</h2><p>不同的文件代表了不同类型的指令集拓展，经过一番查阅后，决定把 <code>madd</code> 指令添加到 <code>M extention</code> 中</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// llvm/lib/Target/RISCV/RISCVInstrInfoM.td</span>
+<span class="token comment">// customized mul+add instruction</span>
+def MADD    <span class="token operator">:</span> ALU_rr<span class="token operator">&lt;</span><span class="token number">0b1111111</span><span class="token punctuation">,</span> <span class="token number">0b111</span><span class="token punctuation">,</span> <span class="token string">"madd"</span><span class="token operator">></span><span class="token punctuation">,</span>
+              Sched<span class="token operator">&lt;</span><span class="token punctuation">[</span>WriteIALU<span class="token punctuation">,</span> ReadIALU<span class="token punctuation">,</span> ReadIALU<span class="token punctuation">]</span><span class="token operator">></span><span class="token punctuation">;</span>
+<span class="token comment">// customized 64 bit version</span>
+def MADDW   <span class="token operator">:</span> ALUW_rr<span class="token operator">&lt;</span><span class="token number">0b1111111</span><span class="token punctuation">,</span> <span class="token number">0b111</span><span class="token punctuation">,</span> <span class="token string">"maddw"</span><span class="token operator">></span><span class="token punctuation">,</span>
+              Sched<span class="token operator">&lt;</span><span class="token punctuation">[</span>WriteIALU<span class="token punctuation">,</span> ReadIALU<span class="token punctuation">,</span> ReadIALU<span class="token punctuation">]</span><span class="token operator">></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>指令继承自 <code>ALU_rr</code>，需要注意的是这里有一些 properties，比如 <code>hasSideEffects</code>，在继承的过程中，程序会检查是否冲突。每种 properties 有对应的含义</p>
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// llvm/lib/Target/RISCV/RISCVInstrInfo.td</span>
+let hasSideEffects <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> mayLoad <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">,</span> mayStore <span class="token operator">=</span> <span class="token number">0</span> in
+<span class="token keyword">class</span> <span class="token class-name">ALU_rr</span><span class="token operator">&lt;</span>bits<span class="token operator">&lt;</span><span class="token number">7</span><span class="token operator">></span> funct7<span class="token punctuation">,</span> bits<span class="token operator">&lt;</span><span class="token number">3</span><span class="token operator">></span> funct3<span class="token punctuation">,</span> string opcodestr<span class="token operator">></span>
+    <span class="token operator">:</span> RVInstR<span class="token operator">&lt;</span>funct7<span class="token punctuation">,</span> funct3<span class="token punctuation">,</span> OPC_OP<span class="token punctuation">,</span> <span class="token punctuation">(</span>outs GPR<span class="token operator">:</span>$rd<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>ins GPR<span class="token operator">:</span>$rs1<span class="token punctuation">,</span> GPR<span class="token operator">:</span>$rs2<span class="token punctuation">)</span><span class="token punctuation">,</span>
+              opcodestr<span class="token punctuation">,</span> <span class="token string">"$rd, $rs1, $rs2"</span><span class="token operator">></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// llvm/lib/Target/RISCV/RISCVInstrFormats.td</span>
+<span class="token keyword">class</span> <span class="token class-name">RVInstR</span><span class="token operator">&lt;</span>bits<span class="token operator">&lt;</span><span class="token number">7</span><span class="token operator">></span> funct7<span class="token punctuation">,</span> bits<span class="token operator">&lt;</span><span class="token number">3</span><span class="token operator">></span> funct3<span class="token punctuation">,</span> RISCVOpcode opcode<span class="token punctuation">,</span> dag outs<span class="token punctuation">,</span>
+              dag ins<span class="token punctuation">,</span> string opcodestr<span class="token punctuation">,</span> string argstr<span class="token operator">></span>
+    <span class="token operator">:</span> RVInst<span class="token operator">&lt;</span>outs<span class="token punctuation">,</span> ins<span class="token punctuation">,</span> opcodestr<span class="token punctuation">,</span> argstr<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> InstFormatR<span class="token operator">></span> <span class="token punctuation">&#123;</span>
+  bits<span class="token operator">&lt;</span><span class="token number">5</span><span class="token operator">></span> rs2<span class="token punctuation">;</span>
+  bits<span class="token operator">&lt;</span><span class="token number">5</span><span class="token operator">></span> rs1<span class="token punctuation">;</span>
+  bits<span class="token operator">&lt;</span><span class="token number">5</span><span class="token operator">></span> rd<span class="token punctuation">;</span>
+
+  let Inst<span class="token punctuation">&#123;</span><span class="token number">31</span><span class="token operator">-</span><span class="token number">25</span><span class="token punctuation">&#125;</span> <span class="token operator">=</span> funct7<span class="token punctuation">;</span>
+  let Inst<span class="token punctuation">&#123;</span><span class="token number">24</span><span class="token operator">-</span><span class="token number">20</span><span class="token punctuation">&#125;</span> <span class="token operator">=</span> rs2<span class="token punctuation">;</span>
+  let Inst<span class="token punctuation">&#123;</span><span class="token number">19</span><span class="token operator">-</span><span class="token number">15</span><span class="token punctuation">&#125;</span> <span class="token operator">=</span> rs1<span class="token punctuation">;</span>
+  let Inst<span class="token punctuation">&#123;</span><span class="token number">14</span><span class="token operator">-</span><span class="token number">12</span><span class="token punctuation">&#125;</span> <span class="token operator">=</span> funct3<span class="token punctuation">;</span>
+  let Inst<span class="token punctuation">&#123;</span><span class="token number">11</span><span class="token operator">-</span><span class="token number">7</span><span class="token punctuation">&#125;</span> <span class="token operator">=</span> rd<span class="token punctuation">;</span>
+  let Opcode <span class="token operator">=</span> opcode<span class="token punctuation">.</span>Value<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>指定 OPC_OP 为 opcode，func7 为 0b1111111，func3 为 0b111，寄存器用 5 位表示（约束为 GPR 寄存器）</p>
+<h2 id="指令-Pattern"><a href="#指令-Pattern" class="headerlink" title="指令 Pattern"></a>指令 Pattern</h2><pre class="line-numbers language-cpp" data-language="cpp"><code class="language-cpp"><span class="token comment">// Add New MADD Pattern</span>
+def <span class="token operator">:</span> Pat<span class="token operator">&lt;</span><span class="token punctuation">(</span>add GPR<span class="token operator">:</span>$rs1<span class="token punctuation">,</span> <span class="token punctuation">(</span>mul GPR<span class="token operator">:</span>$rs1<span class="token punctuation">,</span> GPR<span class="token operator">:</span>$rs2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>MADD GPR<span class="token operator">:</span>$rs1<span class="token punctuation">,</span> GPR<span class="token operator">:</span>$rs2<span class="token punctuation">)</span><span class="token operator">></span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="实验结果-x2F-测试程序"><a href="#实验结果-x2F-测试程序" class="headerlink" title="实验结果&#x2F;测试程序"></a>实验结果&#x2F;测试程序</h2><h3 id="llvm-lit-测试程序"><a href="#llvm-lit-测试程序" class="headerlink" title="llvm-lit 测试程序"></a>llvm-lit 测试程序</h3><ul>
+<li><input checked="" disabled="" type="checkbox"> 能够通过自己编写的至少2个正确汇编测试程序，生成正确的madd指令编码（4分）</li>
+<li><input checked="" disabled="" type="checkbox"> 能够通过自己编写的至少2个错误汇编测试程序，进行适当的错误处理（4分）</li>
+</ul>
+<h4 id="正确的指令编码测试"><a href="#正确的指令编码测试" class="headerlink" title="正确的指令编码测试"></a>正确的指令编码测试</h4><p><code>llvm/test/MC/RISCV/rv32m-valid.s</code></p>
+<p>最后两条指令是新增的测试样例</p>
+<pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly"># RUN: llvm-mc %s -triple&#x3D;riscv32 -mattr&#x3D;+m -riscv-no-aliases -show-encoding \
+# RUN:     | FileCheck -check-prefixes&#x3D;CHECK-ASM,CHECK-ASM-AND-OBJ %s
+# RUN: llvm-mc %s -triple&#x3D;riscv64 -mattr&#x3D;+m -riscv-no-aliases -show-encoding \
+# RUN:     | FileCheck -check-prefixes&#x3D;CHECK-ASM,CHECK-ASM-AND-OBJ %s
+# RUN: llvm-mc -filetype&#x3D;obj -triple&#x3D;riscv32 -mattr&#x3D;+m &lt; %s \
+# RUN:     | llvm-objdump --mattr&#x3D;+m -M no-aliases -d -r - \
+# RUN:     | FileCheck --check-prefix&#x3D;CHECK-ASM-AND-OBJ %s
+# RUN: llvm-mc -filetype&#x3D;obj -triple&#x3D;riscv64 -mattr&#x3D;+m &lt; %s \
+# RUN:     | llvm-objdump --mattr&#x3D;+m -M no-aliases -d -r - \
+# RUN:     | FileCheck --check-prefix&#x3D;CHECK-ASM-AND-OBJ %s
+
+# CHECK-ASM-AND-OBJ: mul a4, ra, s0
+# CHECK-ASM: encoding: [0x33,0x87,0x80,0x02]
+mul a4, ra, s0
+# CHECK-ASM-AND-OBJ: mulh ra, zero, zero
+# CHECK-ASM: encoding: [0xb3,0x10,0x00,0x02]
+mulh x1, x0, x0
+# CHECK-ASM-AND-OBJ: mulhsu t0, t2, t1
+# CHECK-ASM: encoding: [0xb3,0xa2,0x63,0x02]
+mulhsu t0, t2, t1
+# CHECK-ASM-AND-OBJ: mulhu a5, a4, a3
+# CHECK-ASM: encoding: [0xb3,0x37,0xd7,0x02]
+mulhu a5, a4, a3
+# CHECK-ASM-AND-OBJ: div s0, s0, s0
+# CHECK-ASM: encoding: [0x33,0x44,0x84,0x02]
+div s0, s0, s0
+# CHECK-ASM-AND-OBJ: divu gp, a0, a1
+# CHECK-ASM: encoding: [0xb3,0x51,0xb5,0x02]
+divu gp, a0, a1
+# CHECK-ASM-AND-OBJ: rem s2, s2, s8
+# CHECK-ASM: encoding: [0x33,0x69,0x89,0x03]
+rem s2, s2, s8
+# CHECK-ASM-AND-OBJ: remu s2, s2, s8
+# CHECK-ASM: encoding: [0x33,0x79,0x89,0x03]
+remu x18, x18, x24
+
+# CHECK-ASM-AND-OBJ: madd a0, a1, a2
+# CHECK-ASM: encoding: [0x33,0xf5,0xc5,0xfe] 
+madd a0, a1, a2
+# CHECK-ASM-AND-OBJ: madd ra, ra, ra
+# CHECK-ASM: encoding: [0xb3,0xf0,0x10,0xfe]
+madd ra, ra, ra<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h4><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rt@rogerthat ~&#x2F;m&#x2F;llvm-project-llvmorg-13.0.0 (master)&gt; llvm-lit llvm&#x2F;test&#x2F;MC&#x2F;RISCV&#x2F;rv32m-valid.s 
+-- Testing: 1 tests, 1 workers --
+PASS: LLVM :: MC&#x2F;RISCV&#x2F;rv32m-valid.s (1 of 1)
+
+Testing Time: 0.11s
+  Passed: 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="错误的指令编码测试"><a href="#错误的指令编码测试" class="headerlink" title="错误的指令编码测试"></a>错误的指令编码测试</h4><p><code>llvm/test/MC/RISCV/rv32m-invalid.s</code></p>
+<p>最后4条新增的测试指令</p>
+<pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly"># RUN: not llvm-mc -triple riscv32 -mattr&#x3D;+m &lt; %s 2&gt;&amp;1 | FileCheck %s
+
+# RV64M instructions can&#39;t be used for RV32
+mulw ra, sp, gp # CHECK: :[[@LINE]]:1: error: instruction requires the following: RV64I Base Instruction Set
+divw tp, t0, t1 # CHECK: :[[@LINE]]:1: error: instruction requires the following: RV64I Base Instruction Set
+divuw t2, s0, s2 # CHECK: :[[@LINE]]:1: error: instruction requires the following: RV64I Base Instruction Set
+remw a0, a1, a2 # CHECK: :[[@LINE]]:1: error: instruction requires the following: RV64I Base Instruction Set
+remuw a3, a4, a5 # CHECK: :[[@LINE]]:1: error: instruction requires the following: RV64I Base Instruction Set
+
+maddw a0, a1, a2 # CHECK: :[[@LINE]]:1: error: instruction requires the following: RV64I Base Instruction Set
+
+# RV32M operands can&#39;t be Imm or float regs
+madd a0, a1, 1  # check: :[[@line]]:14: error: invalid Imm operand for instruction: gpr is needed 
+madd a0, 1, a1  # check: :[[@line]]:10: error: invalid Imm operand for instruction: gpr is needed 
+madd a0, f0, a1 # check: :[[@line]]:10: error: invalid rs1 for instruction: gpr is needed
+madd a0, a1, f1 # check: :[[@line]]:14: error: invalid rs2 for instruction: gpr is needed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="测试结果-1"><a href="#测试结果-1" class="headerlink" title="测试结果"></a>测试结果</h4><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rt@rogerthat ~&#x2F;m&#x2F;llvm-project-llvmorg-13.0.0 (master)&gt; llvm-lit llvm&#x2F;test&#x2F;MC&#x2F;RISCV&#x2F;rv32m-invalid.s 
+-- Testing: 1 tests, 1 workers --
+PASS: LLVM :: MC&#x2F;RISCV&#x2F;rv32m-invalid.s (1 of 1)
+
+Testing Time: 0.03s
+  Passed: 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="C语言测试程序"><a href="#C语言测试程序" class="headerlink" title="C语言测试程序"></a>C语言测试程序</h3><ul>
+<li><p><input checked="" disabled="" type="checkbox"> 
+能够通过自己编写的至少1个C语言测试程序，生成正确的madd汇编指令（4分）</p>
+</li>
+<li><p><input checked="" disabled="" type="checkbox"> 
+可以给 llvm 前端也添加相应的支持，支持高级语言的内联汇编或者内置函数生成对应的汇编</p>
+</li>
+</ul>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">asm</span><span class="token punctuation">(</span><span class="token string">"madd x1, x1, x1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">,</span> b <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">,</span> c<span class="token punctuation">;</span>
+    c<span class="token operator">=</span><span class="token function">__builtin_riscv_madd</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    c <span class="token operator">=</span> a<span class="token operator">*</span>b<span class="token operator">+</span>b<span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看到同时测试了内联汇编和内置函数（builtin function）</p>
+<p>编译选项，不链接只生成 obj</p>
+<p><code>clang --target=riscv32 -march=rv32g -c -o riscv-test.o riscv-test.c</code></p>
+<pre class="line-numbers language-assembly" data-language="assembly"><code class="language-assembly">rt@rogerthat ~&#x2F;m&#x2F;test&gt; llvm-objdump -d riscv-test.o
+
+riscv-test.o:   file format elf32-littleriscv
+
+Disassembly of section .text:
+
+00000000 &lt;main&gt;:
+       0: 13 01 01 fe   addi    sp, sp, -32
+       4: 23 2e 11 00   sw      ra, 28(sp)
+       8: 23 2c 81 00   sw      s0, 24(sp)
+       c: 13 04 01 02   addi    s0, sp, 32
+      10: 13 05 00 00   mv      a0, zero
+      14: 23 2a a4 fe   sw      a0, -12(s0)
+      18: b3 f0 10 fe   madd    ra, ra, ra
+      1c: 93 05 10 00   addi    a1, zero, 1
+      20: 23 28 b4 fe   sw      a1, -16(s0)
+      24: 93 05 20 00   addi    a1, zero, 2
+      28: 23 26 b4 fe   sw      a1, -20(s0)
+      2c: 83 25 04 ff   lw      a1, -16(s0)
+      30: 03 26 c4 fe   lw      a2, -20(s0)
+      34: b3 f5 c5 fe   madd    a1, a1, a2
+      38: 23 24 b4 fe   sw      a1, -24(s0)
+      3c: 03 26 04 ff   lw      a2, -16(s0)
+      40: 83 25 c4 fe   lw      a1, -20(s0)
+      44: b3 f5 c5 fe   madd    a1, a1, a2
+      48: 23 24 b4 fe   sw      a1, -24(s0)
+      4c: 03 24 81 01   lw      s0, 24(sp)
+      50: 83 20 c1 01   lw      ra, 28(sp)
+      54: 13 01 01 02   addi    sp, sp, 32
+      58: 67 80 00 00   ret<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看出程序正确生成，且成果实现了对参数 a，b，c 调用 madd 指令，以及 DAG 选择的映射。</p>
+<h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><ol>
+<li><p><a target="_blank" rel="noopener" href="https://sourcecodeartisan.com/2020/09/13/llvm-backend-0.html">How to Write an LLVM Backend</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://llvm.liuxfe.com/post/28115">LLVM测试框架</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://reviews.llvm.org/D99320?id=334322#2655389">Add intrinsic for Zbb extension</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://feng-qi.github.io/2017/06/14/clang-llvm-compile-command/">LLVM COMMAND</a></p>
+</li>
+</ol>
+<h1 id="拓展资料"><a href="#拓展资料" class="headerlink" title="拓展资料"></a>拓展资料</h1><ol>
+<li><a target="_blank" rel="noopener" href="https://discourse.llvm.org/t/how-to-run-clang-llvm-for-riscv-target-machine-for-bitmanip-extension/64662">How to run Clang-LLVM for RISCV target machine for Bitmanip extension</a></li>
+</ol>
+<h1 id="可能存在的错误处理"><a href="#可能存在的错误处理" class="headerlink" title="可能存在的错误处理"></a>可能存在的错误处理</h1><ol>
+<li>编译时 signal 9 杀进程 -&gt; 内存&#x2F;硬盘不够用的情况。会发现链接时会在 &#x2F;tmp 中创建文件，内存不够加交换分区，硬盘不够则给 &#x2F;tmp 挂载的逻辑卷加空间（如果可行）。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://wr-web.github.io">RT</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/">https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wr-web.github.io" target="_blank">R0gerThat</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/LLVM/">LLVM</a><a class="post-meta__tags" href="/tags/project/">project</a><a class="post-meta__tags" href="/tags/ISA/">ISA</a></div><div class="post_share"><div class="social-share" data-image="https://i.imgs.ovh/2023/10/21/2STWC.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/" title="如何给 LLVM RISCV 添加一条“指令”"><img class="cover" src="https://i.imgs.ovh/2023/10/21/2STWC.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">如何给 LLVM RISCV 添加一条“指令”</div></div></a></div><div class="next-post pull-right"><a href="/2023/10/18/Dynamic%20Programming/" title="算法學習笔记"><img class="cover" src="https://i.imgs.ovh/2023/10/19/2wG4J.jpeg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">算法學習笔记</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/" title="如何给 LLVM RISCV 添加一条“指令”"><img class="cover" src="https://i.imgs.ovh/2023/10/21/2STWC.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-10-21</div><div class="title">如何给 LLVM RISCV 添加一条“指令”</div></div></a></div><div><a href="/2023/09/28/%E6%95%A3%E8%A8%98-9-28-23/" title="论文阅读笔记"><img class="cover" src="https://i.imgs.ovh/2023/10/13/XDeAu.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-28</div><div class="title">论文阅读笔记</div></div></a></div><div><a href="/2023/09/27/%E6%95%A3%E8%A8%98-9-27-23/" title="LLVM 摸鱼笔记"><img class="cover" src="https://i.imgs.ovh/2023/10/15/r3gVu.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-27</div><div class="title">LLVM 摸鱼笔记</div></div></a></div><div><a href="/2023/09/26/%E6%95%A3%E8%A8%98-9-26-23/" title="LLVM 摸鱼笔记"><img class="cover" src="https://i.imgs.ovh/2023/10/15/r35ZV.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-26</div><div class="title">LLVM 摸鱼笔记</div></div></a></div><div><a href="/2023/09/25/%E6%95%A3%E8%A8%98-9-25-23/" title="LLVM 摸鱼笔记"><img class="cover" src="https://i.imgs.ovh/2023/10/15/r3JNK.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-25</div><div class="title">LLVM 摸鱼笔记</div></div></a></div><div><a href="/2023/09/24/%E6%95%A3%E8%A8%98-9-24-23/" title="LLVM 學習笔记"><img class="cover" src="https://i.imgs.ovh/2023/10/15/r3DVv.jpeg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-09-24</div><div class="title">LLVM 學習笔记</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.imgs.ovh/2023/10/13/XDQ7p.jpeg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">RT</div><div class="author-info__description">@Vidar-Team @CTFer @Game Lover </div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">36</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">30</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">15</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wr-web"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/wr-web" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:orz1053131305@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://wr-web.github.io/atom.xml" target="_blank" title="Rss"><i class="fas fa-rss" style="color: #2d69d7;"></i></a><a class="social-icon" href="https://space.bilibili.com/13582048" target="_blank" title="BiliBili"><i class="fab fa-bilibili" style="color: #00a1d6;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">家人们加个友链</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E6%8A%A5%E5%91%8A-Pat%E6%94%B9%E8%BF%9B"><span class="toc-number">1.</span> <span class="toc-text">实验报告(Pat改进)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E8%A6%81%E6%B1%82"><span class="toc-number">1.1.</span> <span class="toc-text">实验要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-Patch"><span class="toc-number">1.2.</span> <span class="toc-text">代码 Patch</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.1.</span> <span class="toc-text">主模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E6%A8%A1%E5%9D%97-%EF%BC%88llvm-x2F-lib-x2F-Target-x2F-RISCV%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">子模块 （llvm&#x2F;lib&#x2F;Target&#x2F;RISCV）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"><span class="toc-number">1.3.</span> <span class="toc-text">使用说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E7%BC%96%E8%AF%91"><span class="toc-number">1.3.1.</span> <span class="toc-text">安装与编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8-patch"><span class="toc-number">1.3.2.</span> <span class="toc-text">应用 patch</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E7%BC%96%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">指令编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4-Pattern"><span class="toc-number">1.5.</span> <span class="toc-text">指令 Pattern</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C-x2F-%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.6.</span> <span class="toc-text">实验结果&#x2F;测试程序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#llvm-lit-%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.6.1.</span> <span class="toc-text">llvm-lit 测试程序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E7%A1%AE%E7%9A%84%E6%8C%87%E4%BB%A4%E7%BC%96%E7%A0%81%E6%B5%8B%E8%AF%95"><span class="toc-number">1.6.1.1.</span> <span class="toc-text">正确的指令编码测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C"><span class="toc-number">1.6.1.2.</span> <span class="toc-text">测试结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%9A%84%E6%8C%87%E4%BB%A4%E7%BC%96%E7%A0%81%E6%B5%8B%E8%AF%95"><span class="toc-number">1.6.1.3.</span> <span class="toc-text">错误的指令编码测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C-1"><span class="toc-number">1.6.1.4.</span> <span class="toc-text">测试结果</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C%E8%AF%AD%E8%A8%80%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.6.2.</span> <span class="toc-text">C语言测试程序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">2.</span> <span class="toc-text">参考资料</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8B%93%E5%B1%95%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">拓展资料</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E7%9A%84%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">可能存在的错误处理</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/" title="如何给 LLVM RISCV 添加一条“指令”"><img src="https://i.imgs.ovh/2023/10/21/2STWC.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何给 LLVM RISCV 添加一条“指令”"/></a><div class="content"><a class="title" href="/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/" title="如何给 LLVM RISCV 添加一条“指令”">如何给 LLVM RISCV 添加一条“指令”</a><time datetime="2023-10-21T04:00:00.000Z" title="发表于 2023-10-21 12:00:00">2023-10-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/" title="如何给 LLVM RISCV 添加一条“指令”"><img src="https://i.imgs.ovh/2023/10/21/2STWC.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="如何给 LLVM RISCV 添加一条“指令”"/></a><div class="content"><a class="title" href="/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/" title="如何给 LLVM RISCV 添加一条“指令”">如何给 LLVM RISCV 添加一条“指令”</a><time datetime="2023-10-21T04:00:00.000Z" title="发表于 2023-10-21 12:00:00">2023-10-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/18/Dynamic%20Programming/" title="算法學習笔记"><img src="https://i.imgs.ovh/2023/10/19/2wG4J.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="算法學習笔记"/></a><div class="content"><a class="title" href="/2023/10/18/Dynamic%20Programming/" title="算法學習笔记">算法學習笔记</a><time datetime="2023-10-18T04:00:00.000Z" title="发表于 2023-10-18 12:00:00">2023-10-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/15/%E6%95%A3%E8%A8%98-10-14-23/" title="论文笔记:Tracer:Signature-based Static Analysis for Detecting Recurring Vulnerabilities"><img src="https://i.imgs.ovh/2023/10/13/XDJVK.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="论文笔记:Tracer:Signature-based Static Analysis for Detecting Recurring Vulnerabilities"/></a><div class="content"><a class="title" href="/2023/10/15/%E6%95%A3%E8%A8%98-10-14-23/" title="论文笔记:Tracer:Signature-based Static Analysis for Detecting Recurring Vulnerabilities">论文笔记:Tracer:Signature-based Static Analysis for Detecting Recurring Vulnerabilities</a><time datetime="2023-10-15T04:00:00.000Z" title="发表于 2023-10-15 12:00:00">2023-10-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/10/14/%E6%95%A3%E8%A8%98-10-13-23/" title="散記"><img src="https://i.imgs.ovh/2023/10/15/r3Uw2.jpeg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="散記"/></a><div class="content"><a class="title" href="/2023/10/14/%E6%95%A3%E8%A8%98-10-13-23/" title="散記">散記</a><time datetime="2023-10-14T04:00:00.000Z" title="发表于 2023-10-14 12:00:00">2023-10-14</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://i.imgs.ovh/2023/10/21/2STWC.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By RT</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '017d73efa3d7d9bd35c1',
+      clientSecret: '0b3746330e76c8310d622e4ae2d18a227afdfdd1',
+      repo: 'blog_talk',
+      owner: 'wr-web',
+      admin: ['wr-web'],
+      id: '03bd4e22dc8151fc6a34b4573a5fb2da',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

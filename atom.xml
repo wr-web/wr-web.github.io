@@ -40,6 +40,29 @@
   </entry>
   
   <entry>
+    <title>如何给 LLVM RISCV 添加一条“指令”</title>
+    <link href="https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/"/>
+    <id>https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/</id>
+    <published>2023-10-21T04:00:00.000Z</published>
+    <updated>2023-10-24T17:04:25.880Z</updated>
+    
+    
+    <summary type="html">llvm riscv 添加一条“指令”</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/categories/Notes/"/>
+    
+    
+    <category term="LLVM" scheme="https://wr-web.github.io/tags/LLVM/"/>
+    
+    <category term="project" scheme="https://wr-web.github.io/tags/project/"/>
+    
+    <category term="ISA" scheme="https://wr-web.github.io/tags/ISA/"/>
+    
+  </entry>
+  
+  <entry>
     <title>算法學習笔记</title>
     <link href="https://wr-web.github.io/2023/10/18/Dynamic%20Programming/"/>
     <id>https://wr-web.github.io/2023/10/18/Dynamic%20Programming/</id>
@@ -438,27 +461,6 @@
     <id>https://wr-web.github.io/2022/03/16/d3d12-7/</id>
     <published>2022-03-16T12:00:00.000Z</published>
     <updated>2023-10-15T07:41:47.575Z</updated>
-    
-    
-    <summary type="html">learn from DX12</summary>
-    
-    
-    
-    <category term="DX12" scheme="https://wr-web.github.io/categories/DX12/"/>
-    
-    
-    <category term="directX 12" scheme="https://wr-web.github.io/tags/directX-12/"/>
-    
-    <category term="图形学" scheme="https://wr-web.github.io/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>DX12 第六章习题</title>
-    <link href="https://wr-web.github.io/2022/03/13/d3d12-6/"/>
-    <id>https://wr-web.github.io/2022/03/13/d3d12-6/</id>
-    <published>2022-03-13T12:00:00.000Z</published>
-    <updated>2023-10-15T07:41:34.893Z</updated>
     
     
     <summary type="html">learn from DX12</summary>
