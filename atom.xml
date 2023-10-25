@@ -6,7 +6,7 @@
   <link href="https://wr-web.github.io/atom.xml" rel="self"/>
   
   <link href="https://wr-web.github.io/"/>
-  <updated>2023-10-23T11:25:27.678Z</updated>
+  <updated>2023-10-25T05:23:05.471Z</updated>
   <id>https://wr-web.github.io/</id>
   
   <author>
@@ -17,14 +17,14 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>如何给 LLVM RISCV 添加一条“指令”</title>
-    <link href="https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/"/>
-    <id>https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/</id>
-    <published>2023-10-21T04:00:00.000Z</published>
-    <updated>2023-10-23T11:25:27.678Z</updated>
+    <title>如何给 LLVM RISCV 添加一条“指令”（改进）</title>
+    <link href="https://wr-web.github.io/2023/10/24/%E6%95%A3%E8%A8%98-10-24-23/"/>
+    <id>https://wr-web.github.io/2023/10/24/%E6%95%A3%E8%A8%98-10-24-23/</id>
+    <published>2023-10-24T04:00:00.000Z</published>
+    <updated>2023-10-25T05:23:05.471Z</updated>
     
     
-    <summary type="html">llvm riscv 添加一条“指令”</summary>
+    <summary type="html">llvm riscv 添加一条“指令”（改进）</summary>
     
     
     
@@ -41,10 +41,10 @@
   
   <entry>
     <title>如何给 LLVM RISCV 添加一条“指令”</title>
-    <link href="https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/"/>
-    <id>https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-24-23/</id>
+    <link href="https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/"/>
+    <id>https://wr-web.github.io/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/</id>
     <published>2023-10-21T04:00:00.000Z</published>
-    <updated>2023-10-24T17:04:25.880Z</updated>
+    <updated>2023-10-23T11:25:27.678Z</updated>
     
     
     <summary type="html">llvm riscv 添加一条“指令”</summary>
