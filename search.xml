@@ -244,6 +244,27 @@ Disassembly of section .text:
       </tags>
   </entry>
   <entry>
+    <title>散記</title>
+    <url>/2023/10/24/%E6%95%A3%E8%A8%98-10-28-23/</url>
+    <content><![CDATA[<h1 id="小小的總結"><a href="#小小的總結" class="headerlink" title="小小的總結"></a>小小的總結</h1><p>這周幹了什麽呢？</p>
+<p>把諸如《自然辯證法》等課程的期末要求做了，還挺浪費時間。</p>
+<p>完善了上周做好的 LLVM 期末作業，有點費時間，編譯一次就要等一個小時。麻煩的基本是工程上的問題。</p>
+<p>然後就是分析導師給的靜態分析工具的報告了，報告可讀性一般，也不太適合交互，大部分報告都是由 <code>malloc</code> 返回了 <code>null</code> 產生的，消費了不少時間。</p>
+<p>開始背單詞了，但是面對高額的欠款。</p>
+<p>然後就好像什麽都沒做了， <del>有很强的負罪感</del></p>
+<h1 id="近期規劃"><a href="#近期規劃" class="headerlink" title="近期規劃"></a>近期規劃</h1><p>周日開始，下周再看 1 篇論文。</p>
+<p>找點比較經典的靜態分析工具，污點追蹤工具，學習 demo 並學習源碼。</p>
+<p>準備期末考試，GPA 很重要哇。</p>
+<h1 id="長期規劃"><a href="#長期規劃" class="headerlink" title="長期規劃"></a>長期規劃</h1><p>沒有什麽長期計劃，下一秒長期計劃就被推翻了（逃</p>
+]]></content>
+      <categories>
+        <category>Notes</category>
+      </categories>
+      <tags>
+        <tag>散記</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何给 LLVM RISCV 添加一条“指令”</title>
     <url>/2023/10/21/%E6%95%A3%E8%A8%98-10-21-23/</url>
     <content><![CDATA[<h1 id="实验报告"><a href="#实验报告" class="headerlink" title="实验报告"></a>实验报告</h1><h2 id="实验要求"><a href="#实验要求" class="headerlink" title="实验要求"></a>实验要求</h2><ul>
