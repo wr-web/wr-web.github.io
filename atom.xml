@@ -6,7 +6,7 @@
   <link href="https://wr-web.github.io/atom.xml" rel="self"/>
   
   <link href="https://wr-web.github.io/"/>
-  <updated>2023-10-25T05:23:05.471Z</updated>
+  <updated>2023-11-20T10:38:22.708Z</updated>
   <id>https://wr-web.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>英语学习笔记</title>
+    <link href="https://wr-web.github.io/2023/11/20/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>https://wr-web.github.io/2023/11/20/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
+    <published>2023-11-20T04:00:00.000Z</published>
+    <updated>2023-11-20T10:38:22.708Z</updated>
+    
+    
+    <summary type="html">关于啥也没学就看了点英语这回事</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/categories/Notes/"/>
+    
+    
+    <category term="English" scheme="https://wr-web.github.io/tags/English/"/>
+    
+    <category term="Grammar" scheme="https://wr-web.github.io/tags/Grammar/"/>
+    
+  </entry>
   
   <entry>
     <title>如何给 LLVM RISCV 添加一条“指令”（改进）</title>
@@ -438,27 +459,6 @@
     <id>https://wr-web.github.io/2022/03/16/d3d12-7/</id>
     <published>2022-03-16T12:00:00.000Z</published>
     <updated>2023-10-15T07:41:47.575Z</updated>
-    
-    
-    <summary type="html">learn from DX12</summary>
-    
-    
-    
-    <category term="DX12" scheme="https://wr-web.github.io/categories/DX12/"/>
-    
-    
-    <category term="directX 12" scheme="https://wr-web.github.io/tags/directX-12/"/>
-    
-    <category term="图形学" scheme="https://wr-web.github.io/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>DX12 第六章习题</title>
-    <link href="https://wr-web.github.io/2022/03/13/d3d12-6/"/>
-    <id>https://wr-web.github.io/2022/03/13/d3d12-6/</id>
-    <published>2022-03-13T12:00:00.000Z</published>
-    <updated>2023-10-15T07:41:34.893Z</updated>
     
     
     <summary type="html">learn from DX12</summary>
