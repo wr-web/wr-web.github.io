@@ -6,7 +6,7 @@
   <link href="https://wr-web.github.io/atom.xml" rel="self"/>
   
   <link href="https://wr-web.github.io/"/>
-  <updated>2023-11-20T10:38:22.708Z</updated>
+  <updated>2023-11-29T03:50:58.112Z</updated>
   <id>https://wr-web.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>MIT6.191</title>
+    <link href="https://wr-web.github.io/2023/11/26/MIT6.191/"/>
+    <id>https://wr-web.github.io/2023/11/26/MIT6.191/</id>
+    <published>2023-11-26T04:00:00.000Z</published>
+    <updated>2023-11-29T03:50:58.112Z</updated>
+    
+    
+    <summary type="html">MIT6.191深度学习笔记</summary>
+    
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/categories/Notes/"/>
+    
+    <category term="AI" scheme="https://wr-web.github.io/categories/Notes/AI/"/>
+    
+    
+    <category term="Notes" scheme="https://wr-web.github.io/tags/Notes/"/>
+    
+    <category term="Deep Learning" scheme="https://wr-web.github.io/tags/Deep-Learning/"/>
+    
+  </entry>
   
   <entry>
     <title>英语学习笔记</title>
@@ -438,27 +461,6 @@
     <id>https://wr-web.github.io/2022/03/17/d3d12-8/</id>
     <published>2022-03-17T12:00:00.000Z</published>
     <updated>2023-10-15T07:48:51.139Z</updated>
-    
-    
-    <summary type="html">learn from DX12</summary>
-    
-    
-    
-    <category term="DX12" scheme="https://wr-web.github.io/categories/DX12/"/>
-    
-    
-    <category term="directX 12" scheme="https://wr-web.github.io/tags/directX-12/"/>
-    
-    <category term="图形学" scheme="https://wr-web.github.io/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>DX12 第七章习题</title>
-    <link href="https://wr-web.github.io/2022/03/16/d3d12-7/"/>
-    <id>https://wr-web.github.io/2022/03/16/d3d12-7/</id>
-    <published>2022-03-16T12:00:00.000Z</published>
-    <updated>2023-10-15T07:41:47.575Z</updated>
     
     
     <summary type="html">learn from DX12</summary>

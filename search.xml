@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>MIT6.191</title>
+    <url>/2023/11/26/MIT6.191/</url>
+    <content><![CDATA[<h2 id="Deep-Generative-Modeling"><a href="#Deep-Generative-Modeling" class="headerlink" title="Deep Generative Modeling"></a>Deep Generative Modeling</h2><p><strong>Generative Modeling Goal</strong>: Take as input training samples from some distribution and learn a model that represents that distribution</p>
+<p><strong>latent variable</strong>: They are not directly observable, but they are the true underlying features or explanatory factors</p>
+<p><strong>Autoencoder</strong>: </p>
+<p><strong>variational autoencoders(VAEs)</strong>: </p>
+<p><strong>Generative Adversarial Network(GAN)</strong>: </p>
+<p><strong>Dropout Layer</strong></p>
+<p><strong>Double Descent</strong></p>
+<p><strong>Lipschitz</strong></p>
+<p><strong>Neural Tangent Kernels</strong></p>
+<p><strong>Effective dimension</strong></p>
+<p><strong>LNN</strong></p>
+]]></content>
+      <categories>
+        <category>Notes</category>
+        <category>AI</category>
+      </categories>
+      <tags>
+        <tag>Notes</tag>
+        <tag>Deep Learning</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>英语学习笔记</title>
     <url>/2023/11/20/%E8%8B%B1%E8%AF%AD%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
     <content><![CDATA[<blockquote>
