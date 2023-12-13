@@ -3,17 +3,29 @@
   <entry>
     <title>MIT6.191</title>
     <url>/2023/11/26/MIT6.191/</url>
-    <content><![CDATA[<h2 id="Deep-Generative-Modeling"><a href="#Deep-Generative-Modeling" class="headerlink" title="Deep Generative Modeling"></a>Deep Generative Modeling</h2><p><strong>Generative Modeling Goal</strong>: Take as input training samples from some distribution and learn a model that represents that distribution</p>
+    <content><![CDATA[<h1 id="SOME-OF-NOTES-FROM-THE-LECTURE"><a href="#SOME-OF-NOTES-FROM-THE-LECTURE" class="headerlink" title="SOME OF NOTES FROM THE LECTURE"></a>SOME OF NOTES FROM THE LECTURE</h1><h2 id="Deep-Generative-Modeling"><a href="#Deep-Generative-Modeling" class="headerlink" title="Deep Generative Modeling"></a>Deep Generative Modeling</h2><p><strong>Generative Modeling Goal</strong>: Take as input training samples from some distribution and learn a model that represents that distribution</p>
 <p><strong>latent variable</strong>: They are not directly observable, but they are the true underlying features or explanatory factors</p>
-<p><strong>Autoencoder</strong>: </p>
-<p><strong>variational autoencoders(VAEs)</strong>: </p>
-<p><strong>Generative Adversarial Network(GAN)</strong>: </p>
-<p><strong>Dropout Layer</strong></p>
-<p><strong>Double Descent</strong></p>
-<p><strong>Lipschitz</strong></p>
-<p><strong>Neural Tangent Kernels</strong></p>
-<p><strong>Effective dimension</strong></p>
-<p><strong>LNN</strong></p>
+<p><strong>Autoencoder</strong>: An <strong>autoencoder</strong> is a type of <a href="https://en.wikipedia.org/wiki/Artificial_neural_network">artificial neural network</a> used to learn <a href="https://en.wikipedia.org/wiki/Feature_learning">efficient codings</a> of unlabeled data (<a href="https://en.wikipedia.org/wiki/Unsupervised_learning">unsupervised learning</a>)</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Autoencoder_schema.png/440px-Autoencoder_schema.png" alt="Autoencode"></p>
+<p><strong>variational autoencoders(VAEs)</strong>:</p>
+<p><img src="https://i.imgs.ovh/2023/12/13/meF1e.png" alt="image-20231213201111453"></p>
+<p><strong>Generative Adversarial Networks(GANs)</strong>: GANs are a way to make a generative model by having two neural networks compete with each other.</p>
+<p><strong>Dropout Layer</strong>:</p>
+<p><img src="https://miro.medium.com/v2/resize:fit:1210/format:webp/1*wDGvx0z0-nEB8zQHykvwPw.png"></p>
+<p><strong>Double Descent</strong>:</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Double_descent_in_a_two-layer_neural_network_%28Figure_3a_from_Rocks_et_al._2022%29.png/840px-Double_descent_in_a_two-layer_neural_network_%28Figure_3a_from_Rocks_et_al._2022%29.png"></p>
+<p><strong>Lipschitz</strong>:</p>
+<p><img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/a7b2d5f533b6c4c8c63ce33c85d8763e4eaffbfd" alt="d_{Y}(f(x_{1}),f(x_{2}))\leq Kd_{X}(x_{1},x_{2}).">[<a href="https://en.wikipedia.org/wiki/Lipschitz_continuity#cite_note-3">3]</a></p>
+<p><strong>Neural Tangent Kernels</strong>：(<a href="https://arxiv.org/abs/1806.07572">Jacot et al. 2018</a>) is a kernel to explain the evolution of neural networks during training via gradient descent.</p>
+<p><strong>Effective dimension</strong>:</p>
+<p><img src="https://i.imgs.ovh/2023/12/13/medR9.png"></p>
+<p><strong>Liquid Neural Network(LNN)</strong>:A <a href="https://arxiv.org/pdf/2006.04439.pdf">Liquid Neural Network</a> is a time-continuous <a href="https://www.unite.ai/what-are-rnns-and-lstms-in-deep-learning/">Recurrent Neural Network (RNN)</a> that processes data sequentially, keeps the memory of past inputs, adjusts its behaviors based on new inputs, and can handle variable-length inputs to enhance the task-understanding capabilities of NNs.</p>
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ol>
+<li><a href="https://ai.stackexchange.com/questions/30304/what-does-it-mean-having-lipschitz-continuous-derivatives">What does it mean “having Lipschitz continuous derivatives”?</a></li>
+<li><a href="https://towardsdatascience.com/understanding-variational-autoencoders-vaes-f70510919f73">Understanding Variational Autoencoders (VAEs)</a></li>
+<li>[详细解析深度学习中的 Lipschitz 条件](<a href="https://zhuanlan.zhihu.com/p/389024283">详细解析深度学习中的 Lipschitz 条件 - 知乎 (zhihu.com)</a>)</li>
+<li><a href="https://www.unite.ai/liquid-neural-networks-definition-applications-challenges/">Liquid Neural Networks: Definition, Applications, &amp; Challenges</a></li>
+</ol>
 ]]></content>
       <categories>
         <category>Notes</category>
