@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Windows Terminal Customization</title>
+    <url>/2024/01/12/windows-terminal-customization/</url>
+    <content><![CDATA[<h1 id="Windows-Terminal-Customization"><a href="#Windows-Terminal-Customization" class="headerlink" title="Windows Terminal Customization"></a>Windows Terminal Customization</h1><p>This article mainly solved the problem of “open windows terminal here”.</p>
+<p>Firstly u need to download <code>windows terminal</code> in <code>Microsoft Store</code>，then u need to edit settings of <code>windows terminal</code>, add a customized shell like <code>conda</code>.</p>
+<p>Run this registry file.</p>
+<pre class="line-numbers language-reg" data-language="reg"><code class="language-reg">Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\wt]
+@&#x3D;&quot;open terminal here&quot;
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\wt\command]
+@&#x3D;&quot;wt -d %V -p conda&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>-d</code> means choose path, %V means current path.</p>
+<p><code>-p</code> means specific named shell. </p>
+]]></content>
+      <categories>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>env</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MIT6.191</title>
     <url>/2023/11/26/MIT6.191/</url>
     <content><![CDATA[<h1 id="SOME-OF-NOTES-FROM-THE-LECTURE"><a href="#SOME-OF-NOTES-FROM-THE-LECTURE" class="headerlink" title="SOME OF NOTES FROM THE LECTURE"></a>SOME OF NOTES FROM THE LECTURE</h1><h2 id="Deep-Generative-Modeling"><a href="#Deep-Generative-Modeling" class="headerlink" title="Deep Generative Modeling"></a>Deep Generative Modeling</h2><p><strong>Generative Modeling Goal</strong>: Take as input training samples from some distribution and learn a model that represents that distribution</p>
@@ -8,7 +32,7 @@
 <p><strong>Autoencoder</strong>: An <strong>autoencoder</strong> is a type of <a href="https://en.wikipedia.org/wiki/Artificial_neural_network">artificial neural network</a> used to learn <a href="https://en.wikipedia.org/wiki/Feature_learning">efficient codings</a> of unlabeled data (<a href="https://en.wikipedia.org/wiki/Unsupervised_learning">unsupervised learning</a>)</p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Autoencoder_schema.png/440px-Autoencoder_schema.png" alt="Autoencode"></p>
 <p><strong>variational autoencoders(VAEs)</strong>:</p>
-<p><img src="https://i.imgs.ovh/2023/12/13/meF1e.png" alt="image-20231213201111453"></p>
+<p><img src="/img/VAEs.png" alt="VAEs"></p>
 <p><strong>Generative Adversarial Networks(GANs)</strong>: GANs are a way to make a generative model by having two neural networks compete with each other.</p>
 <p><strong>Dropout Layer</strong>:</p>
 <p><img src="https://miro.medium.com/v2/resize:fit:1210/format:webp/1*wDGvx0z0-nEB8zQHykvwPw.png"></p>

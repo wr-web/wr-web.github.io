@@ -6,7 +6,7 @@
   <link href="https://wr-web.github.io/atom.xml" rel="self"/>
   
   <link href="https://wr-web.github.io/"/>
-  <updated>2023-12-13T13:08:26.530Z</updated>
+  <updated>2024-01-11T18:20:08.154Z</updated>
   <id>https://wr-web.github.io/</id>
   
   <author>
@@ -17,11 +17,30 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Windows Terminal Customization</title>
+    <link href="https://wr-web.github.io/2024/01/12/windows-terminal-customization/"/>
+    <id>https://wr-web.github.io/2024/01/12/windows-terminal-customization/</id>
+    <published>2024-01-12T04:00:00.000Z</published>
+    <updated>2024-01-11T18:20:08.154Z</updated>
+    
+    
+    <summary type="html">Windows Terminal Customization</summary>
+    
+    
+    
+    <category term="Windows" scheme="https://wr-web.github.io/categories/Windows/"/>
+    
+    
+    <category term="env" scheme="https://wr-web.github.io/tags/env/"/>
+    
+  </entry>
+  
+  <entry>
     <title>MIT6.191</title>
     <link href="https://wr-web.github.io/2023/11/26/MIT6.191/"/>
     <id>https://wr-web.github.io/2023/11/26/MIT6.191/</id>
     <published>2023-11-26T04:00:00.000Z</published>
-    <updated>2023-12-13T13:08:26.530Z</updated>
+    <updated>2024-06-23T10:10:16.825Z</updated>
     
     
     <summary type="html">MIT6.191深度学习笔记</summary>
@@ -452,27 +471,6 @@
     <category term="WP" scheme="https://wr-web.github.io/tags/WP/"/>
     
     <category term="HGAME" scheme="https://wr-web.github.io/tags/HGAME/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>DX12 第八章学习</title>
-    <link href="https://wr-web.github.io/2022/03/17/d3d12-8/"/>
-    <id>https://wr-web.github.io/2022/03/17/d3d12-8/</id>
-    <published>2022-03-17T12:00:00.000Z</published>
-    <updated>2023-10-15T07:48:51.139Z</updated>
-    
-    
-    <summary type="html">learn from DX12</summary>
-    
-    
-    
-    <category term="DX12" scheme="https://wr-web.github.io/categories/DX12/"/>
-    
-    
-    <category term="directX 12" scheme="https://wr-web.github.io/tags/directX-12/"/>
-    
-    <category term="图形学" scheme="https://wr-web.github.io/tags/%E5%9B%BE%E5%BD%A2%E5%AD%A6/"/>
     
   </entry>
   
