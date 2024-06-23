@@ -32,17 +32,17 @@
 <p><strong>Autoencoder</strong>: An <strong>autoencoder</strong> is a type of <a href="https://en.wikipedia.org/wiki/Artificial_neural_network">artificial neural network</a> used to learn <a href="https://en.wikipedia.org/wiki/Feature_learning">efficient codings</a> of unlabeled data (<a href="https://en.wikipedia.org/wiki/Unsupervised_learning">unsupervised learning</a>)</p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Autoencoder_schema.png/440px-Autoencoder_schema.png" alt="Autoencode"></p>
 <p><strong>variational autoencoders(VAEs)</strong>:</p>
-<p><img src="/img/VAEs.png" alt="VAEs"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/VAEs.png" alt="VAEs"></p>
 <p><strong>Generative Adversarial Networks(GANs)</strong>: GANs are a way to make a generative model by having two neural networks compete with each other.</p>
 <p><strong>Dropout Layer</strong>:</p>
 <p><img src="https://miro.medium.com/v2/resize:fit:1210/format:webp/1*wDGvx0z0-nEB8zQHykvwPw.png"></p>
 <p><strong>Double Descent</strong>:</p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Double_descent_in_a_two-layer_neural_network_%28Figure_3a_from_Rocks_et_al._2022%29.png/840px-Double_descent_in_a_two-layer_neural_network_%28Figure_3a_from_Rocks_et_al._2022%29.png"></p>
 <p><strong>Lipschitz</strong>:</p>
-<p><img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/a7b2d5f533b6c4c8c63ce33c85d8763e4eaffbfd" alt="d_{Y}(f(x_{1}),f(x_{2}))\leq Kd_{X}(x_{1},x_{2}).">[<a href="https://en.wikipedia.org/wiki/Lipschitz_continuity#cite_note-3">3]</a></p>
+<p><img src="https://wikimedia.org/api/rest_v1/media/math/render/svg/a7b2d5f533b6c4c8c63ce33c85d8763e4eaffbfd" alt="d_{Y}(f(x_{1}),f(x_{2}))\leq Kd_{X}(x_{1},x_{2})."><a href="https://en.wikipedia.org/wiki/Lipschitz_continuity#cite_note-3">[3]</a></p>
 <p><strong>Neural Tangent Kernels</strong>：(<a href="https://arxiv.org/abs/1806.07572">Jacot et al. 2018</a>) is a kernel to explain the evolution of neural networks during training via gradient descent.</p>
 <p><strong>Effective dimension</strong>:</p>
-<p><img src="https://i.imgs.ovh/2023/12/13/medR9.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/effective-dimension.png"></p>
 <p><strong>Liquid Neural Network(LNN)</strong>:A <a href="https://arxiv.org/pdf/2006.04439.pdf">Liquid Neural Network</a> is a time-continuous <a href="https://www.unite.ai/what-are-rnns-and-lstms-in-deep-learning/">Recurrent Neural Network (RNN)</a> that processes data sequentially, keeps the memory of past inputs, adjusts its behaviors based on new inputs, and can handle variable-length inputs to enhance the task-understanding capabilities of NNs.</p>
 <h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ol>
 <li><a href="https://ai.stackexchange.com/questions/30304/what-does-it-mean-having-lipschitz-continuous-derivatives">What does it mean “having Lipschitz continuous derivatives”?</a></li>
@@ -77,13 +77,13 @@
 <h4 id="重音（Word-Stress）"><a href="#重音（Word-Stress）" class="headerlink" title="重音（Word Stress）"></a>重音（Word Stress）</h4><p>重音符号（ˈ），次重音符号（ˌ）</p>
 <h4 id="自然拼读（Phonics）"><a href="#自然拼读（Phonics）" class="headerlink" title="自然拼读（Phonics）"></a>自然拼读（Phonics）</h4><p><strong>很多非常规的拼读，仍需积累</strong>。</p>
 <p>单个辅音字母在单词中通常的读法（以英音为例）</p>
-<p><img src="https://i.imgs.ovh/2023/11/20/Hu8BV.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/%E5%8D%95%E4%B8%AA%E8%BE%85%E9%9F%B3.png"></p>
 <p>辅音字母（组合）在单词中通常的读法（以英音为例） </p>
-<p><img src="https://i.imgs.ovh/2023/11/20/HuEvW.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/%E8%BE%85%E9%9F%B3%E7%BB%84%E5%90%88.png"></p>
 <p>单个元音字母在单词中的通常读法（以英音为例） </p>
-<p><img src="https://i.imgs.ovh/2023/11/20/HuD1J.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/%E5%8D%95%E4%B8%AA%E5%85%83%E9%9F%B3.png"></p>
 <p> 元音字母（组合）在单词中的通常读法（以英音为例） </p>
-<p><img src="https://i.imgs.ovh/2023/11/20/HudXI.png"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/%E5%85%83%E9%9F%B3%E7%BB%84%E5%90%88.png"></p>
 <h4 id="节奏（Rhythm）"><a href="#节奏（Rhythm）" class="headerlink" title="节奏（Rhythm）"></a>节奏（Rhythm）</h4><p>英语不像中文的发音，中文每个字基本都是一个音节，<strong>每个音节等时</strong>，而英文一个单词可以有很多个音节，其中<strong>重音音节等时。</strong></p>
 <p><strong>Rab</strong>bits <strong>eat</strong> <strong>car</strong>rots.<br>A <strong>rab</strong>bits is <strong>eat</strong>ing <strong>car</strong>rots.<br>The <strong>rab</strong>bits has been <strong>eat</strong>ing some of the <strong>car</strong>rots.</p>
 <p>上面的例子读起来应该时长相等，因为重音音节等式。</p>
@@ -98,7 +98,7 @@
 <p>比如：he, me, she；</p>
 <p>在句末，对比，强调时不能弱读。</p>
 <p>我认为是为了在表达相同意思的情况下提高语速，可能是语言自然的演变过程。</p>
-<h4 id="爆破音-x2F-塞音（Stop）"><a href="#爆破音-x2F-塞音（Stop）" class="headerlink" title="爆破音&#x2F;塞音（Stop）"></a>爆破音&#x2F;塞音（Stop）</h4><p><img src="https://i.imgs.ovh/2023/11/20/HOXF2.png" alt="QQ截图20231120174836"></p>
+<h4 id="爆破音-x2F-塞音（Stop）"><a href="#爆破音-x2F-塞音（Stop）" class="headerlink" title="爆破音&#x2F;塞音（Stop）"></a>爆破音&#x2F;塞音（Stop）</h4><p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/%E7%88%86%E7%A0%B4%E9%9F%B3.png" alt="爆破音"></p>
 <p>塞音+需成阻音&#x3D;》无声除阻，前一个塞音不发音但是占一拍。</p>
 <p>doctor；friendly；</p>
 <p>hot dog；not good</p>
@@ -106,7 +106,7 @@
 <p>not now；</p>
 <p>值得注意这不等于省音。</p>
 <h4 id="省音（Elision）"><a href="#省音（Elision）" class="headerlink" title="省音（Elision）"></a>省音（Elision）</h4><p>diff<strong>e</strong>rent；int<strong>e</strong>resting 没有读出 &#x2F;ə&#x2F;。</p>
-<p><img src="https://i.imgs.ovh/2023/11/20/HOrhj.png" alt="QQ截图20231120180605"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/%E7%9C%81%E9%9F%B3.png" alt="省音"></p>
 <p>last year 可以是融化，也可以是失爆。</p>
 <h4 id="同化-amp-异化（Assimilation-amp-Dissimilation）"><a href="#同化-amp-异化（Assimilation-amp-Dissimilation）" class="headerlink" title="同化&amp;异化（Assimilation &amp; Dissimilation）"></a>同化&amp;异化（Assimilation &amp; Dissimilation）</h4><p>逆行同化（前面音受后面影响）：</p>
 <p>1、&#x2F;k&#x2F;+辅音；&#x2F;t&#x2F;+辅音；&#x2F;d&#x2F;+辅音 一种同化&#x2F;失爆现象。</p>
@@ -116,7 +116,7 @@
 <p>声带要么一起震动，要么不震动。books &#x2F;bʊks&#x2F; ；dogs &#x2F;dɔɡz&#x2F;；</p>
 <p>互相作用：</p>
 <p>融合</p>
-<p><img src="https://i.imgs.ovh/2023/11/20/HO2UI.png" alt="QQ截图20231120182613"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/%E8%9E%8D%E5%90%88.png" alt="融合"></p>
 <p>相同辅音</p>
 <p>life force；fish shop；black coffee；</p>
 <p>异化：</p>
@@ -176,17 +176,17 @@
 0005-Add-specific-instruction-error.patch
 0006-ADD-new-madd-pattern.patch<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h2 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h2><h3 id="安装与编译"><a href="#安装与编译" class="headerlink" title="安装与编译"></a>安装与编译</h3><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">wget https:&#x2F;&#x2F;github.com&#x2F;llvm&#x2F;llvm-project&#x2F;archive&#x2F;refs&#x2F;tags&#x2F;llvmorg-13.0.0.tar.gz
-tar -xzf llvmorg-13.0.0.tar.gz
-cd llvm-project-llvmorg-13.0.0
-mkdir build install 
-cd build
-cmake -DLLVM_ENABLE_PROJECTS&#x3D;&quot;clang&quot; \
-	-DLLVM_TARGETS_TO_BUILD&#x3D;&quot;RISCV&quot; \
-	-DCMAKE_BUILD_TYPE&#x3D;Debug \
-	-DCMAKE_INSTALL_PREFIX&#x3D;(pwd)&#x2F;compile&#x2F;llvm-project-llvmorg-13.0.0&#x2F;install \
-	..&#x2F;llvm
-make -j3 &#x2F;&#x2F; 怕炸内存,32G内存8个核编译在链接的时候很容易炸内存<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h2 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h2><h3 id="安装与编译"><a href="#安装与编译" class="headerlink" title="安装与编译"></a>安装与编译</h3><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"><span class="token function">wget</span> https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-13.0.0.tar.gz
+<span class="token function">tar</span> -xzf llvmorg-13.0.0.tar.gz
+<span class="token builtin class-name">cd</span> llvm-project-llvmorg-13.0.0
+<span class="token function">mkdir</span> build <span class="token function">install</span> 
+<span class="token builtin class-name">cd</span> build
+cmake -DLLVM_ENABLE_PROJECTS<span class="token operator">=</span><span class="token string">"clang"</span> <span class="token punctuation">\</span>
+	-DLLVM_TARGETS_TO_BUILD<span class="token operator">=</span><span class="token string">"RISCV"</span> <span class="token punctuation">\</span>
+	-DCMAKE_BUILD_TYPE<span class="token operator">=</span>Debug <span class="token punctuation">\</span>
+	-DCMAKE_INSTALL_PREFIX<span class="token operator">=</span><span class="token punctuation">(</span>pwd<span class="token punctuation">)</span>/compile/llvm-project-llvmorg-13.0.0/install <span class="token punctuation">\</span>
+	<span class="token punctuation">..</span>/llvm
+<span class="token function">make</span> -j3 // 怕炸内存,32G内存8个核编译在链接的时候很容易炸内存<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="应用-patch"><a href="#应用-patch" class="headerlink" title="应用 patch"></a>应用 patch</h3><p><code>git apply $diff</code> 或者</p>
 <p><code>git am *.patch</code> </p>
@@ -276,12 +276,12 @@ madd a0, a1, a2
 # CHECK-ASM: encoding: [0xb3,0xf0,0x10,0xfe]
 madd ra, ra, ra<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h4 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h4><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rt@rogerthat ~&#x2F;m&#x2F;llvm-project-llvmorg-13.0.0 (master)&gt; llvm-lit llvm&#x2F;test&#x2F;MC&#x2F;RISCV&#x2F;rv32m-valid.s 
--- Testing: 1 tests, 1 workers --
-PASS: LLVM :: MC&#x2F;RISCV&#x2F;rv32m-valid.s (1 of 1)
+<h4 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h4><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rt@rogerthat ~/m/llvm-project-llvmorg-13.0.0 <span class="token punctuation">(</span>master<span class="token punctuation">)</span><span class="token operator">></span> llvm-lit llvm/test/MC/RISCV/rv32m-valid.s 
+-- Testing: <span class="token number">1</span> tests, <span class="token number">1</span> workers --
+PASS: LLVM :: MC/RISCV/rv32m-valid.s <span class="token punctuation">(</span><span class="token number">1</span> of <span class="token number">1</span><span class="token punctuation">)</span>
 
-Testing Time: 0.11s
-  Passed: 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+Testing Time: <span class="token number">0</span>.11s
+  Passed: <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h4 id="错误的指令编码测试"><a href="#错误的指令编码测试" class="headerlink" title="错误的指令编码测试"></a>错误的指令编码测试</h4><p><code>llvm/test/MC/RISCV/rv32m-invalid.s</code></p>
 <p>最后4条新增的测试指令</p>
@@ -302,12 +302,12 @@ madd a0, 1, a1  # check: :[[@line]]:10: error: invalid Imm operand for instructi
 madd a0, f0, a1 # check: :[[@line]]:10: error: invalid rs1 for instruction: gpr is needed
 madd a0, a1, f1 # check: :[[@line]]:14: error: invalid rs2 for instruction: gpr is needed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h4 id="测试结果-1"><a href="#测试结果-1" class="headerlink" title="测试结果"></a>测试结果</h4><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rt@rogerthat ~&#x2F;m&#x2F;llvm-project-llvmorg-13.0.0 (master)&gt; llvm-lit llvm&#x2F;test&#x2F;MC&#x2F;RISCV&#x2F;rv32m-invalid.s 
--- Testing: 1 tests, 1 workers --
-PASS: LLVM :: MC&#x2F;RISCV&#x2F;rv32m-invalid.s (1 of 1)
+<h4 id="测试结果-1"><a href="#测试结果-1" class="headerlink" title="测试结果"></a>测试结果</h4><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rt@rogerthat ~/m/llvm-project-llvmorg-13.0.0 <span class="token punctuation">(</span>master<span class="token punctuation">)</span><span class="token operator">></span> llvm-lit llvm/test/MC/RISCV/rv32m-invalid.s 
+-- Testing: <span class="token number">1</span> tests, <span class="token number">1</span> workers --
+PASS: LLVM :: MC/RISCV/rv32m-invalid.s <span class="token punctuation">(</span><span class="token number">1</span> of <span class="token number">1</span><span class="token punctuation">)</span>
 
-Testing Time: 0.03s
-  Passed: 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+Testing Time: <span class="token number">0</span>.03s
+  Passed: <span class="token number">1</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h3 id="C语言测试程序"><a href="#C语言测试程序" class="headerlink" title="C语言测试程序"></a>C语言测试程序</h3><ul>
 <li><p><input checked="" disabled="" type="checkbox"> 
@@ -487,15 +487,15 @@ Disassembly of section .text:
 <li>Scalability：能否适用于大型程序</li>
 <li>Usability：是否有直观可解释的报告</li>
 </ul>
-<h1 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h1><p><img src="https://i.imgs.ovh/2023/10/15/rwjhs.png" alt="image-20231014190620861"></p>
+<h1 id="Content"><a href="#Content" class="headerlink" title="Content"></a>Content</h1><p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/640.png" alt="image-20231014190620861"></p>
 <p>2009 年，在图像处理软件 gimp 中出现了这么一个整数溢出的漏洞（图1a，第12，13，14行）。 8 年后，相似的漏洞又一次出现在了图像处理软件 sam2p 中（如图1b）。因为对 BMP 处理有着相似的逻辑，这两段代码片段有着相似的逻辑，相似的漏洞<del>（人类总是在同一个地方重蹈覆辙）</del>。</p>
 <p>为了发现这样的漏洞，作者提出 Signature-based Static Analysis。经典的方法是直接比较程序的语法（比如函数或者程序块），启发式的方法（VUDDY 和 MVP）选择包含 patches 的函数作为特征。然而这些方法都适对付不了规模较大的、语法差别较大的函数（如图1c），尽管漏洞的本质是一样的。</p>
 <p>作者还提到，基于克隆的方法不能高效的通过图1a 的 signature 检出图1b 图1c 的漏洞，通用的整数溢出检测又有很多误报，通过特定的匹配工作量也非常大。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rw4UX.png" alt="image-20231014193732785"></p>
+<p>![image-20231014193732785](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (1).png)</p>
 <p>图2 是作者介绍的工具，可以精确的用图1a 中的 signature 检测图1b 和图2c 的漏洞。</p>
 <h2 id="Taint-Analysis"><a href="#Taint-Analysis" class="headerlink" title="Taint Analysis"></a>Taint Analysis</h2><p>作者用简单的污点值抽象域 T &#x3D; {⊥𝑡 , ⊤𝑡 } 表示是否可能被污染，⊥𝑡 表示没被污染 , ⊤𝑡 表示可能污点数据。抽象域 I &#x3D; {⊥𝑜, ⊤o} 表示是否可能溢出 ⊤o 可能溢出，⊥𝑜 没溢出。只有同时 ⊤𝑡 和 ⊤o 时才可能存在漏洞。</p>
 <h2 id="Traces-on-Data-Dependency-Graphs"><a href="#Traces-on-Data-Dependency-Graphs" class="headerlink" title="Traces on Data Dependency Graphs."></a>Traces on Data Dependency Graphs.</h2><p>这部分是关于需要比较的 signatures 也就是所谓的 Traces 。值得注意的是，作者认为使用数据流依赖图而非控制流依赖图能够避免不相关的表达式。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rwd60.png" alt="image-20231014201014209"></p>
+<p>![image-20231014201014209](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (2).png)</p>
 <p>作者使用如图3 所示的，从数据流图中提取出的 source 到 sink point 的痕迹。这样的痕迹（Trace）会被作为漏洞的 signature。</p>
 <p>然后会尽可能地提取出所有 source 到 sink point 的痕迹。<del>值得注意的是这里他们只展开一次循环</del>。</p>
 <h2 id="Feature-Representation"><a href="#Feature-Representation" class="headerlink" title="Feature Representation"></a>Feature Representation</h2><p>这里讲的主要是对语意语法的表达。最终</p>
@@ -506,18 +506,18 @@ Disassembly of section .text:
 </ul>
 <p><del>假如从程序中检出了目标的痕迹，但是没检出 signature 痕迹（这里我认为是指 High-Level feature），那么就认为没有漏洞。</del></p>
 <h2 id="Similarity-Checking"><a href="#Similarity-Checking" class="headerlink" title="Similarity Checking"></a>Similarity Checking</h2><p>作者使用余弦函数来表示相似度。以图3 为例。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rw8eC.png" alt="image-20231014203914563"></p>
+<p>![image-20231014203914563](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (3).png)</p>
 <p>图3a 和图3b 有着 0.96 的相似度。Tracer 由此检测相似度比较高重复漏洞。</p>
 <hr>
 <p>接着作者紧随其后描述了上述整个过程的形式化方法，对 ALARM，TAINED TRACE，SCORE OF ALARM 的形式化定义。如果感兴趣可以看一下原文，这里只简描述一下一下形式化的算法和几个定义。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rwTMm.png" alt="image-20231014213942829"></p>
+<p>![image-20231014213942829](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (4).png)</p>
 <p>从程序中取出 alarm 的集合 （line1）<br>根据程序构建 DFG （line2）<br>对程序的每一个 alram，从中提取出 traces 的集合 （line5）<br>然后把这些 traces 表达成 feature vectors （line6）<br>与 signature traces 的 feature vectors 对比，取相似度最高的 （line7）</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rwD9t.png" alt="image-20231014214138539"></p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rwqSN.png" alt="image-20231014214156788"></p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rw9dR.png" alt="image-20231014214215482"></p>
+<p>![image-20231014214138539](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (5).png)</p>
+<p>![image-20231014214156788](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (6).png)</p>
+<p>![image-20231014214215482](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (7).png)</p>
 <p>除此之外，作者还定义了抽象内存，以及一系列在抽象内存上的形式化方法。</p>
 <p>作者的动机是在看漏洞报告时发现开发者通常根据一系列操作来描述一个漏洞，如下图所示：</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rwNFp.png" alt="image-20231014221330858"></p>
+<p>![image-20231014221330858](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (8).png)</p>
 <p>作者把 low-level feature 和 high-level feature 作分离是为了提高效率和精度。</p>
 <p>在 Low-Level feature 中，由于每个 Trace 只是由一系列操作组成，为了提高精度</p>
 <ul>
@@ -525,7 +525,7 @@ Disassembly of section .text:
 <li>使用数据流依赖</li>
 </ul>
 <p>在 High-Level feature 中，作者设计了如下的特性，进一步提高程序分析的精度。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rwahT.png" alt="image-20231014222451704"></p>
+<p>![image-20231014222451704](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (9).png)</p>
 <p>以 EqualToPercentage 为例，这个设计也在 MVP 中使用过，在通常的条件表达式中可以避免格式化字符串的错误。尽管作者说在只有 Low-Level feature 的情况下，Trace 的精度已经很高了，使用了 High-Level feature 可以让精度更高。</p>
 <h1 id="Evaluate"><a href="#Evaluate" class="headerlink" title="Evaluate"></a>Evaluate</h1><h2 id="Experimental-Setup"><a href="#Experimental-Setup" class="headerlink" title="Experimental Setup"></a>Experimental Setup</h2><p><strong>Implementation</strong>：Tracer 基于 Facebook’s Infer analyzer，使用污点追踪能分析整数上溢，整数下溢，格式化字符串，命令注入，缓冲区溢出，另外用 Pulse engine 能分析UAF，double free。</p>
 <p><strong>Signature Program</strong>：Signature Trace 取自 （1）16 个能被污点追踪复现的漏洞以及以前的一些工作。（2）Juliet test suite：包含了很多常见漏洞的小程序，作者使取了 5383 个 Tracer 能分析的漏洞程序。（3）OWASP 中取了 5 个安全编程的例子。</p>
@@ -534,24 +534,24 @@ Disassembly of section .text:
 <p><strong>Metrics</strong>：由于不同分析器之间的表现不太一致，比如 CodeQL 只报告 sink point。为了公平比较做了一些考虑。展示 <strong>Root Cases</strong>，以及 <strong>Sink Point</strong>，对于 Tracer 和 CodeQL 比较 true alarm 和 flase alarm，而其他的（VUDDY，CCAligner，Devign）则只记录报告的函数。</p>
 <h2 id="RQ1：Effectiveness"><a href="#RQ1：Effectiveness" class="headerlink" title="RQ1：Effectiveness"></a>RQ1：Effectiveness</h2><p>Debian package 中对于尚未被发现的漏洞，作者选取了相似度大于 0.85 的 alarm，在 0.85 以下又随机选取了 100 个报告进行分析，最终产生了 424 份报告。作者写这篇论文时，Tracer 找到了 112 个新漏洞，30个漏洞已经被确认，且收获了 6 个 CVEs。而在这 112 个漏洞中，只有 10 个能被 baseline tools （VUDDY 和 Devign）发现。<del>杀人诛心</del></p>
 <p>表2 是 Tracer 发现的漏洞的一部分。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/r3CPl.png" alt="image-20231014230916024"></p>
+<p>![image-20231014230916024](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (10).png)</p>
 <p>false alarm 与 true alarm 的曲线，图中的 0.95 0.90 0.85 表示 Tracer 的相似度。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/rwvUu.png" alt="image-20231014231312405"></p>
+<p>![image-20231014231312405](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (11).png)</p>
 <h2 id="RQ2：Comparison"><a href="#RQ2：Comparison" class="headerlink" title="RQ2：Comparison"></a>RQ2：Comparison</h2><p>基于以下事实进行比较，对于所有工具（Tracer85, VUDDY, CCAligner, and CodeQL）作者都会手动分析 Tracer85 产生的 alarm 数量；收集所有工具的真实报警，包括 Tracer 中相似度小于 0.85 随机采样的真实报警。</p>
 <p>最终作者收集到 453 个基本事实与其他 baseline 比较。另外，由于 Devign 不提供合适的报告，作者只判断它能否找到 453 其中的事实。</p>
 <p>比较的结果如表3 所示。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/r3P6d.png" alt="image-20231014231329076"></p>
+<p>![image-20231014231329076](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (12).png)</p>
 <p>与 VUDDY 和 CCAligner 相比（与 clone-based 方法相比）。VUDDYO 使用了原来的数据库，VUDDYS 使用了与 Tracer 相同的数据库。在 VUDDYO 12 个报告中有 7 个误报，其中只有 3 个漏洞，3 个漏洞中有 1 个 Tracer 没有发现（作者解释说是因为没有相对应的 signature），而其他 2 个如图12 所示。</p>
-<p><img src="https://i.imgs.ovh/2023/10/15/r3VeK.png" alt="image-20231015102435111"></p>
+<p>![image-20231015102435111](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (13).png)</p>
 <p>对于这两个相似的漏洞，VUDDYO 根据 <code>LibRaw-demosaic-pack-GPL2, CVE-2017-6889</code> 而 Tracer 根据与发现图1b 中的漏洞的 signature 相似度达到 0.92。更说明了尽管图12 与图1b 中展的漏洞有着完全不同的语法结构，Tracer 仍能高效发现这样的漏洞。</p>
 <p>VUDDYS 只有 10 个误报。以图13 为例，作者认为到 vfprintf 的格式化字符串输入都是合法的。<del>(单这个图应该看不出来)</del></p>
-<p><img src="https://i.imgs.ovh/2023/10/15/r3rMj.png" alt="image-20231015103952666"></p>
+<p>![image-20231015103952666](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (14).png)</p>
 <p>CCAligner 发现了 150 个报告但是没有发现漏洞（因为它本来就不是拿来挖洞的），但是对于漏洞挖掘来说，它也存在大量与 VUDDYO 相似的的出现在图13b 中的误报（合法输入）。</p>
 <p>与 CodeQL 相比（human-written bug patterns），CodeQL 报告了 3488 个，作者分析了其中 324 个。其中 CodeQL 报告了 453 个事实（前面收集的）中的 161 个真实的报告，而 Tracer85 能发现 253 个。事实上 CodeQL 与 Tracer 相比并不能说明 Tracer 在 signature 匹配上更加好，因为 CodeQL 并没有匹配 signature 而且有着完全不同的架构。这样只说明了 Tracer 与当前比较好的静态分析器相比能也能发现比较重要的漏洞。</p>
 <p>对比 Degign（learning-based），作者也使用了两种不同的数据集（与 VUDDY 相似）。Devign𝑂 发现的 10 个漏洞中有 8 个能被 Tracer 发现，而 Devign𝑆 同样一无所获。</p>
-<h2 id="RQ3：Impact-of-High-level-Features"><a href="#RQ3：Impact-of-High-level-Features" class="headerlink" title="RQ3：Impact of High-level Features"></a>RQ3：Impact of High-level Features</h2><p><img src="https://i.imgs.ovh/2023/10/15/r32uI.png" alt="image-20231015110816124"></p>
+<h2 id="RQ3：Impact-of-High-level-Features"><a href="#RQ3：Impact-of-High-level-Features" class="headerlink" title="RQ3：Impact of High-level Features"></a>RQ3：Impact of High-level Features</h2><p>![image-20231015110816124](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (15).png)</p>
 <p>从表4 中可以看出有无 High-Level Features 对精度的影响不大，但是还是有一些提升的。</p>
-<h2 id="RQ4：Scalability"><a href="#RQ4：Scalability" class="headerlink" title="RQ4：Scalability"></a>RQ4：Scalability</h2><p><img src="https://i.imgs.ovh/2023/10/15/r3F8V.png" alt="image-20231015111432584"></p>
+<h2 id="RQ4：Scalability"><a href="#RQ4：Scalability" class="headerlink" title="RQ4：Scalability"></a>RQ4：Scalability</h2><p>![image-20231015111432584](<a href="https://cdn.jsdelivr.net/gh/wr-web/picture/640">https://cdn.jsdelivr.net/gh/wr-web/picture/640</a> (16).png)</p>
 <p>作者主要从程序的规模和运行的时间来描述。静态分析框架分析平均只要 140.42”，相似度计算平均要 2.71“，对于大部分的包都在 20‘ 内完成。一个花了 53‘ 的例外，作者认为是因为函数指针分析不精准导致分析了太多函数。另一个例子是对 gettext 他们只花了 91“ 就分析完成了 982K 行代码。</p>
 <h1 id="Results"><a href="#Results" class="headerlink" title="Results"></a>Results</h1><p>作者开发的 Signature-based Static Analysis 在 273 个 Debian 上发现了 112 个先前未发现的漏洞，其中有 6 个被确认为 CVE。</p>
 <h1 id="碎碎念"><a href="#碎碎念" class="headerlink" title="碎碎念"></a>碎碎念</h1><p>这是我读的第三篇论文，文章的内容，可能有地方我的理解不太对，或者部分内容详略不够得当，恳请🙇读者批评指正。</p>
@@ -579,9 +579,9 @@ Disassembly of section .text:
 <p>抽象解釋：對程序語義進行抽象（近似）的通用理論</p>
 <p>Galois 連接</p>
 <p>抽象域</p>
-<p><img src="https://i.imgs.ovh/2023/10/14/XyLPT.png" alt="image-20231014095701310"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231014095701310.png" alt="image-20231014095701310"></p>
 <p>數值抽象域，在其上的析取，合取</p>
-<p><img src="https://i.imgs.ovh/2023/10/14/XyPip.png" alt="image-20231014095821500"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231014095701310.png" alt="image-20231014095821500"></p>
 <p>多面躰域（綫性不等式域），八邊形域（刻畫+1,-1,0，兩個變量之間的關係）</p>
 <p>上近似：無漏報但是可能存在誤報</p>
 <p>凸抽象域（綫性抽象域），凸抽象域（區間綫性抽象域，絕對值綫性抽象域）</p>
@@ -654,11 +654,11 @@ Disassembly of section .text:
 <p>恶意软件检测，<strong>X-Force</strong>（动态二进制插桩，无崩溃模型）。Bernadi 等人提出基于过程挖掘的恶意软件检测方法，系统调用序列作为指纹，训练分类器进行分类。Arora 等人提出网络流量特征+规则分类器。</p>
 <p><strong>LOOP</strong> 检测&#x2F;分析<strong>不透明谓词</strong>（运行时不可知）</p>
 <p>找到一个比较好的讲<strong>不透明谓词</strong>的例子：</p>
-<p><img src="https://i.imgs.ovh/2023/10/12/XtSe3.md.png"></p>
+<p><del>圖片丟失，下次補上</del></p>
 <p><strong>K-Hunt</strong> 检测二进制可执行文件中不安全密钥。原理有点类似污点追踪。</p>
 <p><strong>QVMII，Qelt</strong> 系统级动态二进制插桩工具。</p>
 <p>动静混合方法不展开了，以下是上面工具的评价。</p>
-<p><img src="https://i.imgs.ovh/2023/10/12/Xtu99.png" alt="image-20231011133802185"></p>
+<p><del>圖片丟失，下次補上</del></p>
 <p>作者认为未来有以下挑战</p>
 <ul>
 <li>精度，效率，代码覆盖率的矛盾</li>
@@ -744,7 +744,7 @@ Disassembly of section .text:
 <p><strong>3.</strong> Tai-e 影响比较广，他们有开源的代码(<a href="https://github.com/pascal-lab/Tai-e)%EF%BC%8C%E4%B8%BA%E5%AD%A6%E4%B9%A0%E8%80%85%E8%AE%BE%E8%AE%A1%E7%9A%84%E9%9D%99%E6%80%81%E5%88%86%E6%9E%90%E4%BB%A3%E7%A0%81%E3%80%82%E5%90%B8%E5%BC%95%E4%BA%86">https://github.com/pascal-lab/Tai-e)，为学习者设计的静态分析代码。吸引了</a> 26 所大学，R&amp;D teams from  13 companies，104 所大学的学生。<del>（这就是开源的力量嘛doge</del></p>
 <h1 id="Program-Abstraction"><a href="#Program-Abstraction" class="headerlink" title="Program Abstraction"></a>Program Abstraction</h1><p>静态分析框架程序抽象模型包括 IR，类型系统，类继承等。接下是对 Tai-e IR 的诠释。</p>
 <p>Tai-e 的 IR 很受 Soot 和 Wala 的启发，实现的更加简洁，更便于了解 IR 的隐含信息。<del>（什么 underlying intents of IR，不太理解）</del></p>
-<p><img src="https://i.imgs.ovh/2023/10/10/LyHbN.png" alt="image-20231008214548165"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231008214548165.png" alt="image-20231008214548165"></p>
 <p>IR 的设计上：Tai-e 区分了赋值表达式的类型</p>
 <p>API 设计：在获取表达式时使用了具体的返回类型，避免使用索引</p>
 <p>程序元素如值，类型，名字的组织和获取方式：Tai-e 集中了索引变量相关的信息到一个单一接口</p>
@@ -766,7 +766,7 @@ Disassembly of section .text:
 </ul>
 <p>前两者 Tai-e 和其他的框架有所不同</p>
 <h3 id="representation"><a href="#representation" class="headerlink" title="representation"></a>representation</h3><p>Spark 和 Wala 都采用了混合的 points-to set，当 set的大小小于某个具体的值，他就用数组存储，否则使用通常的 bit set 存储。Tai-e 也使用了混合的方法，但是在 bit set 的设计上有一些不一样。</p>
-<p><img src="https://i.imgs.ovh/2023/10/10/LyM5R.png" alt="image-20231009091537569"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231009091537569.png" alt="image-20231009091537569"></p>
 <p>在图2中，右侧的是 Tai-e 的设计，使用了类似虚拟内存的页表思想，他们在实践中往往使用二级页表，在上下文敏感的指针分析中这平均节约了 23%（up to 40%） 的内存。当作者把内存限制为某一个值比如 8G，这有利于 Tai-e 拓展更多的基准。作者注意到 Doop 是申明式的，他的 points-to 集合表示开发者无法获取，并且不同的 Datalog 引擎可能有不同的表示。</p>
 <h3 id="context-manager"><a href="#context-manager" class="headerlink" title="context manager"></a>context manager</h3><p>上下文敏感被广泛用于提高 Java 指针分析的精度。作者需要一个管理上下文敏感变量（call-site-，object-，type-sensitivity）的策略。</p>
 <p>Soot 没有一个搞笑的上下文敏感指针分析系统，Spark 是一个上下文不敏感的。Paddle 是 Soot 的 BDD-based 上下文敏感指针分析，但是它比 Doop 低效很多，并且它还很久没维护了。Doop 提供了一些优雅的规则以处理上下文敏感，然而因为 Datalog 的限制，对每一个上下文长度，方法调用，堆内存，开发者不得不写一个实现，导致了一些荣誉。<del>（感觉 Doop 也可以有挺好的拓展性）</del>。</p>
@@ -790,11 +790,11 @@ Disassembly of section .text:
 </ol>
 <p>Helm 等人提出一种动态写作各种分析的方法，即使具有不同的分析格。但是这种方法过于复杂无法解决作者的问题。<del>（解决的主要问题不是 friendly 嘛，这本身就有一点矛盾的）</del></p>
 <p>为了从实践上促进新 analysis（那些需要和指针分析交互的 analysis）的开发，在 Tai-e 中，作者提出一种简单且搞笑的方法 analysis plugin system。当前有很多基于这个系统的插件，包括了基础的比如反射和异常分析，客体比如污点追踪分析，公共工具比如 analysis timer 和 constraint checker。</p>
-<h2 id="Basic-Idea"><a href="#Basic-Idea" class="headerlink" title="Basic Idea"></a>Basic Idea</h2><p><img src="https://i.imgs.ovh/2023/10/10/Lywrp.png" alt="image-20231009202348399"></p>
+<h2 id="Basic-Idea"><a href="#Basic-Idea" class="headerlink" title="Basic Idea"></a>Basic Idea</h2><p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231009202348399.png" alt="image-20231009202348399"></p>
 <p>接下来解释 analysis plugin system 怎么工作。如图3，这个系统包含了一个指针分析 solver 和一些用户定义的分析与前者交互。Solver 和 Plugin 的核心被分别高亮为蓝色和红色，开发者只需要实现和 Plugin 相关的 APIs 就可以开发新的 analysis。额外的辅助 API 比如 addStmt（模拟调用的效果，和前问提及的 Wala 相似）使得创建具体的功能更加简单。</p>
 <p>让我们阐述它的基本工作机制，驱使那些核心的 APIs。假定你在实现某个 analysis Plugin 的onNewPointsToSet 方法，当变量 Var 的  points-to set（PTS）改变了，你需要写处理相关的副作用的逻辑。结果就是，你需要更新和指针相关的 PTS，或者添加一个 call graph edges 相关的 call sites。因此，在实现 onNewPointsToSet 时，你需要调用 addPointsTo 或者 addCallEdge 方法来提示这些变化。</p>
 <p>相反的说，在分析的迭代中，Solver 会自动的调用 onNewPointsToSet 和 onNewCallEdge 方法来提示变量（Var，PTS）可能发生的改变。最终，开发者只需要 Plugin 的几个模块就可以实现目的了。</p>
-<h2 id="Case-Study"><a href="#Case-Study" class="headerlink" title="Case Study"></a>Case Study</h2><p><img src="https://i.imgs.ovh/2023/10/10/Ly3BT.png" alt="image-20231009205124208"></p>
+<h2 id="Case-Study"><a href="#Case-Study" class="headerlink" title="Case Study"></a>Case Study</h2><p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231009205124208.png" alt="image-20231009205124208"></p>
 <p>为了更好的理解怎样构建新的 analyses ，作者给了一个例子，如图4。</p>
 <p>下面是一个污点追踪的例子。</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token number">1</span> <span class="token class-name">String</span> s1 <span class="token operator">=</span> x<span class="token punctuation">.</span><span class="token function">source</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
@@ -816,9 +816,9 @@ Disassembly of section .text:
 <li>可能某种程度上不够灵活，比如 plugin system 不能重写 visitXXX() 函数。</li>
 </ul>
 <p>人们仍然非常关注效率，尽管 Tai-e 的目标是 user-friendly 。作者使用了所有的标准 Java DaCapo benchmarks 加上一些在最近的文章中经常使用的 real-world 应用。</p>
-<p><img src="https://i.imgs.ovh/2023/10/10/LyWfd.png" alt="image-20231010002222335"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231010002222335.png" alt="image-20231010002222335"></p>
 <p>在指针分析中，如表1，Tai-e 比起其他有着更好的 Recall，效率上也更高，得益于反射的精度，native code modeling，以及很多指针分析实现上的优化。</p>
-<p><img src="https://i.imgs.ovh/2023/10/10/LykRK.png" alt="image-20231010002924438"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231010002924438.png" alt="image-20231010002924438"></p>
 <p>在数据流分析中，作者又展示了表2中的平均数据。Tai-e 在这个分析中不如 Soot 但是比 Wala 和 SpotBugs 好，他们分析 Soot 在数据流分析中有比较复杂的优化，而这种优化在 Tai-e 中没有。<del>（怎么有一种未来可期的感觉）</del></p>
 <h1 id="RELATED-WORK"><a href="#RELATED-WORK" class="headerlink" title="RELATED WORK"></a>RELATED WORK</h1><p>强相关的在前文已经提及，在这里讨论一些额外的相关的工作。</p>
 <p>Lam et al. 回顾了 Soot，总结了它的主要的特征和挑战（联合单个以支持多重的分析，分析不完整的程序等），未来的方向（构建更快的 startup，提高过程间分析能力），另外他们还提及一些开发 Soot 中的困难，建议了一些未来编译器的框架。</p>
@@ -854,7 +854,7 @@ Disassembly of section .text:
 <p>有兩種，動態分析比如 Droidfuzzer，靜態分析如 Amandroid，DroidSafe，OAuthLint，但是由於這些分析大部分都缺少語義信息，面對如 try catch 處理不了，就會產生非常多的關於 Dos 的 false positive 報錯。</p>
 <p>而有一些可以進行語義模式匹配的工具比如説 CodeQL 和 Semgrep，CodeQL 的缺點是他依賴於完整的代碼和編譯環境，然而這對於安全研究者而言可遇不可求。Semgrep 的缺點是它不能識別安卓的應用的組件<del>（沒用過，不清楚這裏説的是什麽意思）</del>，也就不可能獲得那些可以有 vulnerable input 的組件。</p>
 <p>綜上作者就提出了這種，既結合靜態分析中的污點追蹤，又結合語義匹配分析，還可以分析組件的<del><strong>（未開源的，逃）</strong></del>靜態分析工具。</p>
-<p><img src="https://i.imgs.ovh/2023/10/10/LysYV.png" alt="image-20231005160301135"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20231005160301135.png" alt="image-20231005160301135"></p>
 <h2 id="METHODLOGY"><a href="#METHODLOGY" class="headerlink" title="METHODLOGY"></a>METHODLOGY</h2><p>程序接收三個輸入，程序的 java 代碼、manifest files <del>（應該是前文説的 components 分析）</del> 、用戶自定義的規則，作爲輸入，報告可以的代碼片段。由於程序並不需要對源代碼進行處理，所以對於加殼的程序也只要脫殼了就能用。這個系統包含了兩個模塊，analysis module 與 filter module，如圖所示，寫作給出最後的報告。</p>
 <h3 id="System-Design"><a href="#System-Design" class="headerlink" title="System Design"></a>System Design</h3><p>analysis module 是爲了獲得基本的程式信息，對於 manifest 文件，提取了 enabled，exported，name，permission 和 intent-filter。對於應用程式，作者使用了 jeb 生成 call graph，並以 DFS 的方式生產了滿足後端規則的調用鏈。然後把這個調用鏈傳給 filter module。</p>
 <p>filter module 的規則是由一開始的規則生成的，從 cross-function rules 變成 intra-function rules <del>（這裏有點不清楚，什麽是 intra-function rules）</del>，然後子模塊迭代函數然後拿規則去匹配代碼，剔除不匹配的函數鏈。如果開啓了污點追蹤，就可以計算輸入最終能否影響到最終的 sink function。最後把這個調用鏈傳給輸出，由安全研究者手動的檢查是否是漏洞。作者這個模塊的實現是基於 Semgrep <del>（沒用過，mark 一下）</del>。</p>
@@ -2873,7 +2873,7 @@ input_str_off<span class="token operator">=</span> <span class="token number">0x
 <p>通过 gdb 调试得知（实在是对 CPP 编译出来的程序了解比较少）</p>
 <p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/Snipaste_2021-07-28_23-26-09.jpg" alt="Snipaste_2021-07-28_23-26-09"></p>
 <p>大胆猜测字符长度</p>
-<p><img src="file:///C:/Users/UserUnknow/Desktop/picture/Snipaste_2021-07-28_23-26-26.jpg" alt="Snipaste_2021-07-28_23-26-26"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/Snipaste_2021-07-28_23-26-26.jpg" alt="Snipaste_2021-07-28_23-26-26"></p>
 <p>这道题和第一道题很想，我打算根据目前所学写两个脚本</p>
 <h4 id="sm-run"><a href="#sm-run" class="headerlink" title="sm.run()"></a>sm.run()</h4><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># .virtualenvs/angr</span>
 <span class="token keyword">import</span> angr
