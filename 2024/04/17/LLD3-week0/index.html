@@ -1,0 +1,343 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>LDD3 学习笔记 | R0gerThat</title><meta name="author" content="RT"><meta name="copyright" content="RT"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="LDD3 环境&#x2F;字符驱动">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LDD3 学习笔记">
+<meta property="og:url" content="https://wr-web.github.io/2024/04/17/LLD3-week0/index.html">
+<meta property="og:site_name" content="R0gerThat">
+<meta property="og:description" content="LDD3 环境&#x2F;字符驱动">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/wr-web/picture/archive52.jpg">
+<meta property="article:published_time" content="2024-04-17T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-06-24T04:41:17.735Z">
+<meta property="article:author" content="RT">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/wr-web/picture/archive52.jpg"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/wr-web/picture/archive02.jpg"><link rel="canonical" href="https://wr-web.github.io/2024/04/17/LLD3-week0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LDD3 学习笔记',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-06-24 12:41:17'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="R0gerThat" type="application/atom+xml">
+</head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/wr-web/picture/archive52.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="R0gerThat"><span class="site-name">R0gerThat</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">LDD3 学习笔记</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-17T04:00:00.000Z" title="发表于 2024-04-17 12:00:00">2024-04-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-06-24T04:41:17.735Z" title="更新于 2024-06-24 12:41:17">2024-06-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="LDD3 学习笔记"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="LDD3-WEEK0"><a href="#LDD3-WEEK0" class="headerlink" title="LDD3 WEEK0"></a>LDD3 WEEK0</h1><p>这周忙于人工智能课程的作业，书本看的不多，下周多看一些多实践一些。</p>
+<h2 id="1-简介"><a href="#1-简介" class="headerlink" title="1.简介"></a>1.简介</h2><p>主要介绍了驱动程序的角色，内核划分，以及 Linux 版本号、社区的一些基本信息。</p>
+<h2 id="2-建立和运行模块"><a href="#2-建立和运行模块" class="headerlink" title="2.建立和运行模块"></a>2.建立和运行模块</h2><h3 id="hello-world"><a href="#hello-world" class="headerlink" title="hello world"></a>hello world</h3><pre class="line-numbers language-makefile" data-language="makefile"><code class="language-makefile">obj-m <span class="token operator">+=</span> hello_world.o
+
+<span class="token target symbol">all</span><span class="token punctuation">:</span>
+	make -C /lib/modules/<span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">shell</span> uname -r<span class="token punctuation">)</span>/build M<span class="token operator">=</span><span class="token variable">$</span><span class="token punctuation">(</span>PWD<span class="token punctuation">)</span> modules
+
+<span class="token target symbol">clean</span><span class="token punctuation">:</span>
+	make -C /lib/modules/<span class="token variable">$</span><span class="token punctuation">(</span><span class="token function">shell</span> uname -r<span class="token punctuation">)</span>/build M<span class="token operator">=</span><span class="token variable">$</span><span class="token punctuation">(</span>PWD<span class="token punctuation">)</span> clean<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;linux/module.h></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span><span class="token string">&lt;linux/kernel.h></span></span>
+
+<span class="token function">MODULE_LICENSE</span><span class="token punctuation">(</span><span class="token string">"GPL"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">MODULE_AUTHOR</span><span class="token punctuation">(</span><span class="token string">"RogerThat"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">MODULE_DESCRIPTION</span><span class="token punctuation">(</span><span class="token string">"A simple hello world module"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">MODULE_VERSION</span><span class="token punctuation">(</span><span class="token string">"0.01"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">static</span> <span class="token keyword">int</span> __init <span class="token function">hello_mod_init</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+        <span class="token function">printk</span><span class="token punctuation">(</span>KERN_ALERT <span class="token string">"Hello world from kernel!! \n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">static</span> <span class="token keyword">void</span> __exit <span class="token function">hello_mod_exit</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+        <span class="token function">printk</span><span class="token punctuation">(</span>KERN_ALERT <span class="token string">"Exiting hello world module from kernel !!!\n"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token function">module_init</span><span class="token punctuation">(</span>hello_mod_init<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token function">module_exit</span><span class="token punctuation">(</span>hello_mod_exit<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>output</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rt@rogerthat ~&#x2F;kernel&gt; make
+make -C &#x2F;lib&#x2F;modules&#x2F;5.19.0-46-generic&#x2F;build M&#x3D;&#x2F;home&#x2F;rt&#x2F;kernel modules
+make[1]: Entering directory &#39;&#x2F;usr&#x2F;src&#x2F;linux-headers-5.19.0-46-generic&#39;
+warning: the compiler differs from the one used to build the kernel
+  The kernel was built by: x86_64-linux-gnu-gcc-12 (Ubuntu 12.2.0-3ubuntu1) 12.2.0
+  You are using:           gcc-12 (Ubuntu 12.3.0-1ubuntu1~22.04) 12.3.0
+  CC [M]  &#x2F;home&#x2F;rt&#x2F;kernel&#x2F;hello_world.o
+  MODPOST &#x2F;home&#x2F;rt&#x2F;kernel&#x2F;Module.symvers
+  CC [M]  &#x2F;home&#x2F;rt&#x2F;kernel&#x2F;hello_world.mod.o
+  LD [M]  &#x2F;home&#x2F;rt&#x2F;kernel&#x2F;hello_world.ko
+  BTF [M] &#x2F;home&#x2F;rt&#x2F;kernel&#x2F;hello_world.ko
+Skipping BTF generation for &#x2F;home&#x2F;rt&#x2F;kernel&#x2F;hello_world.ko due to unavailability of vmlinux
+make[1]: Leaving directory &#39;&#x2F;usr&#x2F;src&#x2F;linux-headers-5.19.0-46-generic&#39;
+rt@rogerthat ~&#x2F;kernel [1]&gt; sudo insmod hello_world.ko
+rt@rogerthat ~&#x2F;kernel&gt; sudo lsmod | grep &quot;hello&quot;
+hello_world            16384  0
+rt@rogerthat ~&#x2F;kernel [1]&gt; sudo dmesg
+[  489.143299] hello_world: loading out-of-tree module taints kernel.
+[  489.143332] hello_world: module verification failed: signature and&#x2F;or required key missing - tainting kernel
+[  489.144447] Hello world from kernel!!
+rt@rogerthat ~&#x2F;kernel [1]&gt; sudo rmmod hello_world<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>也可以用 <code>modprob</code> ，处理依赖。</p>
+<p>内核符号表，这个比较新奇，之前对这个的了解比较少。</p>
+<p>感觉可以多用一下 <code>goto</code> 了（，新版的 <code>linux</code>（6.x） 内核有不少 <code>rust</code> 的代码，但是怎么这么多函数都是 <code>unsafe</code> 的，这算一种画蛇添足吗&#x3D;。&#x3D;。</p>
+<p><del>我的 WSL 内核版本是 5.15.90.4，在 WSL 上做这些事情是不是会有趣一些</del></p>
+<h2 id="3-字符驱动"><a href="#3-字符驱动" class="headerlink" title="3.字符驱动"></a>3.字符驱动</h2><p>讲字符驱动，顺便翻了一下 <code>Linux 2.1 fs.h</code> 中关于文件的一些数据结构</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">file</span>		<span class="token operator">*</span>f_next<span class="token punctuation">,</span> <span class="token operator">*</span><span class="token operator">*</span>f_pprev<span class="token punctuation">;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">dentry</span>		<span class="token operator">*</span>f_dentry<span class="token punctuation">;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">file_operations</span>	<span class="token operator">*</span>f_op<span class="token punctuation">;</span>
+	<span class="token class-name">mode_t</span>			f_mode<span class="token punctuation">;</span>
+	<span class="token class-name">loff_t</span>			f_pos<span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">short</span> 		f_count<span class="token punctuation">,</span> f_flags<span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span> 		f_reada<span class="token punctuation">,</span> f_ramax<span class="token punctuation">,</span> f_raend<span class="token punctuation">,</span> f_ralen<span class="token punctuation">,</span> f_rawin<span class="token punctuation">;</span>
+	<span class="token keyword">struct</span> <span class="token class-name">fown_struct</span>	f_owner<span class="token punctuation">;</span>
+
+	<span class="token keyword">unsigned</span> <span class="token keyword">long</span>		f_version<span class="token punctuation">;</span>
+
+	<span class="token comment">/* needed for tty driver, and maybe others */</span>
+	<span class="token keyword">void</span>			<span class="token operator">*</span>private_data<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看到第三个结构体 <code>file_operations</code> 也就是书中讲的。</p>
+<p>而在 <code>Linux 6.x</code> 中变成了</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token number">989</span>  <span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token punctuation">&#123;</span>
+<span class="token number">990</span>  	<span class="token keyword">union</span> <span class="token punctuation">&#123;</span>
+<span class="token number">991</span>  		<span class="token comment">/* fput() uses task work when closing and freeing file (default). */</span>
+<span class="token number">992</span>  		<span class="token keyword">struct</span> <span class="token class-name">callback_head</span> 	f_task_work<span class="token punctuation">;</span>
+<span class="token number">993</span>  		<span class="token comment">/* fput() must use workqueue (most kernel threads). */</span>
+<span class="token number">994</span>  		<span class="token keyword">struct</span> <span class="token class-name">llist_node</span>	f_llist<span class="token punctuation">;</span>
+<span class="token number">995</span>  		<span class="token keyword">unsigned</span> <span class="token keyword">int</span> 		f_iocb_flags<span class="token punctuation">;</span>
+<span class="token number">996</span>  	<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token number">997</span>  
+<span class="token number">998</span>  	<span class="token comment">/*
+999  	 * Protects f_ep, f_flags.
+1000  	 * Must not be taken from IRQ context.
+1001  	 */</span>
+<span class="token number">1002</span>  	<span class="token class-name">spinlock_t</span>		f_lock<span class="token punctuation">;</span>
+<span class="token number">1003</span>  	<span class="token class-name">fmode_t</span>			f_mode<span class="token punctuation">;</span>
+<span class="token number">1004</span>  	<span class="token class-name">atomic_long_t</span>		f_count<span class="token punctuation">;</span>
+<span class="token number">1005</span>  	<span class="token keyword">struct</span> <span class="token class-name">mutex</span>		f_pos_lock<span class="token punctuation">;</span>
+<span class="token number">1006</span>  	<span class="token class-name">loff_t</span>			f_pos<span class="token punctuation">;</span>
+<span class="token number">1007</span>  	<span class="token keyword">unsigned</span> <span class="token keyword">int</span>		f_flags<span class="token punctuation">;</span>
+<span class="token number">1008</span>  	<span class="token keyword">struct</span> <span class="token class-name">fown_struct</span>	f_owner<span class="token punctuation">;</span>
+<span class="token number">1009</span>  	<span class="token keyword">const</span> <span class="token keyword">struct</span> <span class="token class-name">cred</span>	<span class="token operator">*</span>f_cred<span class="token punctuation">;</span>
+<span class="token number">1010</span>  	<span class="token keyword">struct</span> <span class="token class-name">file_ra_state</span>	f_ra<span class="token punctuation">;</span>
+<span class="token number">1011</span>  	<span class="token keyword">struct</span> <span class="token class-name">path</span>		f_path<span class="token punctuation">;</span>
+<span class="token number">1012</span>  	<span class="token keyword">struct</span> <span class="token class-name">inode</span>		<span class="token operator">*</span>f_inode<span class="token punctuation">;</span>	<span class="token comment">/* cached value */</span>
+<span class="token number">1013</span>  	<span class="token keyword">const</span> <span class="token keyword">struct</span> <span class="token class-name">file_operations</span>	<span class="token operator">*</span>f_op<span class="token punctuation">;</span>
+<span class="token number">1014</span>  
+<span class="token number">1015</span>  	u64			f_version<span class="token punctuation">;</span>
+<span class="token number">1016</span>  #ifdef CONFIG_SECURITY
+<span class="token number">1017</span>  	<span class="token keyword">void</span>			<span class="token operator">*</span>f_security<span class="token punctuation">;</span>
+<span class="token number">1018</span>  #endif
+<span class="token number">1019</span>  	<span class="token comment">/* needed for tty driver, and maybe others */</span>
+<span class="token number">1020</span>  	<span class="token keyword">void</span>			<span class="token operator">*</span>private_data<span class="token punctuation">;</span>
+<span class="token number">1021</span>  
+<span class="token number">1022</span>  #ifdef CONFIG_EPOLL
+<span class="token number">1023</span>  	<span class="token comment">/* Used by fs/eventpoll.c to link all the hooks to this file */</span>
+<span class="token number">1024</span>  	<span class="token keyword">struct</span> <span class="token class-name">hlist_head</span>	<span class="token operator">*</span>f_ep<span class="token punctuation">;</span>
+<span class="token number">1025</span>  #endif <span class="token comment">/* #ifdef CONFIG_EPOLL */</span>
+<span class="token number">1026</span>  	<span class="token keyword">struct</span> <span class="token class-name">address_space</span>	<span class="token operator">*</span>f_mapping<span class="token punctuation">;</span>
+<span class="token number">1027</span>  	<span class="token class-name">errseq_t</span>		f_wb_err<span class="token punctuation">;</span>
+<span class="token number">1028</span>  	<span class="token class-name">errseq_t</span>		f_sb_err<span class="token punctuation">;</span> <span class="token comment">/* for syncfs */</span>
+<span class="token number">1029</span>  <span class="token punctuation">&#125;</span> __randomize_layout
+<span class="token number">1030</span>    <span class="token keyword">__attribute__</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token function">aligned</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>	<span class="token comment">/* lest something weird decides that 2 is OK */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>结构有一些变化，<code>2.x</code> 直接用双向链表连起了 <code>struct file</code>，而 <code>6.x</code> 的 <code>f_llist</code> 是一个单向链表？多了 <code>epoll，security</code> 等选项。具体的一些细节回头再看看。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">file_operations</span> <span class="token punctuation">&#123;</span>
+	<span class="token class-name">loff_t</span> <span class="token punctuation">(</span><span class="token operator">*</span>llseek<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token class-name">loff_t</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token class-name">ssize_t</span> <span class="token punctuation">(</span><span class="token operator">*</span>read<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token class-name">size_t</span><span class="token punctuation">,</span> <span class="token class-name">loff_t</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token class-name">ssize_t</span> <span class="token punctuation">(</span><span class="token operator">*</span>write<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">const</span> <span class="token keyword">char</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token class-name">size_t</span><span class="token punctuation">,</span> <span class="token class-name">loff_t</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>readdir<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">void</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token class-name">filldir_t</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">unsigned</span> <span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>poll<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">poll_table_struct</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>ioctl<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">inode</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">int</span><span class="token punctuation">,</span> <span class="token keyword">unsigned</span> <span class="token keyword">long</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>mmap<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">vm_area_struct</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>open<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">inode</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>flush<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>release<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">inode</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>fsync<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">dentry</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>fasync<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>check_media_change<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token class-name">kdev_t</span> dev<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>revalidate<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token class-name">kdev_t</span> dev<span class="token punctuation">)</span><span class="token punctuation">;</span>
+	<span class="token keyword">int</span> <span class="token punctuation">(</span><span class="token operator">*</span>lock<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> <span class="token keyword">struct</span> <span class="token class-name">file_lock</span> <span class="token operator">*</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>似乎是几个 CRT 中比较常用的函数，实际上这些操作大部分实现系统调用。struct file 中包含了 f_op 方法，一种面向对象思想。</p>
+<p><strong>没找到</strong> <code>aio_read，aio_write</code> 异步读写，可能是没支持？回头再看看。</p>
+<p><code>poll</code> 是三个系统调用的后端 <code>poll，epoll</code> 和 <code>select</code>。</p>
+<p><code>ioctl</code> 设备发出特定命令，<code>readv, writev</code> 发散&#x2F;汇聚读和写操作？回头再看看</p>
+<p><code>struct inode</code> ，<code>i_rdev，i_cdev</code></p>
+<p><code>unsigned long copy_to_user(void __user *to,const void *from,unsigned long count);</code></p>
+<h3 id="skull"><a href="#skull" class="headerlink" title="skull"></a>skull</h3><p>还没试过这部分代码，接着看看</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://wr-web.github.io">RT</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://wr-web.github.io/2024/04/17/LLD3-week0/">https://wr-web.github.io/2024/04/17/LLD3-week0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://wr-web.github.io" target="_blank">R0gerThat</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/wr-web/picture/archive52.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/04/23/LDD3-week1/" title="LDD3 学习笔记"><img class="cover" src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive49.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">LDD3 学习笔记</div></div></a></div><div class="next-post pull-right"><a href="/2024/01/12/windows-terminal-customization/" title="Windows Terminal Customization"><img class="cover" src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive40.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Windows Terminal Customization</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/05/07/%E4%BB%A3%E7%A0%81%E8%A1%A5%E5%85%85/" title="LDD3 学习笔记"><img class="cover" src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive51.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-07</div><div class="title">LDD3 学习笔记</div></div></a></div><div><a href="/2024/05/01/LDD3-week2/" title="LDD3 学习笔记"><img class="cover" src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive50.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-01</div><div class="title">LDD3 学习笔记</div></div></a></div><div><a href="/2024/04/23/LDD3-week1/" title="LDD3 学习笔记"><img class="cover" src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive49.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-23</div><div class="title">LDD3 学习笔记</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="gitalk-container"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">RT</div><div class="author-info__description">@Vidar-Team @CTFer @Game Lover </div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">17</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wr-web"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/wr-web" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:orz1053131305@outlook.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a><a class="social-icon" href="https://wr-web.github.io/atom.xml" target="_blank" title="Rss"><i class="fas fa-rss" style="color: #2d69d7;"></i></a><a class="social-icon" href="https://space.bilibili.com/13582048" target="_blank" title="BiliBili"><i class="fab fa-bilibili" style="color: #00a1d6;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">家人们加个友链</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LDD3-WEEK0"><span class="toc-number">1.</span> <span class="toc-text">LDD3 WEEK0</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">1.简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%BB%BA%E7%AB%8B%E5%92%8C%E8%BF%90%E8%A1%8C%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.</span> <span class="toc-text">2.建立和运行模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#hello-world"><span class="toc-number">1.2.1.</span> <span class="toc-text">hello world</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%AD%97%E7%AC%A6%E9%A9%B1%E5%8A%A8"><span class="toc-number">1.3.</span> <span class="toc-text">3.字符驱动</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#skull"><span class="toc-number">1.3.1.</span> <span class="toc-text">skull</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/05/07/%E4%BB%A3%E7%A0%81%E8%A1%A5%E5%85%85/" title="LDD3 学习笔记"><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive51.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LDD3 学习笔记"/></a><div class="content"><a class="title" href="/2024/05/07/%E4%BB%A3%E7%A0%81%E8%A1%A5%E5%85%85/" title="LDD3 学习笔记">LDD3 学习笔记</a><time datetime="2024-05-07T04:00:00.000Z" title="发表于 2024-05-07 12:00:00">2024-05-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/05/01/LDD3-week2/" title="LDD3 学习笔记"><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive50.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LDD3 学习笔记"/></a><div class="content"><a class="title" href="/2024/05/01/LDD3-week2/" title="LDD3 学习笔记">LDD3 学习笔记</a><time datetime="2024-05-01T04:00:00.000Z" title="发表于 2024-05-01 12:00:00">2024-05-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/23/LDD3-week1/" title="LDD3 学习笔记"><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive49.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LDD3 学习笔记"/></a><div class="content"><a class="title" href="/2024/04/23/LDD3-week1/" title="LDD3 学习笔记">LDD3 学习笔记</a><time datetime="2024-04-23T04:00:00.000Z" title="发表于 2024-04-23 12:00:00">2024-04-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/04/17/LLD3-week0/" title="LDD3 学习笔记"><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive52.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LDD3 学习笔记"/></a><div class="content"><a class="title" href="/2024/04/17/LLD3-week0/" title="LDD3 学习笔记">LDD3 学习笔记</a><time datetime="2024-04-17T04:00:00.000Z" title="发表于 2024-04-17 12:00:00">2024-04-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/01/12/windows-terminal-customization/" title="Windows Terminal Customization"><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/archive40.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Windows Terminal Customization"/></a><div class="content"><a class="title" href="/2024/01/12/windows-terminal-customization/" title="Windows Terminal Customization">Windows Terminal Customization</a><time datetime="2024-01-12T04:00:00.000Z" title="发表于 2024-01-12 12:00:00">2024-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://cdn.jsdelivr.net/gh/wr-web/picture/archive52.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By RT</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const initGitalk = () => {
+    const gitalk = new Gitalk(Object.assign({
+      clientID: '017d73efa3d7d9bd35c1',
+      clientSecret: '0b3746330e76c8310d622e4ae2d18a227afdfdd1',
+      repo: 'blog_talk',
+      owner: 'wr-web',
+      admin: ['wr-web'],
+      id: 'fb47945defaf26c9cbf6a23ce286dca8',
+      updateCountCallback: commentCount
+    },null))
+
+    gitalk.render('gitalk-container')
+  }
+
+  const loadGitalk = async() => {
+    if (typeof Gitalk === 'function') initGitalk()
+    else {
+      await getCSS('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css')
+      await getScript('https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js')
+      initGitalk()
+    }
+  }
+  
+  const commentCount = n => {
+    const isCommentCount = document.querySelector('#post-meta .gitalk-comment-count')
+    if (isCommentCount) {
+      isCommentCount.textContent= n
+    }
+  }
+
+  if ('Gitalk' === 'Gitalk' || !false) {
+    if (false) btf.loadComment(document.getElementById('gitalk-container'), loadGitalk)
+    else loadGitalk()
+  } else {
+    window.loadOtherComment = loadGitalk
+  }
+})()</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script defer="defer" id="ribbon" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-ribbon.min.js" size="150" alpha="0.6" zIndex="-1" mobile="false" data-click="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
