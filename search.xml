@@ -71,7 +71,7 @@
 <span class="token function">module_init</span><span class="token punctuation">(</span>complete_init<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token function">module_exit</span><span class="token punctuation">(</span>complete_cleanup<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240516141337151.png" alt="image-20240516141337151"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240516141337151.png" alt="image-20240516141337151"></p>
 <h2 id="第六章"><a href="#第六章" class="headerlink" title="第六章"></a>第六章</h2><h3 id="异步通知"><a href="#异步通知" class="headerlink" title="异步通知"></a>异步通知</h3><p>通过 SIGIO 完成，需要使能</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
@@ -115,7 +115,7 @@
     <span class="token punctuation">&#125;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240516144923597.png" alt="image-20240516144923597"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240516144923597.png" alt="image-20240516144923597"></p>
 <h3 id="llseek"><a href="#llseek" class="headerlink" title="llseek"></a>llseek</h3><p>scull 代码，实现了 llseek，对于一些提供数据流的设备，不应支持 llseek</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token class-name">loff_t</span> <span class="token function">scull_llseek</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">file</span> <span class="token operator">*</span>filp<span class="token punctuation">,</span> <span class="token class-name">loff_t</span> off<span class="token punctuation">,</span> <span class="token keyword">int</span> whence<span class="token punctuation">)</span>
 <span class="token punctuation">&#123;</span>
@@ -147,7 +147,7 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>进行一个简单的测试</p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240516152231158.png" alt="image-20240516152231158"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240516152231158.png" alt="image-20240516152231158"></p>
 <h3 id="文件访问控制"><a href="#文件访问控制" class="headerlink" title="文件访问控制"></a>文件访问控制</h3><p>简单的写一个 open &lt;device&gt;</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdlib.h></span></span>
@@ -204,7 +204,7 @@
 	<span class="token keyword">return</span> <span class="token number">0</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240516163211343.png" alt="image-20240516163211343"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240516163211343.png" alt="image-20240516163211343"></p>
 <p>可以看出不同第二个打开失败了。</p>
 <h4 id="sculluid"><a href="#sculluid" class="headerlink" title="sculluid"></a>sculluid</h4><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">static</span> <span class="token keyword">struct</span> <span class="token class-name">scull_dev</span> scull_u_device<span class="token punctuation">;</span>
 <span class="token keyword">static</span> <span class="token keyword">int</span> scull_u_count<span class="token punctuation">;</span>	<span class="token comment">/* initialized to 0 by default */</span>
@@ -239,7 +239,7 @@
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>比较清晰</p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240516163901501.png" alt="image-20240516163901501"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240516163901501.png" alt="image-20240516163901501"></p>
 <h4 id="scullpriv"><a href="#scullpriv" class="headerlink" title="scullpriv"></a>scullpriv</h4><pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">/************************************************************************
  *
  * Finally the `cloned' private device. This is trickier because it
@@ -1565,7 +1565,7 @@ rmmod <span class="token variable">$module</span> <span class="token variable">$
 <span class="token builtin class-name">exit</span> <span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="中断补充"><a href="#中断补充" class="headerlink" title="中断补充"></a>中断补充</h2><p>关于中断嵌套，曾经是支持的（</p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240516234342751.png" alt="image-20240516234342751"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240516234342751.png" alt="image-20240516234342751"></p>
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -5436,9 +5436,9 @@ rt@rogerthat ~&#x2F;k&#x2F;s&#x2F;test&gt; sudo dmesg
 [ 5814.272212] scull ioctl cmd: SCULL_IOCRESET arg:114514<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <h4 id="关于阻塞读写"><a href="#关于阻塞读写" class="headerlink" title="关于阻塞读写"></a>关于阻塞读写</h4><p>踩了坑，他分配的设备 MINOR 和 scull.init 对不上，导致找不到对应设备</p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240426030320220.png" alt="image-20240426030320220"></p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240426030413865.png" alt="image-20240426030413865"></p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240426030420835.png" alt="image-20240426030420835"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240426030320220.png" alt="image-20240426030320220"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240426030413865.png" alt="image-20240426030413865"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240426030420835.png" alt="image-20240426030420835"></p>
 <h4 id="关于非阻塞读写"><a href="#关于非阻塞读写" class="headerlink" title="关于非阻塞读写"></a>关于非阻塞读写</h4><p>有点问题，为啥这个 read 读不出东西，回头再看看了。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;stdio.h></span></span>
 <span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;fcntl.h></span></span>
@@ -5473,9 +5473,9 @@ rt@rogerthat ~&#x2F;k&#x2F;s&#x2F;test&gt; sudo dmesg
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>结果</p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240426033534189.png" alt="image-20240426033534189"></p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240426035640132.png" alt="image-20240426035640132"></p>
-<p><img src="C:\Users\orz10\AppData\Roaming\Typora\typora-user-images\image-20240426035650075.png" alt="image-20240426035650075"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240426033534189.png" alt="image-20240426033534189"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240426035640132.png" alt="image-20240426035640132"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/wr-web/picture/image-20240426035650075.png" alt="image-20240426035650075"></p>
 <h4 id="关于-access"><a href="#关于-access" class="headerlink" title="关于 access"></a>关于 access</h4><h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1><p>[1] <a href="https://ty-chen.github.io/linux-kernel-char-device/">https://ty-chen.github.io/linux-kernel-char-device/</a></p>
 ]]></content>
       <categories>
